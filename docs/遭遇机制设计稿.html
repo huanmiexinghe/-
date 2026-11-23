@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetic Rush 磁极冲刺 · 遭遇机制设计稿</title>
+<style>
+  :root{
+    --ink:#2b2350; --ink-2:#5c5480; --ink-3:#8d87aa;
+    --red:#ff4d6d; --red-soft:#ffe3e9;
+    --blue:#35b6ff; --blue-soft:#dff2ff;
+    --gold:#ffb703; --gold-soft:#fff3d6;
+    --mint:#3fd0c9; --mint-soft:#dcf7f4;
+    --grape:#a97cff; --grape-soft:#efe7ff;
+    --green:#3fc76a; --green-soft:#e2f7e8;
+    --bg:#f3f0e8; --paper:#fffdf8; --paper-2:#faf7ef;
+    --line:#ded8ca; --line-strong:#c9c1ae;
+    --shadow:0 10px 28px rgba(43,35,80,.10);
+    --radius:18px;
+    --mono:Consolas,"SFMono-Regular","Cascadia Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--ink); background:
+      radial-gradient(900px 420px at 8% -8%, #ffe8ee 0%, rgba(255,232,238,0) 60%),
+      radial-gradient(800px 380px at 92% 0%, #e2f4ff 0%, rgba(226,244,255,0) 55%),
+      var(--bg);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+    line-height:1.72; font-size:15px;
+  }
+  code{
+    font-family:var(--mono); font-size:12.5px;
+    background:#f1ede2; border:1px solid #e3ddce; border-radius:5px;
+    padding:1px 5px; white-space:nowrap;
+  }
+  .wrap{display:flex; gap:28px; max-width:1420px; margin:0 auto; padding:28px 26px 80px}
+  /* ---------- 侧栏 ---------- */
+  .side{
+    width:238px; flex:0 0 238px; position:sticky; top:22px; align-self:flex-start;
+    max-height:calc(100vh - 44px); overflow:auto;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px 14px;
+  }
+  .side .brand{font-weight:800; letter-spacing:.5px; font-size:13px; color:var(--ink-2); margin:2px 0 12px}
+  .side a{
+    display:block; padding:7px 10px; border-radius:9px; color:var(--ink-2);
+    font-size:13px; line-height:1.35; border-left:3px solid transparent; text-decoration:none;
+  }
+  .side a:hover{background:var(--paper-2); color:var(--ink)}
+  .side a.sub{padding-left:20px; font-size:12.5px; color:var(--ink-3)}
+  .side .div{height:1px; background:var(--line); margin:10px 0}
+  main{flex:1; min-width:0; max-width:1090px}
+  /* ---------- 头部 ---------- */
+  .hero{
+    background:linear-gradient(160deg,#fffdf8 0%,#fff7f9 58%,#f2fbff 100%);
+    border:1px solid var(--line); border-radius:24px; box-shadow:var(--shadow);
+    padding:34px 36px 30px; position:relative; overflow:hidden;
+  }
+  .hero:before{
+    content:""; position:absolute; right:-70px; top:-90px; width:300px; height:300px;
+    border-radius:50%; background:radial-gradient(circle,#ffd9e2 0%,rgba(255,217,226,0) 70%);
+  }
+  .hero:after{
+    content:""; position:absolute; right:140px; bottom:-130px; width:260px; height:260px;
+    border-radius:50%; background:radial-gradient(circle,#d6f0ff 0%,rgba(214,240,255,0) 70%);
+  }
+  .kicker{font-size:12px; font-weight:800; letter-spacing:2.5px; color:var(--red)}
+  h1{font-size:34px; line-height:1.28; margin:10px 0 8px; letter-spacing:.5px}
+  .subtitle{color:var(--ink-2); font-size:15px; max-width:800px; position:relative; z-index:2}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; position:relative; z-index:2}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px;
+    font-size:12px; font-weight:700; border:1px solid var(--line-strong); background:#fff; color:var(--ink-2);
+  }
+  .chip.red{background:var(--red-soft); border-color:#ffc2cf; color:#b72345}
+  .chip.blue{background:var(--blue-soft); border-color:#b9e5ff; color:#0c6fa8}
+  .chip.gold{background:var(--gold-soft); border-color:#ffd98a; color:#9a6200}
+  .chip.mint{background:var(--mint-soft); border-color:#a9e6e1; color:#0a6c66}
+  .dot{width:7px; height:7px; border-radius:50%; background:currentColor; display:inline-block}
+  /* ---------- 版块 ---------- */
+  section{scroll-margin-top:18px; margin-top:26px}
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:26px 30px;
+  }
+  h2{font-size:24px; margin:0 0 6px; letter-spacing:.3px; display:flex; align-items:center; gap:10px}
+  h2 .num{font-size:12px; font-weight:800; color:#fff; background:var(--ink); border-radius:8px; padding:3px 8px; letter-spacing:1px}
+  .lede{color:var(--ink-2); margin:0 0 18px; font-size:14px}
+  h3{font-size:17px; margin:26px 0 10px; padding-left:12px; border-left:4px solid var(--red); line-height:1.4}
+  h3.blue{border-left-color:var(--blue)}
+  h3.mint{border-left-color:var(--mint)}
+  h3.gold{border-left-color:var(--gold)}
+  h4{font-size:15px; margin:0}
+  /* ---------- 数据条 ---------- */
+  .stats{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:18px 0 4px}
+  .stat{background:var(--paper-2); border:1px solid var(--line); border-radius:12px; padding:12px 14px}
+  .stat b{display:block; font-size:24px; line-height:1.2; letter-spacing:.3px}
+  .stat span{display:block; font-size:11.5px; color:var(--ink-3); font-weight:700; margin-top:2px}
+  .stat .u{font-size:12px; color:var(--ink-3); font-weight:700; margin-left:2px}
+  .stat.red b{color:var(--red)} .stat.blue b{color:#1189cc} .stat.gold b{color:#b87800}
+  .stat.mint b{color:#139a92} .stat.grape b{color:#7b50d8}
+  /* ---------- 表格 ---------- */
+  .tblwrap{overflow:auto; border:1px solid var(--line); border-radius:12px; margin-top:12px}
+  table{border-collapse:collapse; width:100%; min-width:720px; font-size:13px; background:#fff}
+  th,td{padding:9px 12px; text-align:left; border-bottom:1px solid #eee9dc; vertical-align:top}
+  th{background:var(--paper-2); font-size:12px; color:var(--ink-2); letter-spacing:.4px; position:sticky; top:0}
+  tr:last-child td{border-bottom:none}
+  td.num{text-align:right; font-family:var(--mono); white-space:nowrap}
+  .bar{height:6px; border-radius:4px; background:#ece7da; overflow:hidden; min-width:52px}
+  .bar i{display:block; height:100%; border-radius:4px; background:linear-gradient(90deg,#ff8fa3,#ff4d6d)}
+  .bar.blue i{background:linear-gradient(90deg,#8fd8ff,#35b6ff)}
+  .tag{display:inline-block; font-size:11px; font-weight:800; padding:1px 7px; border-radius:999px; white-space:nowrap}
+  .tag.bad{background:var(--red-soft); color:#b72345}
+  .tag.warn{background:var(--gold-soft); color:#9a6200}
+  .tag.ok{background:var(--green-soft); color:#187a3f}
+  .tag.info{background:var(--blue-soft); color:#0c6fa8}
+  .tag.p0{background:#ffe1e7; color:#c11f45}
+  .tag.p1{background:#fff0cf; color:#9a6200}
+  .tag.p2{background:#ece5ff; color:#6136c9}
+  /* ---------- 问题卡 ---------- */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .pcard{background:#fff; border:1px solid var(--line); border-left:5px solid var(--red); border-radius:12px; padding:14px 16px}
+  .pcard.blue{border-left-color:var(--blue)} .pcard.gold{border-left-color:var(--gold)}
+  .pcard.mint{border-left-color:var(--mint)} .pcard.grape{border-left-color:var(--grape)}
+  .pcard.green{border-left-color:var(--green)}
+  .pcard h4{margin-bottom:4px; font-size:15px}
+  .pcard p{margin:0; color:var(--ink-2); font-size:13.5px}
+  .ev{margin-top:8px; padding:7px 10px; background:#f7f3e9; border-radius:8px; font-family:var(--mono); font-size:12px; color:var(--ink-2); line-height:1.6}
+  /* ---------- 口径盒 ---------- */
+  .rules{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:6px}
+  .rule{background:#fff; border:1px dashed var(--line-strong); border-radius:12px; padding:12px 14px}
+  .rule b{display:block; font-size:12px; letter-spacing:.6px; color:var(--ink-3); margin-bottom:4px}
+  .rule p{margin:0; font-size:13px; color:var(--ink-2)}
+  .rule code{background:#fff7e2; border-color:#f1dfae}
+  /* ---------- 机制卡 ---------- */
+  .mcards{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:14px}
+  .mcard{background:#fff; border:1.5px solid var(--line-strong); border-radius:16px; padding:16px 18px 14px; position:relative; overflow:hidden}
+  .mcard:before{content:""; position:absolute; left:0; top:0; width:6px; height:100%; background:var(--red)}
+  .mcard.b:before{background:var(--blue)} .mcard.m:before{background:var(--mint)}
+  .mcard.g:before{background:var(--gold)} .mcard.p:before{background:var(--grape)}
+  .mcard.k:before{background:var(--green)}
+  .mhead{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:2px}
+  .mnum{font-family:var(--mono); font-size:11px; font-weight:800; color:#fff; background:var(--ink); border-radius:6px; padding:1px 6px}
+  .mhead h4{font-size:16.5px; margin-right:auto}
+  .one{margin:6px 0 10px; font-size:13.5px; color:var(--ink); background:var(--paper-2); border-radius:8px; padding:7px 10px}
+  .fields{display:grid; grid-template-columns:64px 1fr; gap:3px 8px; margin:0; font-size:12.8px}
+  .fields dt{color:var(--ink-3); font-weight:800; font-size:11.5px; padding-top:2px; letter-spacing:.4px}
+  .fields dd{margin:0; color:var(--ink-2); line-height:1.62}
+  .files{margin-top:10px; padding-top:8px; border-top:1px dashed var(--line); font-family:var(--mono); font-size:11.5px; color:var(--ink-3); line-height:1.7}
+  /* ---------- 组合时间轴 ---------- */
+  .combo{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-top:14px}
+  .combo h4{font-size:16px; margin-bottom:2px}
+  .combo .why{margin:2px 0 10px; font-size:13px; color:var(--ink-2)}
+  .tl{display:flex; align-items:stretch; height:44px; border-radius:10px; overflow:hidden; border:1.5px solid var(--ink); background:#faf8f2}
+  .seg{display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:800; color:#fff; padding:0 8px; text-align:center; line-height:1.25}
+  .seg.a{background:#ff6b86} .seg.b{background:#35b6ff} .seg.c{background:#3fd0c9}
+  .seg.d{background:#ffb703; color:#4a3300} .seg.e{background:#a97cff} .seg.f{background:#8b83ad}
+  .tlcap{display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:5px}
+  .rhythm{margin-top:8px; font-size:12.5px; color:var(--ink-2)}
+  .rhythm b{color:var(--ink)}
+  /* ---------- 图表 ---------- */
+  .chartbox{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 10px 6px; margin-top:14px}
+  .chartbox h4{margin:2px 0 0 10px; font-size:15px}
+  .chartbox .cap{margin:2px 0 4px 10px; font-size:12px; color:var(--ink-3)}
+  svg{display:block; width:100%; height:auto}
+  .legend{display:flex; gap:16px; flex-wrap:wrap; margin:4px 0 2px 10px; font-size:12px; color:var(--ink-2)}
+  .legend i{display:inline-block; width:16px; height:8px; border-radius:4px; margin-right:5px; vertical-align:middle}
+  /* 节奏条 */
+  .beats{display:flex; height:46px; border:1.5px solid var(--ink); border-radius:10px; overflow:hidden; margin-top:8px; background:#fff}
+  .beat{display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:800; text-align:center; line-height:1.2; padding:0 6px; border-right:1px dashed rgba(43,35,80,.25)}
+  .beat:last-child{border-right:none}
+  .b1{background:#eef8f6; color:#0a6c66; flex:12} .b2{background:#fff1f4; color:#b72345; flex:45}
+  .b3{background:#ffe4e9; color:#b72345; flex:25} .b4{background:#e2f7e8; color:#187a3f; flex:18}
+  .rulist{display:grid; grid-template-columns:1fr 1fr; gap:10px 18px; margin:12px 0 0; padding:0; list-style:none}
+  .rulist li{background:#fff; border:1px solid var(--line); border-radius:10px; padding:9px 12px; font-size:13px; color:var(--ink-2)}
+  .rulist b{color:var(--ink)}
+  .formula{background:#fff7e2; border:1px solid #f1dfae; border-radius:10px; padding:10px 14px; font-family:var(--mono); font-size:12.5px; color:#6b4d00; margin-top:12px}
+  /* ---------- 优先级 ---------- */
+  .prio{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px}
+  .pcol{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; border-top:5px solid var(--red)}
+  .pcol.p1{border-top-color:var(--gold)} .pcol.p2{border-top-color:var(--grape)}
+  .pcol h4{display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:15px}
+  .pcol ul{margin:0; padding-left:18px; font-size:13px; color:var(--ink-2)}
+  .pcol li{margin:5px 0}
+  .pcol .note{font-size:11.5px; color:var(--ink-3); border-top:1px dashed var(--line); padding-top:8px; margin-top:8px}
+  /* ---------- 决策 ---------- */
+  .dec{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px}
+  .dcard{background:#fff; border:1.5px solid var(--line-strong); border-radius:14px; padding:14px 16px}
+  .dcard .qn{font-family:var(--mono); font-weight:800; color:var(--red); font-size:12px; letter-spacing:1px}
+  .dcard h4{font-size:15px; margin:4px 0 6px}
+  .dcard p{margin:0; font-size:13px; color:var(--ink-2)}
+  .dcard .rec{margin-top:8px; padding:7px 10px; background:var(--green-soft); border-radius:8px; font-size:12.5px; color:#187a3f}
+  .foot{margin-top:26px; text-align:center; font-size:12px; color:var(--ink-3)}
+  @media (max-width:1080px){
+    .wrap{flex-direction:column}
+    .side{position:static; width:auto; max-height:none; display:flex; flex-wrap:wrap; gap:2px}
+    .side .div{display:none}
+    main{max-width:none}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid2,.mcards,.rules,.prio,.dec,.rulist{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">MAGNETIC RUSH · 设计稿</div>
+    <a href="#s1">01 现状盘点</a>
+    <a href="#s2">02 为什么无聊</a>
+    <a href="#s3">03 设计口径</a>
+    <a href="#s4">04 十个新机制</a>
+    <a href="#s5" class="sub">M01 磁芯雨</a>
+    <a href="#s5" class="sub">M02–M10 机制卡</a>
+    <a href="#s6">05 组合范式</a>
+    <a href="#s7">06 密度与节奏</a>
+    <a href="#s8">07 31–36 关与无尽</a>
+    <a href="#s9">08 优先级与代价</a>
+    <a href="#s10">09 待拍板</a>
+    <div class="div"></div>
+    <a href="#s1" style="color:var(--red);font-weight:700">本轮只设计 · 不改代码</a>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <div class="kicker">DESIGN ONLY · 遭遇内容扩充</div>
+      <h1>让跑酷从「障碍排列」变成「机制对话」</h1>
+      <p class="subtitle">
+        基于现有 36 关、272 个危险点与既有极性/磁铁机制，给出一套可评审的遭遇扩充方案：
+        10 个新机制、4 组组合范式、2 个主动风险回报机制，以及一条不会再「越后越空」的密度曲线。
+        所有数值沿用现有物理、连击、星级与磁芯口径。
+      </p>
+      <div class="meta">
+        <span class="chip red"><span class="dot"></span>36 关 · 272 危险点</span>
+        <span class="chip blue">87.5% 是尖刺 + 灰墙</span>
+        <span class="chip gold">6 关 ★3 数学不可达</span>
+        <span class="chip mint">10 新机制 / 3 组范式</span>
+        <span class="chip">P0 = 4 个小成本 + 1 个中成本</span>
+      </div>
+    </header>
+
+    <!-- ===================== 01 ===================== -->
+    <section id="s1" class="card">
+      <h2><span class="num">01</span>现状盘点：能遇到的东西，到底有多少种</h2>
+      <p class="lede">统计口径：36 个正式关卡的 <code>obstacles</code> 数组，晶片计入「可遭遇物」但不计入危险点。</p>
+
+      <div class="stats">
+        <div class="stat red"><b>272</b><span>危险点总数</span></div>
+        <div class="stat blue"><b>238</b><span>尖刺 + 灰墙占比 <em>87.5%</em></span></div>
+        <div class="stat gold"><b>193</b><span>晶片，其中 136 枚（70%）贴地即得</span></div>
+        <div class="stat mint"><b>42</b><span>新机制内容点（墙 14 / 摆锤 11 / 激光 9 / 浮台 8）</span></div>
+        <div class="stat grape"><b>0</b><span>正式关使用 SPLIT_PATH 分叉</span></div>
+      </div>
+
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th style="width:120px">可遭遇元素</th><th style="width:74px">数量</th><th style="width:88px">危险密度</th><th style="width:190px">它解决的问题</th><th>现状评价（代码事实）</th><th style="width:120px">连击贡献</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>红 / 蓝尖刺</b></td>
+              <td class="num">206</td>
+              <td><div class="bar"><i style="width:100%"></i></div><span style="font-family:var(--mono);font-size:11px">206/272</span></td>
+              <td>极性判断 + 跳跃时机</td>
+              <td><span class="tag bad">同质化主力</span> 只需「同色掠过或跳过去」一个动作，占全部危险点的 75.7%</td>
+              <td>同色安全穿越 +1</td>
+            </tr>
+            <tr>
+              <td><b>灰墙</b></td>
+              <td class="num">32</td>
+              <td><div class="bar"><i style="width:16%"></i></div></td>
+              <td>强制跳跃，无极性决策</td>
+              <td><span class="tag warn">纯操作</span> 与尖刺共享同一个「跳」动词</td>
+              <td>安全通过 +1</td>
+            </tr>
+            <tr>
+              <td><b>相位墙</b></td>
+              <td class="num">14</td>
+              <td><div class="bar blue"><i style="width:7%"></i></div></td>
+              <td>极性 + 时机（同色可穿）</td>
+              <td>只在 31 / 34 / 36 出现；L31 连续 6 面同型墙，无组合变化</td>
+              <td>穿过 +1</td>
+            </tr>
+            <tr>
+              <td><b>磁暴摆锤</b></td>
+              <td class="num">11</td>
+              <td><div class="bar blue"><i style="width:6%"></i></div></td>
+              <td>磁力位移 + 空间站位</td>
+              <td>15 / 19 / 29 / 34 / 36；几乎总是「摆锤 + 1 个陷阱尖刺」的固定搭配</td>
+              <td>安全通过 +1</td>
+            </tr>
+            <tr>
+              <td><b>脉冲激光</b></td>
+              <td class="num">9</td>
+              <td><div class="bar blue"><i style="width:4%"></i></div></td>
+              <td>节拍等待（贴地 or 跳过）</td>
+              <td>L33 独占 6 根、L36 有 3 根；<b>激光不产连击</b>，导致 L33 的 ★3 不可达</td>
+              <td><span class="tag bad">0</span></td>
+            </tr>
+            <tr>
+              <td><b>移动浮台</b></td>
+              <td class="num">8</td>
+              <td><div class="bar blue"><i style="width:3%"></i></div></td>
+              <td>落脚点时机 / 高低路线</td>
+              <td>32 / 35 / 36；多数时候只是「等它过来再跳」，没有第二条路可选</td>
+              <td><span class="tag bad">0</span></td>
+            </tr>
+            <tr>
+              <td><b>传送门</b></td>
+              <td class="num">64 端点</td>
+              <td><div class="bar blue"><i style="width:9%"></i></div></td>
+              <td>空间跳转</td>
+              <td>每个门对免费 +2 连击；L20 一关 4 对 → 连击通胀，★3 与技巧脱钩</td>
+              <td>+2 / 对</td>
+            </tr>
+            <tr>
+              <td><b>磁芯（晶片）</b></td>
+              <td class="num">193</td>
+              <td><div class="bar" style="background:#f3e6b8"><i style="width:100%;background:linear-gradient(90deg,#ffd76a,#ffb703)"></i></div></td>
+              <td>收集目标 / ★2</td>
+              <td><span class="tag warn">无风险收集</span> 136 枚（70%）是贴地 <code>gem()</code>，跑过去就吃到</td>
+              <td>+1 / 枚</td>
+            </tr>
+            <tr>
+              <td><b>加速带</b></td>
+              <td class="num">6</td>
+              <td><div class="bar" style="background:#f3e6b8"><i style="width:100%;background:linear-gradient(90deg,#ffd76a,#ffb703)"></i></div></td>
+              <td>速度变化 / 跳距扩张</td>
+              <td>纯增益，没有任何代价；跳跃距离从 238px 扩到 475px</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td><b>极性区</b></td>
+              <td class="num">10</td>
+              <td><div class="bar blue"><i style="width:4%"></i></div></td>
+              <td>强制换色，打断节奏</td>
+              <td>强制固定颜色，玩家无需预判；换色成功即 +1 连击</td>
+              <td>+1</td>
+            </tr>
+            <tr>
+              <td><b>重力翻转</b></td>
+              <td class="num">14</td>
+              <td><div class="bar blue"><i style="width:5%"></i></div></td>
+              <td>天花板路线</td>
+              <td>21–25 关集中出现，本质仍是「换个地方跳」，不产生新决策</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td><b>特殊门</b></td>
+              <td class="num">3</td>
+              <td><div class="bar" style="background:#ece7da"><i style="width:2%;background:#a97cff"></i></div></td>
+              <td>隐藏关入口</td>
+              <td>奖励型内容，和主线遭遇密度无关</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="formula">
+        读表结论：现有内容里「危险」几乎只有两种动词（跳 / 同色掠过），而「奖励」几乎只有一种动词（跑过去吃）。
+        新机制真正缺的不是数量，而是<b>让玩家在同一次遭遇里同时做颜色决策与空间决策</b>。
+      </div>
+    </section>
+
+    <!-- ===================== 02 ===================== -->
+    <section id="s2" class="card">
+      <h2><span class="num">02</span>「无聊」的六个成因（每条都有代码证据）</h2>
+      <p class="lede">不是「内容少」，而是内容被排列成了同一种节奏；下面是可直接复核的事实。</p>
+
+      <div class="grid2">
+        <div class="pcard">
+          <h4>① 动作词汇只有两个</h4>
+          <p>尖刺 206 + 灰墙 32 = 238 / 272（87.5%）。除相位墙、摆锤外，其余危险都是「跳」或「同色掠过」的同一操作换皮。</p>
+          <div class="ev">levels.ts：尖刺 206、灰墙 32、相位墙 14、摆锤 11、激光 9</div>
+        </div>
+        <div class="pcard blue">
+          <h4>② 没有需要选路的遭遇</h4>
+          <p><code>SPLIT_PATH</code> 在类型里已经定义，但 36 个正式关的关卡数据里一次都没有使用；全程只有一条地面线。</p>
+          <div class="ev">config.ts 定义 SPLIT_PATH；levels.ts 0 次引用</div>
+        </div>
+        <div class="pcard gold">
+          <h4>③ 密度倒挂：越后面越空</h4>
+          <p>第 4 章平均 2.66 危险/1000px 是峰值，第 7 章反而降到 1.33；同时关卡从 3680px 拉长到 5067px，maxCombo 目标从 15 涨到 20（L30 为 22）。</p>
+          <div class="ev">ch4：2.66 → ch7：1.33；平均时长 11.5s → 15.8s</div>
+        </div>
+        <div class="pcard">
+          <h4>④ 6 关的 ★3 数学不可达</h4>
+          <p>连击源总数小于 <code>maxCombo</code>：L23（10 vs 11）、L25（10 vs 15）、L28（12 vs 15）、L29（16 vs 18）、L33（7 vs 10）、L36（17 vs 20）。无论怎么打都拿不到 ★3。</p>
+          <div class="ev">按「每个危险点/晶片最多计 1 次连击」逐关核对</div>
+        </div>
+        <div class="pcard mint">
+          <h4>⑤ ★3 变成「收集测试」</h4>
+          <p>L32 需要 10 / 11 个连击源、L35 需要 16 / 16 全部拿满才有 ★3；其中 136 枚晶片是贴地 <code>gem()</code>，导致 ★3 更像「沿路捡东西」而不是操作。</p>
+          <div class="ev">L32：8 晶片 + 3 尖刺；L35：8 晶片 + 2 门对</div>
+        </div>
+        <div class="pcard grape">
+          <h4>⑥ 同型连排 + 风险无回报</h4>
+          <p>L31 连排 6 面相位墙、L33 连排 6 根激光；而加速带、传送门、极性区都是纯收益，没有任何「主动冒险换奖励」的选项。</p>
+          <div class="ev">L31：6 pwall + 6 晶片；L33：6 laser + 7 晶片，无其他危险</div>
+        </div>
+      </div>
+
+      <h3 class="blue">★3 可达性逐关核对（只列余量 ≤1 或不可达）</h3>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>关卡</th><th>maxCombo 目标</th><th>潜在连击源</th><th>余量</th><th>结论</th></tr></thead>
+          <tbody>
+            <tr><td>21 重力初感</td><td class="num">7</td><td class="num">8</td><td class="num">+1</td><td><span class="tag warn">必须近乎零失误</span></td></tr>
+            <tr><td>22 倒立跳跃</td><td class="num">9</td><td class="num">10</td><td class="num">+1</td><td><span class="tag warn">必须近乎零失误</span></td></tr>
+            <tr><td>23 颠倒门</td><td class="num">11</td><td class="num">10</td><td class="num">−1</td><td><span class="tag bad">★3 不可达</span></td></tr>
+            <tr><td>24 天花板路径</td><td class="num">13</td><td class="num">13</td><td class="num">0</td><td><span class="tag warn">必须全收</span></td></tr>
+            <tr><td>25 逆重狂奔</td><td class="num">15</td><td class="num">10</td><td class="num">−5</td><td><span class="tag bad">★3 不可达</span></td></tr>
+            <tr><td>27 极速走廊</td><td class="num">12</td><td class="num">13</td><td class="num">+1</td><td><span class="tag warn">必须近乎零失误</span></td></tr>
+            <tr><td>28 全面混乱</td><td class="num">15</td><td class="num">12</td><td class="num">−3</td><td><span class="tag bad">★3 不可达</span></td></tr>
+            <tr><td>29 终极试炼</td><td class="num">18</td><td class="num">16</td><td class="num">−2</td><td><span class="tag bad">★3 不可达</span></td></tr>
+            <tr><td>32 浮台回声</td><td class="num">10</td><td class="num">11</td><td class="num">+1</td><td><span class="tag warn">必须近乎全收</span></td></tr>
+            <tr><td>33 红色节拍</td><td class="num">10</td><td class="num">7</td><td class="num">−3</td><td><span class="tag bad">★3 不可达（激光不产连击）</span></td></tr>
+            <tr><td>35 浮空追踪</td><td class="num">16</td><td class="num">16</td><td class="num">0</td><td><span class="tag warn">必须全收</span></td></tr>
+            <tr><td>36 边境风暴</td><td class="num">20</td><td class="num">17</td><td class="num">−3</td><td><span class="tag bad">★3 不可达</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formula">
+        这一组事实决定了设计方向：<b>新增机制必须产出「有效连击事件」</b>，否则只会继续把 ★3 绑在晶片上；
+        同时必须给玩家<b>可选的高风险连击源</b>，让 ★3 从「全收集」变成「敢不敢」。
+      </div>
+    </section>
+
+    <!-- ===================== 03 ===================== -->
+    <section id="s3" class="card">
+      <h2><span class="num">03</span>设计口径：不破坏刚修好的规则</h2>
+      <p class="lede">以下常量与判定直接取自代码，所有新机制的数值都必须落在这套口径内。</p>
+      <div class="rules">
+        <div class="rule">
+          <b>移动与跳跃</b>
+          <p>基础速度 <code>320</code> px/s；跳跃 <code>-520</code> / 重力 <code>1400</code> → 最高 96px、最远 238px、滞空 0.74s；滑铲 0.6s；换色冷却 0.18s、容错 0.1s。</p>
+        </div>
+        <div class="rule">
+          <b>加速与连击加成</b>
+          <p>加速带 <code>2.0×</code> 持续 3s；连击 20/30/50 分别 +5% / +10% / +15%；速度合成顺序：基础 × 倍率 × (1+连击) + 位移项。</p>
+        </div>
+        <div class="rule">
+          <b>星级（保持不变）</b>
+          <p><code>stars = clear ? 1 + allGems + comboGoal : 0</code>。新机制的奖励晶片如果会绑架 ★2，必须标记为 bonus 并排除在 <code>allGems</code> 之外。</p>
+        </div>
+        <div class="rule">
+          <b>连击（有效事件计数）</b>
+          <p>同色尖刺 +1、灰墙 +1、相位墙 +1、摆锤 +1、传送门 +2、极性区 +1、晶片 +1；激光、浮台、加速带、重力翻转不产连击。</p>
+        </div>
+        <div class="rule">
+          <b>磁芯经济</b>
+          <p>普通关晶片不计磁芯币；磁芯币只来自无尽晶片（+1）、每日首通（+3）、特殊关。新风险物可产币，但设每关上限。</p>
+        </div>
+        <div class="rule">
+          <b>节奏常量</b>
+          <p>摆锤 185px / 2400；浮台 60–140px / 2.4–4.0s；激光 2.4–3.2s / 预警 0.8s；无尽安全走廊 <code>600</code>px，速度上限 <code>2.0×</code>。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 04 ===================== -->
+    <section id="s4" class="card">
+      <h2><span class="num">04</span>十个新机制：每一个都要做一次颜色或空间决策</h2>
+      <p class="lede">全部只用现有的 3 个操作（换色 / 跳 / 滑），不新增按钮；「实现代价」按改动面估算，S=小、M=中、L=大。</p>
+
+      <div class="mcards">
+        <article class="mcard" id="m1">
+          <div class="mhead"><span class="mnum">M01</span><h4>磁芯雨</h4><span class="tag p0">P0</span><span class="tag info">M</span></div>
+          <p class="one">天花板在两色磁芯雨中落下，同色接住 +1 连击，异色碰到即死。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>保持同色把雨吃满，还是提前换色给下一道相位墙让路。</dd>
+            <dt>成功/失败</dt><dd>成功接住 1–3 枚（每带上限 +3 连击）；被异色雨芯命中 → 死亡、连击清零。</dd>
+            <dt>关键数值</dt><dd>雨带 520px；3 枚、水平间隔 170px；下落 300px/s；判定半径 14px；每关 1–2 带。</dd>
+            <dt>极性耦合</dt><dd>沿用「同色安全」的同一套判定，但对象是运动体；不产磁芯币，只产连击。</dd>
+            <dt>节奏搭配</dt><dd>L8 起引入；配尖刺/传送门；L24 后可与涡旋组合（雨被吸偏）。</dd>
+          </dl>
+          <div class="files">Obstacle.ts · GameScene.ts · data/levels.ts · EditorScene.ts · scripts/selfcheck.ts</div>
+        </article>
+
+        <article class="mcard b" id="m2">
+          <div class="mhead"><span class="mnum">M02</span><h4>极性锁</h4><span class="tag p0">P0</span><span class="tag info">S</span></div>
+          <p class="one">进入 2 秒的锁色门廊，门内换色会震碎锁芯——不致死，但会让你后续更难。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>提前定色并忍住不切，还是放弃门内的高价值诱饵。</dd>
+            <dt>成功/失败</dt><dd>顺利出门 +3 连击；门内换色 −4 连击、换色冷却 +0.5s（最多触发 2 次）。</dd>
+            <dt>关键数值</dt><dd>锁定时长 2.0s（按时间计，避免加速带缩短）；容错 1 次；门框高 300px。</dd>
+            <dt>极性耦合</dt><dd>直接约束核心操作；门内可放异色尖刺诱饵，制造「必须换色但不能换」的冲突。</dd>
+            <dt>节奏搭配</dt><dd>L16 起；配尖刺/摆锤；L31 起与滑动相位墙组合。</dd>
+          </dl>
+          <div class="files">GameScene.ts · Obstacle.ts(meta) · levels.ts · selfcheck.ts</div>
+        </article>
+
+        <article class="mcard m" id="m3">
+          <div class="mhead"><span class="mnum">M03</span><h4>极性弹射板</h4><span class="tag p1">P1</span><span class="tag info">S–M</span></div>
+          <p class="one">踩上弹射板，同色高抛、异色小跳；高度就是路线选择权。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>为上层路线换色，还是保留颜色只做一次小跳。</dd>
+            <dt>成功/失败</dt><dd>同色 vy=-780（高≈217px、平飞≈356px）；异色 vy=-420（高≈63px）。错误高度会错过落点或撞上层障碍。</dd>
+            <dt>关键数值</dt><dd>板宽 96px；每关 1–2 个；落点前后各留 ≥120px 安全区。</dd>
+            <dt>极性耦合</dt><dd>颜色直接决定弹射高度；上层路线放晶片/诱饵，形成「换色 = 选路」。</dd>
+            <dt>节奏搭配</dt><dd>L24 起；配断桥、浮台、危险分叉。</dd>
+          </dl>
+          <div class="files">Obstacle.ts · GameScene.ts · Player.ts(复用跳跃接口) · levels.ts</div>
+        </article>
+
+        <article class="mcard p" id="m4">
+          <div class="mhead"><span class="mnum">M04</span><h4>磁力涡旋</h4><span class="tag p2">P2</span><span class="tag info">M</span></div>
+          <p class="one">半空涡旋每 1.5 秒反转吸/斥：异极被吸上去，同极被压向地面。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>借吸力上浮吃高空奖励，还是贴地被斥开、安全通过。</dd>
+            <dt>成功/失败</dt><dd>吸力净上升约 180px；被推到激光/尖刺上则死亡。</dd>
+            <dt>关键数值</dt><dd>半径 250px、力 1700（重力 1400 → 净 +300）；反转周期 1.5s；每关 1 个。</dd>
+            <dt>极性耦合</dt><dd>与摆锤同族但相反：范围大、力小、方向定时翻转，逼迫「按节拍换色」。</dd>
+            <dt>节奏搭配</dt><dd>L27 起；配激光、磁芯雨。</dd>
+          </dl>
+          <div class="files">GameScene.ts(物理场) · Obstacle.ts(渲染) · levels.ts · selfcheck.ts</div>
+        </article>
+
+        <article class="mcard b" id="m5">
+          <div class="mhead"><span class="mnum">M05</span><h4>滑动相位墙</h4><span class="tag p1">P1</span><span class="tag info">M</span></div>
+          <p class="one">相位墙沿滑轨上下移动，同色仍可穿、异色即死——颜色对，还要位置对。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>等它滑到可穿窗口，还是换色抢一个更早的窗口。</dd>
+            <dt>成功/失败</dt><dd>安全穿过 +1 连击；异色接触 → 死亡、连击清零。</dd>
+            <dt>关键数值</dt><dd>幅度 100px、周期 3.0s、墙厚 32px；安全窗口 ≥0.55s。</dd>
+            <dt>极性耦合</dt><dd>复用静态相位墙的规则，只把位置变成时间函数 → 从「配色题」升级为「配色 + 计时」。</dd>
+            <dt>节奏搭配</dt><dd>L31 起；配摆锤、激光。</dd>
+          </dl>
+          <div class="files">Obstacle.ts(运动字段) · GameScene.ts(实时碰撞) · levels.ts</div>
+        </article>
+
+        <article class="mcard g" id="m6">
+          <div class="mhead"><span class="mnum">M06</span><h4>极性传送带</h4><span class="tag p1">P1</span><span class="tag info">M</span></div>
+          <p class="one">320px 的传送带，同色 +90px/s，异色 −90px/s——速度本身成为颜色选择。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>保速冲过去，还是换色为前方障碍让路、接受减速。</dd>
+            <dt>成功/失败</dt><dd>同色提速 28%；异色减速，可能让后续 300px 断桥跳不过去。</dd>
+            <dt>关键数值</dt><dd>±90px/s（基础 320 的 ±28%）；长度 320px；每关 ≤2；叠加顺序：倍率后再加减。</dd>
+            <dt>极性耦合</dt><dd>颜色 = 方向；与连击加速/加速带叠加但不叠乘，避免数值失控。</dd>
+            <dt>节奏搭配</dt><dd>L27 起；配断桥、弹射板。</dd>
+          </dl>
+          <div class="files">GameScene.ts(速度合成) · Obstacle.ts(渲染) · levels.ts</div>
+        </article>
+
+        <article class="mcard" id="m7">
+          <div class="mhead"><span class="mnum">M07</span><h4>磁芯诱饵</h4><span class="tag p0">P0</span><span class="tag info">S</span><span class="tag gold">风险回报</span></div>
+          <p class="one">悬在危险上方的磁芯：吃下 +1 磁芯币 +2 连击，代价是 1.2 秒不能换色。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>贪这一杖换收益，并接受接下来 1.2 秒失去「换色保险」。</dd>
+            <dt>成功/失败</dt><dd>成功 +1 币 +2 连击；失败＝锁色期间遇到异色墙，只能靠跳/滑，撞上即死、连击清零。</dd>
+            <dt>关键数值</dt><dd>悬浮高度：地面上方 70px（跳跃顶点可达）；锁色 1.2s；每关 1–2 枚；HUD 显示倒计时。</dd>
+            <dt>极性耦合</dt><dd>把「换色权」本身当作资源抵押，是极性系统最直接的冒险表达。</dd>
+            <dt>节奏搭配</dt><dd>L20 起；L34 起与磁极镜组合（镜面自动翻转，锁色期间也能变相换色）。</dd>
+          </dl>
+          <div class="files">Obstacle.ts(currency meta) · Player.ts(锁色) · GameScene.ts · HUD · levels.ts</div>
+        </article>
+
+        <article class="mcard p" id="m8">
+          <div class="mhead"><span class="mnum">M08</span><h4>危险分叉</h4><span class="tag p2">P2</span><span class="tag info">L</span><span class="tag gold">风险回报</span></div>
+          <p class="one">关卡 1/3 处上下两条路线：上层高风险高收益，下层安全低保。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>跳上上层赌 6 连击 + 2 磁芯，还是走下层稳稳通关。</dd>
+            <dt>成功/失败</dt><dd>上层：4 枚 bonus 晶片 + 2 磁芯 + 6 连击；失败坠落/撞墙 → 死亡，回到分叉前检查点，连击清零。</dd>
+            <dt>关键数值</dt><dd>上层 900px、平台高 190px（需弹射板/浮台）；下层 1 枚计入 ★2 的晶片；每章 1 关出现。</dd>
+            <dt>极性耦合</dt><dd>入口通常要求换色 + 借弹射板；bonus 晶片不计入 <code>allGems</code>，但计入连击与磁芯。</dd>
+            <dt>节奏搭配</dt><dd>L26 起每章 1 次；L36 一次；前后各留 600px 安全区。</dd>
+          </dl>
+          <div class="files">types/levels · GameScene(分支/回退) · Renderer · EditorScene · CustomLevels · selfcheck</div>
+        </article>
+
+        <article class="mcard k" id="m9">
+          <div class="mhead"><span class="mnum">M09</span><h4>磁极镜</h4><span class="tag p0">P0</span><span class="tag info">S</span></div>
+          <p class="one">穿过竖镜立即反转极性，260px 后就是「反转后颜色」才过的障碍。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>进镜前先切到反色（预判两次翻转），还是赌自己能反应过来。</dd>
+            <dt>成功/失败</dt><dd>通过 +1 连击；未预判 → 撞异色墙/尖刺死亡。</dd>
+            <dt>关键数值</dt><dd>反转即时 + 0.2s 无敌（沿用传送门容错）；反应窗 260px ≈ 0.81s；每关 1–2 面。</dd>
+            <dt>极性耦合</dt><dd>不是固定色而是「取反」，与极性区同族但更难；锁色期间遇到它会造成高级冲突。</dd>
+            <dt>节奏搭配</dt><dd>L34 起；配摆锤、滑动相位墙、诱饵。</dd>
+          </dl>
+          <div class="files">POLARITY_ZONE meta.invert · GameScene.ts · Obstacle.ts(图标) · levels.ts</div>
+        </article>
+
+        <article class="mcard m" id="m10">
+          <div class="mhead"><span class="mnum">M10</span><h4>断桥</h4><span class="tag p1">P1</span><span class="tag info">M</span></div>
+          <p class="one">地面缺口，掉下即死；上方可选晶片，宽度决定你是「跳」还是「借速度」。</p>
+          <dl class="fields">
+            <dt>玩家决策</dt><dd>直接跳、先踩传送带/加速带再冲，还是走上层。</dd>
+            <dt>成功/失败</dt><dd>180 / 240 档普通跳可过（跳距 238）；300 档需传送带 +90（410）或加速带 2×（640）；落坑死亡、连击清零。</dd>
+            <dt>关键数值</dt><dd>宽度 180 / 240 / 300px；边缘预警 140px；每关 1–2 个。</dd>
+            <dt>极性耦合</dt><dd>本身不涉及颜色，专门用来给「颜色决策」留呼吸，同时给传送带/弹射板创造用途。</dd>
+            <dt>节奏搭配</dt><dd>L22 起；配传送带、加速带、浮台。</dd>
+          </dl>
+          <div class="files">GameScene(地面碰撞/重生) · Obstacle.ts · levels.ts · Renderer</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== 05 ===================== -->
+    <section id="s5" class="card">
+      <h2><span class="num">05</span>组合范式：让两个机制产生第三种节奏</h2>
+      <p class="lede">组合不是把机制并排放，而是让它们的「节奏周期」错开或咬合，产生等待 → 爆发 → 释放的段落。</p>
+
+      <div class="combo">
+        <h4>范式 A · 雨锁门廊（M01 + M02 + M09）</h4>
+        <p class="why">先让玩家主动收集，再逼他承诺不换色，最后用镜面强制反转——同一次遭遇里完成「贪 → 忍 → 决断」。</p>
+        <div class="tl">
+          <div class="seg a" style="flex:22">接雨<br>0.6s / +3</div>
+          <div class="seg f" style="flex:50">极性锁：不许换色<br>2.0s / 出门 +3</div>
+          <div class="seg e" style="flex:18">镜面反转<br>0.2s</div>
+          <div class="seg b" style="flex:10">换色穿墙<br>0.2s</div>
+        </div>
+        <div class="tlcap"><span>0.0s</span><span>3.0s</span></div>
+        <p class="rhythm"><b>为什么不是堆砌：</b>三段强制使用不同的动作（收集 / 不动 / 换色），任何一段失败都不会立即死，但会损失可量化连击，形成「可恢复的紧张」。</p>
+      </div>
+
+      <div class="combo">
+        <h4>范式 B · 浮台–激光的站位钟摆（移动浮台 + 脉冲激光）</h4>
+        <p class="why">把浮台周期 3.2s 与激光周期 2.8s 错开 0.4s，安全窗口每两个周期才出现一次，迫使玩家「等一拍再动」。</p>
+        <div class="tl">
+          <div class="seg f" style="flex:35">浮台上升<br>等</div>
+          <div class="seg d" style="flex:22">激光预警<br>0.8s</div>
+          <div class="seg c" style="flex:35">安全窗 0.7s<br>跳 / 落台</div>
+          <div class="seg f" style="flex:8">离开</div>
+        </div>
+        <div class="tlcap"><span>0.0s</span><span>4.2s</span></div>
+        <p class="rhythm"><b>为什么不是堆砌：</b>两个机制不是相加而是相乘——浮台决定「高度」，激光决定「时间」，玩家要同时满足两者，成功后获得一次明确的呼吸（0.7s 空窗）。</p>
+      </div>
+
+      <div class="combo">
+        <h4>范式 C · 摆锤–滑墙双摆（摆锤 + 滑动相位墙）</h4>
+        <p class="why">摆锤用磁力把玩家推离/拉向墙面，滑动相位墙则把「可穿位置」也变成时间函数——两个周期叠加，形成只有 0.5s 的复合窗口。</p>
+        <div class="tl">
+          <div class="seg f" style="flex:40">被动位移<br>摆锤吸/斥 1.2s</div>
+          <div class="seg b" style="flex:25">预切换色<br>0.3s</div>
+          <div class="seg c" style="flex:25">滑墙窗口<br>0.55s</div>
+          <div class="seg f" style="flex:10">出</div>
+        </div>
+        <div class="tlcap"><span>0.0s</span><span>3.2s</span></div>
+        <p class="rhythm"><b>为什么不是堆砌：</b>摆锤让玩家「失去位置控制」，滑墙让玩家「失去时间控制」，两者叠加后，唯一的解法是提前换色——从被动反应变成主动预判。</p>
+      </div>
+
+      <div class="combo">
+        <h4>范式 D · 弹射–断桥–传送带（M03 + M10 + M06）</h4>
+        <p class="why">用颜色决定弹射高度、用传送带决定水平速度、用断桥宽度卡住「速度不够就过不去」，把颜色/速度/路线绑成一条因果链。</p>
+        <div class="tl">
+          <div class="seg b" style="flex:25">同色弹射<br>上抛</div>
+          <div class="seg d" style="flex:30">落带加速<br>+90px/s</div>
+          <div class="seg a" style="flex:30">300px 断桥<br>需 ≥400px/s</div>
+          <div class="seg c" style="flex:15">落地缓冲</div>
+        </div>
+        <div class="tlcap"><span>0.0s</span><span>3.0s</span></div>
+        <p class="rhythm"><b>为什么不是堆砌：</b>三个机制各自只改变一个变量（高度/速度/跨度），组合后变成一道「物理算术题」，失败原因清楚可见，不是随机死亡。</p>
+      </div>
+    </section>
+
+    <!-- ===================== 06 ===================== -->
+    <section id="s6" class="card">
+      <h2><span class="num">06</span>密度与节奏曲线：用「决策密度」替代「危险堆叠」</h2>
+      <p class="lede">现有曲线的问题是第 4 章最密、第 7 章最空，且第 7 章关卡更长。新方案把「危险密度」压平，把「决策密度」抬起来。</p>
+
+      <div class="chartbox">
+        <h4>各章危险密度：现状 vs 目标</h4>
+        <div class="cap">单位：危险点 / 1000px。目标带 2.2–2.6，峰值不超过 3.0；第 7 章从 1.33 提升到约 2.5。</div>
+        <div class="legend">
+          <span><i style="background:#ff8fa3"></i>现状</span>
+          <span><i style="background:#35b6ff"></i>目标危险密度</span>
+          <span><i style="background:rgba(63,208,201,.20);border:1px solid #3fd0c9"></i>目标带 2.2–2.6</span>
+        </div>
+        <svg viewBox="0 0 960 360" role="img" aria-label="各章危险密度现状与目标对比">
+          <!-- 网格 -->
+          <g stroke="#e6e0d2" stroke-width="1">
+            <line x1="70" y1="300" x2="900" y2="300"/>
+            <line x1="70" y1="246" x2="900" y2="246"/>
+            <line x1="70" y1="192" x2="900" y2="192"/>
+            <line x1="70" y1="138" x2="900" y2="138"/>
+            <line x1="70" y1="84" x2="900" y2="84"/>
+            <line x1="70" y1="330" x2="900" y2="330"/>
+          </g>
+          <g font-family="Consolas,monospace" font-size="11" fill="#8d87aa">
+            <text x="48" y="304">0.8</text>
+            <text x="48" y="250">1.4</text>
+            <text x="48" y="196">2.0</text>
+            <text x="48" y="142">2.6</text>
+            <text x="48" y="88">3.2</text>
+          </g>
+          <!-- 目标带 -->
+          <rect x="350" y="115" width="550" height="56" fill="rgba(63,208,201,.14)" stroke="#3fd0c9" stroke-dasharray="4 3" rx="4"/>
+          <text x="884" y="110" text-anchor="end" font-size="11" fill="#0a6c66" font-family="Consolas,monospace">目标带</text>
+          <!-- 现状折线 -->
+          <polyline points="90,178 220,198 350,237 480,128 610,246 740,230 870,251"
+            fill="none" stroke="#ff8fa3" stroke-width="3" stroke-linejoin="round"/>
+          <g fill="#ff4d6d">
+            <circle cx="90" cy="178" r="4.5"/><circle cx="220" cy="198" r="4.5"/><circle cx="350" cy="237" r="4.5"/>
+            <circle cx="480" cy="128" r="4.5"/><circle cx="610" cy="246" r="4.5"/><circle cx="740" cy="230" r="4.5"/>
+            <circle cx="870" cy="251" r="4.5"/>
+          </g>
+          <!-- 目标折线 -->
+          <polyline points="90,198 220,180 350,171 480,157 610,148 740,143 870,138"
+            fill="none" stroke="#35b6ff" stroke-width="3" stroke-dasharray="7 4" stroke-linejoin="round"/>
+          <g fill="#1189cc">
+            <circle cx="90" cy="198" r="4"/><circle cx="220" cy="180" r="4"/><circle cx="350" cy="171" r="4"/>
+            <circle cx="480" cy="157" r="4"/><circle cx="610" cy="148" r="4"/><circle cx="740" cy="143" r="4"/>
+            <circle cx="870" cy="138" r="4"/>
+          </g>
+          <!-- 标注 -->
+          <g font-family="Consolas,monospace" font-size="11" fill="#5c5480" text-anchor="middle">
+            <text x="90" y="344">ch1</text><text x="220" y="344">ch2</text><text x="350" y="344">ch3</text>
+            <text x="480" y="344">ch4</text><text x="610" y="344">ch5</text><text x="740" y="344">ch6</text>
+            <text x="870" y="344">ch7</text>
+          </g>
+          <g font-family="Consolas,monospace" font-size="10" fill="#c11f45">
+            <text x="480" y="118" text-anchor="middle">2.66 峰值</text>
+            <text x="870" y="270" text-anchor="middle">1.33 谷底</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="chartbox">
+        <h4>单关节奏：四段式结构</h4>
+        <div class="cap">每关按长度切分，保证「紧张–缓解」交替；终点前必须有 400px 不带危险的缓冲。</div>
+        <div class="beats">
+          <div class="beat b1">观察段 12%<br>≤1 个危险</div>
+          <div class="beat b2">主段 45%<br>2.2–2.6 / 1000px</div>
+          <div class="beat b3">高潮段 25%<br>≤4 个危险 · 不引入新机制</div>
+          <div class="beat b4">缓冲 18%<br>0 危险 · 只放晶片</div>
+        </div>
+        <ul class="rulist">
+          <li><b>最小间距：</b><code>max(240px, 0.62s × 当前速度)</code>。320px/s → 240px；640px/s → 397px。</li>
+          <li><b>同型连排上限：</b>同一种机制连续 ≤3 次，第 4 次必须换成「同机制 + 不同高度/颜色」的变体。</li>
+          <li><b>机制混排上限：</b>任意 400px 窗口内最多 2 种机制，避免读不过来。</li>
+          <li><b>检查点后：</b>保留 <code>600px</code> 安全走廊（沿用无尽模式的 <code>ENDLESS_ZONE_SAFE_CORRIDOR</code>）。</li>
+          <li><b>加速段：</b>速度 ≥1.6× 时，危险密度按速度反比下调，峰值不超过 2.8。</li>
+          <li><b>新机制登场：</b>首次出现只放 1 个，前后各 500px 不叠加其他新机制，并带一次教学提示。</li>
+        </ul>
+        <div class="formula">
+          有效密度 = 危险点/1000px；决策密度 = (需换色或选路的遭遇)/1000px。
+          目标：ch1–3 决策密度 0.4–0.6，ch4–6 0.8–1.1，ch7 1.2–1.4 —— 数量不必暴涨，决策必须变密。
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 07 ===================== -->
+    <section id="s7" class="card">
+      <h2><span class="num">07</span>31–36 关与无尽模式：具体怎么改</h2>
+
+      <h3>第 7 章逐关改造</h3>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th>关卡</th><th>现状</th><th>保留</th><th>新增 / 改造</th><th>目标密度</th><th>连击源修正</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>31 相位初现</b></td>
+              <td>6 面相位墙 + 6 晶片，D=1.4</td>
+              <td>相位墙教学</td>
+              <td>2 面改滑动相位墙、1 面磁极镜、2 枚磁芯诱饵</td>
+              <td class="num">2.2</td>
+              <td class="num">6 墙 + 6 晶片 = 12 → 目标 8，宽松</td>
+            </tr>
+            <tr>
+              <td><b>32 浮台回声</b></td>
+              <td>4 浮台 + 3 尖刺，D=0.7（最空）</td>
+              <td>浮台节奏</td>
+              <td>加 2 根横向激光（择位窗口）、180px 断桥、2 个弹射板</td>
+              <td class="num">2.0</td>
+              <td class="num">8 晶片 + 3 尖刺 = 11 → 目标 10，仍然紧；加 2 诱饵 → 15</td>
+            </tr>
+            <tr>
+              <td><b>33 红色节拍</b></td>
+              <td>6 激光 + 7 晶片，D=1.4；★3 不可达</td>
+              <td>激光节拍主题</td>
+              <td>加 2 面相位墙、2 面磁极镜、2 枚诱饵；激光改为「快慢交替」节拍</td>
+              <td class="num">2.3</td>
+              <td class="num">7 晶片 + 2 墙 + 2 镜 + 4 诱饵 = 15 → 目标 10，可达</td>
+            </tr>
+            <tr>
+              <td><b>34 交错的磁极</b></td>
+              <td>4 墙 + 3 摆锤 + 8 晶片，D=1.9</td>
+              <td>墙–摆锤组合</td>
+              <td>1 面墙改滑动墙、1 面磁极镜、2 枚诱饵</td>
+              <td class="num">2.4</td>
+              <td class="num">18 → 目标 14，留 4 余量</td>
+            </tr>
+            <tr>
+              <td><b>35 浮空追踪</b></td>
+              <td>2 门对 + 2 浮台 + 4 尖刺，D=0.7</td>
+              <td>传送–浮台路线</td>
+              <td>补 2 根激光、240px 断桥、1 条传送带、2 枚诱饵</td>
+              <td class="num">2.0</td>
+              <td class="num">8 晶片 + 4 尖刺 + 4 门 = 16 → 目标 16，加诱饵 → 20</td>
+            </tr>
+            <tr>
+              <td><b>36 边境风暴</b></td>
+              <td>12 危险 + 8 晶片，D=1.9；★3 不可达</td>
+              <td>全机制综合 + 2 检查点</td>
+              <td>1 次危险分叉（上层 4 bonus 晶片 + 2 磁芯 + 6 连击）、1 个涡旋、1 面滑动墙</td>
+              <td class="num">2.5</td>
+              <td class="num">17 + 6（分叉）= 23 → 目标 20，可达</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="mint">无尽模式：机制登场时间表与防过载</h3>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>生存时间</th><th>解锁机制</th><th>危险密度上限</th><th>固定组合包</th><th>风险物</th></tr></thead>
+          <tbody>
+            <tr><td class="num">0–60s</td><td>尖刺 / 灰墙 / 传送门</td><td class="num">1.8</td><td>2 门对 + 4 尖刺</td><td>—</td></tr>
+            <tr><td class="num">60–120s</td><td>+ 相位墙、磁芯诱饵</td><td class="num">2.0</td><td>雨锁门廊（简化版）</td><td>诱饵 1 / 900px</td></tr>
+            <tr><td class="num">120–180s</td><td>+ 滑动相位墙、磁芯雨</td><td class="num">2.2</td><td>范式 A 完整版</td><td>诱饵 1 / 900px</td></tr>
+            <tr><td class="num">180–240s</td><td>+ 断桥、传送带</td><td class="num">2.3</td><td>范式 D</td><td>危险分叉 1 / 4000px</td></tr>
+            <tr><td class="num">240s+</td><td>+ 涡旋、磁极镜</td><td class="num">2.5（随速度反比下调）</td><td>范式 B / C 轮换</td><td>分叉 + 诱饵</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="formula">
+        防「越后越密到不可玩」：<code>D_max(v) = clamp(2.6 / v, 1.4, 2.6)</code>，v 为当前速度倍率（无尽上限 2.0×）。
+        即速度翻倍时密度减半，保证遭遇间隔始终 ≥0.62s；每个高峰组合包之后强制 600px 安全走廊；风暴期间不再生成新机制，只保留原有障碍。
+      </div>
+    </section>
+
+    <!-- ===================== 08 ===================== -->
+    <section id="s8" class="card">
+      <h2><span class="num">08</span>落地优先级与实现代价</h2>
+      <p class="lede">先做「小成本、高频率、能直接补连击源」的机制，再用中成本机制改变单关节奏；分叉最后做。</p>
+
+      <div class="prio">
+        <div class="pcol">
+          <h4><span class="tag p0">P0</span>先做（1–2 周内可验证）</h4>
+          <ul>
+            <li><b>M02 极性锁</b>（S）——制造「不能换色」的承诺段</li>
+            <li><b>M09 磁极镜</b>（S）——最便宜的预判考验</li>
+            <li><b>M07 磁芯诱饵</b>（S）——第一个主动风险回报</li>
+            <li><b>M01 磁芯雨</b>（M）——运动体极性判定，视觉新意最大</li>
+            <li><b>★3 不可达修复</b>——6 关调整 <code>maxCombo</code> 或补连击源（见 §7）</li>
+          </ul>
+          <div class="note">验收：L31–36 重新可达 ★3；每关至少 1 次「不换色 / 换色」的可量化取舍。</div>
+        </div>
+        <div class="pcol p1">
+          <h4><span class="tag p1">P1</span>第二批（改变单关节奏）</h4>
+          <ul>
+            <li><b>M03 弹射板</b>（S–M）——高度 = 路线</li>
+            <li><b>M05 滑动相位墙</b>（M）——配色 + 计时</li>
+            <li><b>M10 断桥</b>（M）——速度系统有了用途</li>
+            <li><b>M06 传送带</b>（M）——颜色决定速度</li>
+            <li>落地四段式结构 + 最小间距规则</li>
+          </ul>
+          <div class="note">验收：第 7 章危险密度 ≥2.0；任意 400px 内不出现 3 种机制。</div>
+        </div>
+        <div class="pcol p2">
+          <h4><span class="tag p2">P2</span>最后做（结构性扩展）</h4>
+          <ul>
+            <li><b>M04 磁力涡旋</b>（M）——空间物理场</li>
+            <li><b>M08 危险分叉</b>（L）——分支路线 + 检查点回退 + 编辑器</li>
+            <li>无尽模式机制时间表全量接入</li>
+          </ul>
+          <div class="note">验收：分叉上层收益可量化（6 连击 + 2 磁芯）；失败只回退到分叉点，不整关重开。</div>
+        </div>
+      </div>
+
+      <h3 class="gold">实现代价与改动文件</h3>
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>机制</th><th>代价</th><th>主要文件</th><th>新增数据字段</th><th>主要风险</th></tr></thead>
+          <tbody>
+            <tr><td>M01 磁芯雨</td><td><span class="tag warn">中</span></td><td>Obstacle.ts · GameScene.ts · levels.ts · EditorScene.ts · selfcheck.ts</td><td>fallSpeed / count / interval</td><td>运动体碰撞判定与帧率稳定性</td></tr>
+            <tr><td>M02 极性锁</td><td><span class="tag ok">小</span></td><td>GameScene.ts · Obstacle.ts(meta) · levels.ts</td><td>lockDuration / lockId</td><td>与检查点/重生的状态清理</td></tr>
+            <tr><td>M03 弹射板</td><td><span class="tag ok">小–中</span></td><td>Obstacle.ts · GameScene.ts · Player.ts · levels.ts</td><td>launchSame / launchOpposite</td><td>与浮台/传送落点叠加</td></tr>
+            <tr><td>M04 涡旋</td><td><span class="tag warn">中</span></td><td>GameScene.ts(物理) · Obstacle.ts · levels.ts</td><td>radius / force / flipPeriod</td><td>与重力翻转、摆锤的受力叠加</td></tr>
+            <tr><td>M05 滑动相位墙</td><td><span class="tag warn">中</span></td><td>Obstacle.ts(更新/渲染) · GameScene.ts · levels.ts</td><td>range / period / phase</td><td>碰撞检测要取实时位置，不能缓存</td></tr>
+            <tr><td>M06 传送带</td><td><span class="tag warn">中</span></td><td>GameScene.ts(速度合成) · Obstacle.ts · levels.ts</td><td>boost / length</td><td>与 boost/连击速度的叠加顺序</td></tr>
+            <tr><td>M07 磁芯诱饵</td><td><span class="tag ok">小</span></td><td>Obstacle.ts · Player.ts · GameScene.ts · HUD · levels.ts</td><td>currency / lockSwitch</td><td>锁色期间的教学提示与 HUD 可读性</td></tr>
+            <tr><td>M08 危险分叉</td><td><span class="tag bad">大</span></td><td>LevelDef/levels · GameScene · Renderer · EditorScene · CustomLevels · selfcheck</td><td>branch / upperLane / checkpoint</td><td>摄像机双层、回退状态、编辑器 UI</td></tr>
+            <tr><td>M09 磁极镜</td><td><span class="tag ok">小</span></td><td>GameScene.ts · Obstacle.ts · levels.ts</td><td>invert: true</td><td>与传送门无敌帧复用，避免叠加</td></tr>
+            <tr><td>M10 断桥</td><td><span class="tag warn">中</span></td><td>GameScene.ts · Obstacle.ts · levels.ts · Renderer</td><td>pitWidth</td><td>地面渲染断口、重生点与联机同步</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== 09 ===================== -->
+    <section id="s9" class="card">
+      <h2><span class="num">09</span>需要用户拍板的 4 个决策</h2>
+      <div class="dec">
+        <div class="dcard">
+          <div class="qn">Q1</div>
+          <h4>6 关 ★3 不可达怎么修？</h4>
+          <p>是按新内容补连击源（更自然、但会继续提高连击通胀），还是直接下调 <code>maxCombo</code>（更快、但关卡目标会变低）？</p>
+          <div class="rec">建议：<b>先下调目标</b>（P0 立即修复），再用新机制逐步补源；两者不要同时做。</div>
+        </div>
+        <div class="dcard">
+          <div class="qn">Q2</div>
+          <h4>分叉上层的晶片计入 ★2 吗？</h4>
+          <p>计入 → ★2 也变成风险决策，会显著提高难度；不计入 → 上层只影响 ★3 与磁芯，★2 保持公平。</p>
+          <div class="rec">建议：<b>不计入 <code>allGems</code></b>，标记为 bonus；★2 仍是「稳拿」，★3 才是「敢赌」。</div>
+        </div>
+        <div class="dcard">
+          <div class="qn">Q3</div>
+          <h4>磁芯诱饵能否出现在普通关？</h4>
+          <p>出现 → 主线也能赚磁芯币，但会改变成长经济；只在无尽/每日出现 → 风险更可控，但主线缺少风险回报。</p>
+          <div class="rec">建议：<b>普通关允许</b>，每关上限 2 枚、每章 ≤6 枚；只影响 ★3 连击与磁芯，不碰 ★2。</div>
+        </div>
+        <div class="dcard">
+          <div class="qn">Q4</div>
+          <h4>第一批先做「新机制」还是「节奏重排」？</h4>
+          <p>新机制 → 新鲜感最快，但要新写碰撞/渲染；节奏重排 → 不动引擎，只改 31–36 的关卡数据与密度规则。</p>
+          <div class="rec">建议：<b>并行但分开验收</b>——先落 P0 的 4 个机制 + 6 关修复；节奏重排单独提交，便于回滚。</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      本轮仅产出设计，未改动任何游戏代码 · 文档可直接用于评审 · 数值口径来自 config.ts / RunRules.ts / levels.ts 当前实现
+    </div>
+  </main>
+</div>
+</body>
+</html>

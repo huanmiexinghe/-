@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 自适应图标背景层：与原插画的天空渐变一致（顶 #6FC4F2 → 底 #EAF9FF） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="#6FC4F2"
+        android:endColor="#EAF9FF"
+        android:type="linear" />
+</shape>

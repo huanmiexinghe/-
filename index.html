@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>磁极冲刺 Magnetic Rush</title>
+
+  <!-- PWA / 移动端 -->
+  <meta name="theme-color" content="#6fc4f2" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="磁极冲刺" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      /* 卡通主题：画面外侧的留白改用深海军蓝，与明亮的天空画面形成干净对比 */
+      background: #14283a;
+      overflow: hidden;
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      overscroll-behavior: none;
+    }
+    #app {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* 刘海屏安全区 */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right)
+               env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    canvas {
+      display: block;
+      background: #cdeeff;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 18px 60px rgba(0,0,0,0.6);
+      border-radius: 2px;
+    }
+
+    /* 窗口比例异常兜底提示：
+       正常竖持手机会由 Android manifest 的 sensorLandscape 自动转成横屏，
+       这里只在分屏 / 小窗 / 折叠屏展开等被系统强制压缩成竖长比例时出现，
+       避免画面被缩成小小一条。 */
+    #aspect-hint {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: #0a0a0f;
+      color: #fff;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      text-align: center;
+      padding: 32px;
+    }
+    #aspect-hint .phone {
+      width: 58px; height: 96px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 10px;
+      position: relative;
+      animation: rotatePhone 1.8s ease-in-out infinite;
+    }
+    #aspect-hint .phone::after {
+      content: '';
+      position: absolute; left: 50%; top: 7px;
+      width: 18px; height: 2px; margin-left: -9px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 2px;
+    }
+    #aspect-hint .t1 { font-size: 22px; font-weight: bold; }
+    #aspect-hint .t2 { font-size: 15px; color: #888899; line-height: 1.7; }
+    @keyframes rotatePhone {
+      0%, 20% { transform: rotate(0deg); }
+      60%, 100% { transform: rotate(-90deg); }
+    }
+    @media (pointer: coarse) and (max-aspect-ratio: 1/1) {
+      #aspect-hint { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <div id="aspect-hint">
+    <div class="phone"></div>
+    <div class="t1">窗口比例异常</div>
+    <div class="t2">当前窗口太窄，游戏画面会被缩得很小<br />请退出分屏 / 小窗，横屏全屏游玩</div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

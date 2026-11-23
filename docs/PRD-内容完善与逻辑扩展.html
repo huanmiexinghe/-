@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetic Rush 磁极冲刺 · 内容完善与逻辑扩展 PRD</title>
+<style>
+  :root{
+    --ink:#2b2350; --ink-2:#5c5480; --ink-3:#8d87aa;
+    --red:#ff4d6d; --red-soft:#ffe3e9;
+    --blue:#35b6ff; --blue-soft:#dff2ff;
+    --gold:#ffb703; --mint:#3fd0c9; --grape:#a97cff; --green:#3fc76a;
+    --bg:#f3f0e8; --paper:#fffdf8; --paper-2:#faf7ef;
+    --line:#ded8ca; --line-strong:#c9c1ae;
+    --shadow:0 10px 28px rgba(43,35,80,.10);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; color:var(--ink); background:
+      radial-gradient(900px 420px at 8% -8%, #ffe8ee 0%, rgba(255,232,238,0) 60%),
+      radial-gradient(800px 380px at 92% 0%, #e2f4ff 0%, rgba(226,244,255,0) 55%),
+      var(--bg);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+    line-height:1.72; font-size:15px;
+  }
+  a{color:#1967d2; text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{
+    font-family:Consolas,"SFMono-Regular",monospace; font-size:12.5px;
+    background:#f1ede2; border:1px solid #e3ddce; border-radius:5px;
+    padding:1px 5px; white-space:nowrap;
+  }
+  .wrap{display:flex; gap:28px; max-width:1420px; margin:0 auto; padding:28px 26px 80px}
+  /* ---------- 侧栏 ---------- */
+  .side{
+    width:238px; flex:0 0 238px; position:sticky; top:22px; align-self:flex-start;
+    max-height:calc(100vh - 44px); overflow:auto;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px 14px;
+  }
+  .side .brand{font-weight:800; letter-spacing:.5px; font-size:13px; color:var(--ink-2); margin:2px 0 12px}
+  .side a{
+    display:block; padding:7px 10px; border-radius:9px; color:var(--ink-2);
+    font-size:13px; line-height:1.35; border-left:3px solid transparent;
+  }
+  .side a:hover{background:var(--paper-2); text-decoration:none; color:var(--ink)}
+  .side a.sub{padding-left:20px; font-size:12.5px; color:var(--ink-3)}
+  .side a.on{background:#fff4f6; border-left-color:var(--red); color:var(--ink); font-weight:600}
+  .side .div{height:1px; background:var(--line); margin:10px 0}
+  main{flex:1; min-width:0; max-width:1080px}
+  /* ---------- 头部 ---------- */
+  .hero{
+    background:linear-gradient(160deg,#fffdf8 0%,#fff7f9 58%,#f2fbff 100%);
+    border:1px solid var(--line); border-radius:24px; box-shadow:var(--shadow);
+    padding:34px 36px 30px; position:relative; overflow:hidden;
+  }
+  .hero:before{
+    content:""; position:absolute; right:-70px; top:-90px; width:300px; height:300px;
+    border-radius:50%; background:radial-gradient(circle,#ffd9e2 0%,rgba(255,217,226,0) 70%);
+  }
+  .hero:after{
+    content:""; position:absolute; right:120px; bottom:-120px; width:260px; height:260px;
+    border-radius:50%; background:radial-gradient(circle,#d6f0ff 0%,rgba(214,240,255,0) 70%);
+  }
+  .kicker{font-size:12px; font-weight:800; letter-spacing:2.5px; color:var(--red)}
+  h1{font-size:34px; line-height:1.28; margin:10px 0 8px; letter-spacing:.5px}
+  .subtitle{color:var(--ink-2); font-size:15px; max-width:760px}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; position:relative; z-index:2}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px;
+    font-size:12px; font-weight:700; border:1px solid var(--line-strong); background:#fff; color:var(--ink-2);
+  }
+  .chip.red{background:var(--red-soft); border-color:#ffc2cf; color:#b72345}
+  .chip.blue{background:var(--blue-soft); border-color:#b9e5ff; color:#0c6fa8}
+  .chip.gold{background:#fff3d6; border-color:#ffd98a; color:#9a6200}
+  .dot{width:7px; height:7px; border-radius:50%; background:currentColor; display:inline-block}
+  /* ---------- 卡片 ---------- */
+  section{scroll-margin-top:18px; margin-top:26px}
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:26px 30px;
+  }
+  h2{font-size:24px; margin:0 0 14px; letter-spacing:.3px; display:flex; align-items:center; gap:10px}
+  h2 .num{
+    font-size:12px; font-weight:800; color:#fff; background:var(--ink);
+    border-radius:8px; padding:3px 8px; letter-spacing:1px;
+  }
+  h3{font-size:18px; margin:26px 0 10px; padding-left:12px; border-left:4px solid var(--red); line-height:1.4}
+  h3.blue{border-left-color:var(--blue)}
+  h3.gold{border-left-color:var(--gold)}
+  h3.green{border-left-color:var(--green)}
+  h3.purple{border-left-color:var(--grape)}
+  h4{font-size:15px; margin:18px 0 8px; color:var(--ink-2)}
+  p{margin:8px 0}
+  .lead{font-size:16px; color:var(--ink-2)}
+  .muted{color:var(--ink-3)}
+  .small{font-size:13px}
+  /* ---------- 表格 ---------- */
+  .t-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; margin:12px 0 6px}
+  table{border-collapse:collapse; width:100%; font-size:13.5px; background:#fff}
+  th,td{padding:9px 11px; border-bottom:1px solid #eee8db; text-align:left; vertical-align:top}
+  th{background:#f7f3e8; font-size:12.5px; color:var(--ink-2); letter-spacing:.3px; white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fffcf4}
+  td.nowrap,th.nowrap{white-space:nowrap}
+  .num-cell{font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap}
+  /* ---------- 徽标 ---------- */
+  .tag{
+    display:inline-block; font-size:11px; font-weight:800; padding:2px 7px;
+    border-radius:6px; letter-spacing:.5px; white-space:nowrap; vertical-align:1px;
+  }
+  .p0{background:#ffe1e7; color:#b72345}
+  .p1{background:#fff0cf; color:#8a5a00}
+  .p2{background:#e3f3ff; color:#0c6fa8}
+  .s{background:#e6f7ec; color:#1d7c42}
+  .m{background:#fff0cf; color:#8a5a00}
+  .l{background:#ffe1e7; color:#b72345}
+  .impl{background:#efeafc; color:#5d3fb3}
+  .done{background:#e6f7ec; color:#1d7c42}
+  .gap{background:#f0ece2; color:#6f6796}
+  /* ---------- 提示块 ---------- */
+  .note{
+    border:1px solid #f0d9a8; background:#fff9e8; border-radius:12px;
+    padding:12px 16px; margin:14px 0; font-size:13.5px;
+  }
+  .note.red{border-color:#ffc7d2; background:#fff4f6}
+  .note.blue{border-color:#bfe6ff; background:#f2fbff}
+  .note.green{border-color:#bfe9cd; background:#f3fcf6}
+  .note b{color:var(--ink)}
+  ul,ol{margin:8px 0 8px 20px; padding:0}
+  li{margin:4px 0}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .mini{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+  }
+  .mini .k{font-size:11px; color:var(--ink-3); font-weight:800; letter-spacing:1px}
+  .mini .v{font-size:20px; font-weight:800; margin-top:3px}
+  .mini .d{font-size:12.5px; color:var(--ink-2); margin-top:4px}
+  /* ---------- 决策卡 ---------- */
+  .decision{
+    display:grid; grid-template-columns:40px 1fr; gap:14px;
+    border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:#fff;
+    margin:12px 0;
+  }
+  .decision .n{
+    width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    background:var(--ink); color:#fff; font-weight:800; font-size:15px;
+  }
+  .decision h4{margin:0 0 5px; font-size:15px; color:var(--ink)}
+  .decision p{margin:2px 0; font-size:13.5px; color:var(--ink-2)}
+  /* ---------- 星级组件 ---------- */
+  .stars{display:inline-flex; gap:3px; vertical-align:middle}
+  .star{width:17px; height:17px; display:inline-block; position:relative}
+  .star svg{width:100%; height:100%}
+  .star.off svg{opacity:.28}
+  /* ---------- 演示 ---------- */
+  .demo{
+    border:1px solid var(--line-strong); border-radius:14px; background:
+      linear-gradient(180deg,#fffdf8,#fbf7ec); padding:18px 20px; margin:14px 0;
+  }
+  .demo-title{font-size:13px; font-weight:800; letter-spacing:1px; color:var(--ink-2); margin-bottom:12px}
+  .demo-row{display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:8px 0}
+  .demo-row label{font-size:13px; color:var(--ink-2); min-width:118px}
+  .demo input[type=range]{width:190px; accent-color:var(--red)}
+  .demo input[type=checkbox]{width:17px;height:17px;accent-color:var(--red)}
+  .demo .val{font-family:Consolas,monospace; font-size:13px; background:#fff; border:1px solid var(--line); border-radius:6px; padding:1px 7px; min-width:44px; text-align:center}
+  .demo .result{
+    margin-top:14px; padding:12px 16px; border-radius:12px; background:#fff;
+    border:1px dashed var(--line-strong); font-size:13.5px;
+  }
+  .demo .bigstars{font-size:30px; letter-spacing:6px; color:var(--gold); line-height:1.2}
+  .btns{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  .btn{
+    border:1px solid var(--line-strong); background:#fff; border-radius:9px;
+    padding:6px 11px; font-size:12.5px; font-weight:700; color:var(--ink-2); cursor:pointer;
+  }
+  .btn:hover{background:#fff5f7; border-color:#ffc2cf}
+  .btn.primary{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .meter{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px}
+  .meter .box{background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px}
+  .meter .lab{font-size:11px; font-weight:800; color:var(--ink-3); letter-spacing:1px}
+  .meter .count{font-size:24px; font-weight:800}
+  /* ---------- 线框 ---------- */
+  .wire{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px;
+  }
+  .wire .cap{font-size:11px; color:var(--ink-3); font-weight:800; letter-spacing:1px; margin-bottom:10px}
+  .cellmock{
+    width:160px; border:1px solid #d8d1c2; border-radius:12px; background:#fff; padding:10px 12px;
+    box-shadow:0 3px 0 rgba(43,35,80,.08);
+  }
+  .cellmock .top{display:flex; justify-content:space-between; align-items:center}
+  .cellmock .no{font-weight:800; font-size:14px}
+  .cellmock .nm{font-size:11px; color:var(--ink-3); margin:4px 0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .rescard{
+    width:290px; border:1px solid #d8d1c2; border-radius:16px; background:#fff; padding:16px;
+    box-shadow:0 4px 0 rgba(43,35,80,.08);
+  }
+  .rescard .ttl{font-size:12px; letter-spacing:1px; color:var(--ink-3); font-weight:800}
+  .rescard .big{font-size:28px; font-weight:800; margin:2px 0 8px}
+  .rowline{display:flex; justify-content:space-between; font-size:12.5px; color:var(--ink-2); padding:4px 0; border-bottom:1px dashed #eee8db}
+  /* ---------- 流程图 ---------- */
+  .svgbox{background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; overflow-x:auto}
+  .svgbox svg{display:block; min-width:760px}
+  /* ---------- 末尾 ---------- */
+  .foot{margin-top:28px; color:var(--ink-3); font-size:12px; text-align:center}
+  .anchor-link{color:var(--ink-3); font-size:11px; margin-left:8px; font-weight:400}
+  @media (max-width:1080px){
+    .wrap{padding:18px 14px 60px}
+    .side{display:none}
+    main{max-width:none}
+    .grid2,.grid3{grid-template-columns:1fr}
+    .hero{padding:26px 20px}
+    h1{font-size:27px}
+    .card{padding:20px 18px}
+  }
+  @media print{
+    .side{display:none} body{background:#fff} .card,.hero{box-shadow:none}
+    section{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<aside class="side">
+  <div class="brand">MAGNETIC RUSH · PRD v0.1</div>
+  <a href="#summary">0 · 评审摘要与决策</a>
+  <a href="#baseline">1 · 现状基线</a>
+  <a href="#baseline-play" class="sub">1.1 核心玩法与循环</a>
+  <a href="#baseline-modes" class="sub">1.2 模式与内容</a>
+  <a href="#baseline-gaps" class="sub">1.3 已识别的逻辑缺口</a>
+  <a href="#scope">2 · 范围与优先级</a>
+  <a href="#model">3 · 产品模型与共享规则</a>
+  <a href="#model-state" class="sub">3.1 状态流转</a>
+  <a href="#model-star" class="sub">3.2 星级与连击口径</a>
+  <a href="#model-save" class="sub">3.3 存档与解锁</a>
+  <a href="#fr">4 · 功能需求</a>
+  <a href="#fr01" class="sub">FR-01 星级目标体系</a>
+  <a href="#fr02" class="sub">FR-02 连击系统重构</a>
+  <a href="#fr03" class="sub">FR-03 终点门槛与漏片补救</a>
+  <a href="#fr04" class="sub">FR-04 移动端跳关与失败降级</a>
+  <a href="#fr05" class="sub">FR-05 关卡内容扩充</a>
+  <a href="#fr06" class="sub">FR-06 三种新障碍机制</a>
+  <a href="#fr07" class="sub">FR-07 无尽模式 2.0</a>
+  <a href="#fr08" class="sub">FR-08 每日挑战</a>
+  <a href="#fr09" class="sub">FR-09 磁芯与外观成长线</a>
+  <a href="#fr10" class="sub">FR-10 联机模式扩展</a>
+  <a href="#fr11" class="sub">FR-11 自定义关卡编辑器扩展</a>
+  <a href="#fr12" class="sub">FR-12 设置与可达性</a>
+  <a href="#fr13" class="sub">FR-13 成就与统计适配</a>
+  <a href="#deps">5 · 依赖与改动范围总表</a>
+  <a href="#miniapp">6 · 小程序端可行性</a>
+  <a href="#questions">7 · 待确认问题</a>
+  <a href="#appendix">8 · 代码证据索引</a>
+</aside>
+
+<main>
+
+<!-- ================= 0 摘要 ================= -->
+<section id="summary">
+  <div class="hero">
+    <div class="kicker">PRODUCT REQUIREMENTS DOCUMENT</div>
+    <h1>Magnetic Rush 磁极冲刺<br>内容完善与逻辑扩展</h1>
+    <p class="subtitle">在现有「自动奔跑 + 红蓝极性切换」框架上补齐重复游玩目标、修正可被利用的连击规则、扩展关卡与模式内容。设计只做增量，不推翻现有手感与渲染结构。</p>
+    <div class="meta">
+      <span class="chip"><span class="dot"></span>版本 v0.1 · 设计评审稿</span>
+      <span class="chip">2026-11-04</span>
+      <span class="chip red">客户端玩法逻辑</span>
+      <span class="chip blue">联机轻量扩展</span>
+      <span class="chip gold">待确认 5 项决策</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:22px">
+    <h2><span class="num">00</span>评审摘要</h2>
+    <p class="lead">现有游戏已经是一个可完整游玩的成品：30 个常规关、3 个特殊关、1 个彩蛋关、无尽模式、4 人联机竞速、自定义关卡编辑器、14 类关卡元素、10 个成就。真正缺的不是“能不能玩”，而是<strong>“为什么再玩一遍”</strong>与<strong>“失败后能否继续”</strong>。</p>
+    <p>本设计把问题收敛为三条主线：</p>
+    <ol>
+      <li><b>目标线：</b>把每关变成“★1 通关 / ★2 全晶片 / ★3 连击目标”，让已经存在于 <code>LevelDef.maxCombo</code> 但从未被读取的字段真正发挥作用。</li>
+      <li><b>公平线：</b>修掉“狂按切换就能刷连击”的规则漏洞；把“漏 1 个晶片就整关重开”的硬门槛改成星级目标；让触屏玩家也能在连续失败后跳关。</li>
+      <li><b>内容线：</b>新增第 7–8 章共 12 关、3 种新障碍（移动浮台 / 相位墙 / 脉冲激光）、无尽 2.0 分区与磁暴事件、每日挑战、纯外观成长线。</li>
+    </ol>
+
+    <div class="note red">
+      <b>本次只交付设计，不改游戏代码。</b>所有数值均为首发默认值，标注 <code>[TBD]</code> 的项需要在实现后联调校准。文档中的“新增”均已与现有代码逐条比对，已实现内容只作为基线陈述，不重复立项。
+    </div>
+
+    <h3>需要用户确认的 5 个核心决策</h3>
+
+    <div class="decision">
+      <div class="n">1</div>
+      <div>
+        <h4>连击是否改为“有效事件计数”，删除“切换即 +1”</h4>
+        <p><b>推荐：改。</b>现在 <code>Player.switchPolarity()</code> 每切换一次就 <code>combo++</code>，配合 0.18s 冷却，约 9 秒即可刷到 50 连击并触发最高速度加成与成就。改后只有“安全通过危险 / 收集 / 穿门 / 过区”才计数。<b>影响：</b>手感不变，但星级目标、成就、无尽纪录的含金量全部改变。</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="n">2</div>
+      <div>
+        <h4>终点“必须集齐全部晶片”是否改为星级条件</h4>
+        <p><b>推荐：改。</b>现在漏收晶片会在终点触发 <code>die()</code>，普通关没有检查点，等于整关重开；而晶片大量放在可选高台，容错极低。改为“终点永远可通，缺片只影响 ★2”，把惩罚从“重开”降为“少一颗星”。<b>影响：</b>关卡难度曲线整体下降，需同步调整 ★3 连击目标。</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="n">3</div>
+      <div>
+        <h4>本期内容规模：只做 P0 闭环，还是一次做到第 8 章</h4>
+        <p><b>推荐：分两步。</b>第一步 P0 + P1（星级/连击/补救/跳关 + 第 7 章 31–36 + 3 新机制 + 无尽 2.0 + 每日挑战）；第二步再评估第 8 章 37–42、外观、联机扩展。<b>影响：</b>直接决定本次实现批次与验收范围。</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="n">4</div>
+      <div>
+        <h4>成长线是否允许永久数值升级</h4>
+        <p><b>推荐：不允许，只做外观。</b>永久加速/额外生命/自动收集会直接破坏竞速、每日挑战与无尽纪录的可比性，也会让 ★3 目标失去意义。磁芯只兑换皮肤花纹、尾迹、HUD 框与称号，<b>极性红/蓝本身不可改色</b>。<b>影响：</b>决定经济系统是否需要与数值系统隔离。</p>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="n">5</div>
+      <div>
+        <h4>联机投入深度：轻量增强，还是做淘汰赛 + 服务端校验</h4>
+        <p><b>推荐：先做轻量增强</b>（重连、重赛、快捷短语、基础成绩校验），淘汰赛放 P2。当前服务端只是转发 15Hz 状态，玩家端权威；做完整服务端权威模拟成本远高于玩法收益。<b>影响：</b>决定是否改 <code>relay-server.mjs</code> 的房间协议。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1 基线 ================= -->
+<section id="baseline">
+  <div class="card">
+    <h2><span class="num">01</span>现状基线</h2>
+    <p class="lead">以下事实均来自当前代码，不包含推测。行号以当前工作区为准。</p>
+
+    <h3 id="baseline-play">1.1 核心玩法与循环</h3>
+    <p><b>一句话定义：</b>玩家控制一个自动向右奔跑的磁极球，在红/蓝两种极性之间切换，用“同色安全、异色致命”的规则穿过障碍，并依靠跳跃与滑行通过空间障碍，最终抵达终点。</p>
+
+    <div class="grid3" style="margin-top:14px">
+      <div class="mini">
+        <div class="k">基础速度 / 跳跃</div>
+        <div class="v">320 <span class="small">px/s</span></div>
+        <div class="d">跳速 -520、重力 1400、滑行 0.6s</div>
+      </div>
+      <div class="mini">
+        <div class="k">极性切换</div>
+        <div class="v">0.18 <span class="small">s 冷却</span></div>
+        <div class="d">切换后 0.1s 容错无敌；灰墙无视无敌</div>
+      </div>
+      <div class="mini">
+        <div class="k">画布 / 地面</div>
+        <div class="v">960×540</div>
+        <div class="d">地面 440、天花板 100、角色 40px</div>
+      </div>
+    </div>
+
+    <h4>一次标准关卡循环</h4>
+    <div class="svgbox" style="margin-top:10px">
+      <svg viewBox="0 0 980 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="核心玩法循环">
+        <defs>
+          <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 z" fill="#5c5480"></path>
+          </marker>
+        </defs>
+        <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12.5" fill="#2b2350">
+          <rect x="18" y="88" width="132" height="58" rx="12" fill="#ffe3e9" stroke="#ffb6c5"></rect>
+          <text x="84" y="112" text-anchor="middle" font-weight="700">自动奔跑</text>
+          <text x="84" y="131" text-anchor="middle" font-size="11" fill="#8d87aa">读障碍 · 看颜色</text>
+
+          <rect x="196" y="46" width="132" height="58" rx="12" fill="#dff2ff" stroke="#a9e1ff"></rect>
+          <text x="262" y="70" text-anchor="middle" font-weight="700">切换极性</text>
+          <text x="262" y="89" text-anchor="middle" font-size="11" fill="#8d87aa">空格 / 双指</text>
+
+          <rect x="196" y="132" width="132" height="58" rx="12" fill="#fff3d6" stroke="#ffd98a"></rect>
+          <text x="262" y="156" text-anchor="middle" font-weight="700">跳跃 / 滑行</text>
+          <text x="262" y="175" text-anchor="middle" font-size="11" fill="#8d87aa">上滑 / 下滑</text>
+
+          <rect x="374" y="88" width="142" height="58" rx="12" fill="#f0ecfa" stroke="#d4c6f5"></rect>
+          <text x="445" y="112" text-anchor="middle" font-weight="700">通过判定</text>
+          <text x="445" y="131" text-anchor="middle" font-size="11" fill="#8d87aa">同色安全 / 异色死亡</text>
+
+          <rect x="562" y="88" width="132" height="58" rx="12" fill="#e6f7ec" stroke="#bfe9cd"></rect>
+          <text x="628" y="112" text-anchor="middle" font-weight="700">连击 / 收集</text>
+          <text x="628" y="131" text-anchor="middle" font-size="11" fill="#8d87aa">速度加成 · 晶片</text>
+
+          <rect x="740" y="46" width="132" height="58" rx="12" fill="#fff9e8" stroke="#f0d9a8"></rect>
+          <text x="806" y="70" text-anchor="middle" font-weight="700">终点结算</text>
+          <text x="806" y="89" text-anchor="middle" font-size="11" fill="#8d87aa">时间 / 连击 / 解锁</text>
+
+          <rect x="740" y="132" width="132" height="58" rx="12" fill="#ffe3e9" stroke="#ffb6c5"></rect>
+          <text x="806" y="156" text-anchor="middle" font-weight="700">死亡重试</text>
+          <text x="806" y="175" text-anchor="middle" font-size="11" fill="#8d87aa">0.5s 复活 / 连击清零</text>
+
+          <line x1="150" y1="117" x2="188" y2="90" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="150" y1="117" x2="188" y2="150" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="328" y1="75" x2="366" y2="105" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="328" y1="161" x2="366" y2="130" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="516" y1="117" x2="554" y2="117" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="694" y1="108" x2="732" y2="82" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="694" y1="126" x2="732" y2="155" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar)"></line>
+          <line x1="806" y1="190" x2="84" y2="190" stroke="#ff4d6d" stroke-width="1.4" stroke-dasharray="6 5" marker-end="url(#ar)"></line>
+          <text x="430" y="211" text-anchor="middle" font-size="11.5" fill="#b72345">失败：时间继续累计、连击清零、障碍重置（教程关回到检查点）</text>
+          <text x="806" y="25" text-anchor="middle" font-size="11.5" fill="#8d87aa">成功：写纪录 · 解锁下一关 · 每 5 关 +1 次跳关</text>
+        </g>
+      </svg>
+    </div>
+
+    <h4>已实现的玩法元素（14 类）</h4>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>元素</th><th>规则</th><th>关键参数</th><th>代码位置</th></tr></thead>
+        <tbody>
+          <tr><td>红 / 蓝尖刺</td><td>同色安全触发，异色致命；切换后 0.1s 无敌可豁免</td><td>32×32</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts">Obstacle.ts</a></td></tr>
+          <tr><td>灰墙 WALL</td><td>恒致命，容错无敌无效</td><td>64×112</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L696-L710">GameScene.ts:696</a></td></tr>
+          <tr><td>传送门 A / B</td><td>同色且 <code>portalId</code> 相同配对；地面↔天花板自动翻重力；一次性</td><td>52×78</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L719-L746">GameScene.ts:719</a></td></tr>
+          <tr><td>强制极性区</td><td>进入后极性被强制为区色</td><td>120×150</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L747-L777">GameScene.ts:747</a></td></tr>
+          <tr><td>重力翻转区</td><td>进入后重力方向翻转</td><td>120×150</td><td>同上</td></tr>
+          <tr><td>加速带</td><td>×2 速度，持续 3s</td><td>80×36 / 3s</td><td>同上</td></tr>
+          <tr><td>摆锤</td><td>磁力按极性吸/斥施加纵向力；摆球碰撞致命</td><td>默认绳长 180、摆幅 0.6 rad、磁力半径 185、峰值力 2400</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L128-L141">Obstacle.ts:128</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L611-L624">GameScene.ts:611</a></td></tr>
+          <tr><td>晶片</td><td>收集计数；当前终点要求全收集</td><td>38×38</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L778-L817">GameScene.ts:778</a></td></tr>
+          <tr><td>星核</td><td>特殊关收集目标；3 枚解锁彩蛋关</td><td>—</td><td><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L759-L854">levels.ts:759</a></td></tr>
+          <tr><td>星门</td><td>进入特殊关，保存快照，通关后返回原关继续</td><td>—</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L818-L851">GameScene.ts:818</a></td></tr>
+          <tr><td>单向平台</td><td>仅从上方支撑；可站立</td><td>120×18 / 160×18</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L186-L199">Player.ts:186</a></td></tr>
+          <tr><td>终点</td><td>当前：未集齐晶片则 <code>die()</code>；集齐才 <code>win()</code></td><td>56×140</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L852-L869">GameScene.ts:852</a></td></tr>
+          <tr><td>提示牌</td><td>教程关地面提示文本</td><td>—</td><td><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts">levels.ts</a></td></tr>
+          <tr><td>检查点</td><td>教程关专属，死亡回到最近检查点；障碍不重置</td><td>—</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L261-L289">GameScene.ts:261</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="baseline-modes" class="blue">1.2 模式与内容结构</h3>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>模式</th><th>入口</th><th>内容来源</th><th>结束条件</th><th>写入记录</th></tr></thead>
+        <tbody>
+          <tr><td><b>NORMAL</b></td><td>主菜单 → 选关</td><td>30 个手工关（6 章 × 5 关）+ 教程关 0</td><td>到达终点 / 无限重试</td><td>最佳时间、最佳连击、通关、跳过</td></tr>
+          <tr><td><b>ENDLESS</b></td><td>主菜单</td><td><code>EndlessGenerator</code> 程序生成</td><td>死亡即结束</td><td>最长时间、距离、总连击</td></tr>
+          <tr><td><b>CUSTOM</b></td><td>主菜单 → 编辑器</td><td>代码分享的自定义关（id 9000）</td><td>到达终点 / 无限重试</td><td>不写存档</td></tr>
+          <tr><td><b>SPECIAL</b></td><td>关卡内星门</td><td>101 / 102 / 103 特殊关 + 彩蛋 200</td><td>通关 / 死亡重试</td><td>星核、特殊关通关、彩蛋</td></tr>
+          <tr><td><b>ONLINE</b></td><td>主菜单 → 联机大厅</td><td>内置关卡或自定义关；最多 4 人</td><td>抵达终点；死亡后回起点重跑</td><td>不写本地纪录；服务端仅转发</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="small muted">内容总量：常规 30 关 + 特殊 3 关 + 彩蛋 1 关 + 教程 1 关；关卡元素 14 类；成就 10 个；无尽难度每 45s 提升 10%，上限 1.8 倍。</p>
+
+    <h3 id="baseline-gaps" class="green">1.3 已识别的逻辑缺口</h3>
+    <p>这些不是“缺少新功能”的主观愿望，而是现有规则互相作用后产生的结果，均有代码证据。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th style="width:20%">缺口</th><th style="width:42%">现状表现</th><th style="width:38%">证据与后果</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>连击可刷</b></td>
+            <td>每次切换极性 <code>combo++</code>，冷却仅 0.18s；越过任意尖刺/墙也 +1（包括靠无敌帧硬穿异色尖刺）</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L86-L95">Player.ts:86–95</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L679-L687">GameScene.ts:679–687</a>；连击 50 → 彩虹特效与最高速度加成，可从“操作技巧”变成“按键频率”</td>
+          </tr>
+          <tr>
+            <td><b>目标字段闲置</b></td>
+            <td><code>LevelDef.maxCombo</code> 每关都有值（4–22），但游戏逻辑从未读取，只在结算页显示“本局最高连击”</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L21-L38">levels.ts:21–38</a>；重玩目标缺失，通关后没有“下一颗星”可追</td>
+          </tr>
+          <tr>
+            <td><b>漏片即重开</b></td>
+            <td>终点判定要求 <code>collected === totalGems</code>，否则 <code>die()</code>；普通关无检查点，死亡回起点且时间不清零</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L852-L866">GameScene.ts:852–866</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L261-L289">GameScene.ts:261–289</a>；一次漏收 = 整关重开，容错远低于其他障碍</td>
+          </tr>
+          <tr>
+            <td><b>触屏无法跳关</b></td>
+            <td>连续死亡 3 次后的跳关提示只响应键盘 <code>KeyK</code>；触屏没有对应入口</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L544-L552">GameScene.ts:544–552</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1206-L1211">GameScene.ts:1206–1211</a>；移动端玩家可能被单关永久卡住</td>
+          </tr>
+          <tr>
+            <td><b>内容硬编码 30 关</b></td>
+            <td>成就 <code>PERFECTIONIST</code> 要求 1–30 全通；联机大厅只把 id ≤ 30 的关卡列入内置房</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/systems/AchievementSystem.ts#L99-L108">AchievementSystem.ts:99–108</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts#L102">OnlineLobbyScene.ts:102</a>；新增关卡后成就不更新、联机选不到新关</td>
+          </tr>
+          <tr>
+            <td><b>无尽模式变化有限</b></td>
+            <td>生成器只调“间距”和“难度权重”；无分区、无拾取物、无事件；速度每 45s +10%</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/systems/EndlessGenerator.ts">EndlessGenerator.ts</a>；长局体验趋同，缺少节奏起伏</td>
+          </tr>
+          <tr>
+            <td><b>设置项只存不用</b></td>
+            <td><code>SaveData.muted</code> 已存在但无任何读取；无音量、震动、色弱辅助；<code>Audio.setVolume()</code> 已有但未被 UI 调用</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L17">SaveSystem.ts:17</a>、<a href="file:///D:/magnetic-rush-mobile/src/core/Audio.ts#L42">Audio.ts:42</a></td>
+          </tr>
+          <tr>
+            <td><b>危险操作无确认</b></td>
+            <td>主菜单第 6 项“重置存档”单击即清空全部进度</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L129-L131">MenuScene.ts:129–131</a>；误触不可逆</td>
+          </tr>
+          <tr>
+            <td><b>编辑器能力受限</b></td>
+            <td>工具栏没有平台工具；摆锤/加速带/区域参数不可编辑；无通关性检查</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/scenes/EditorScene.ts#L29-L45">EditorScene.ts:29–45</a>、<a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L21-L25">CustomLevels.ts:21–25</a></td>
+          </tr>
+          <tr>
+            <td><b>类型定义残影</td>
+            <td><code>ObstacleType</code> 声明了 <code>BLUE_LASER</code>、<code>SPLIT_PATH</code>，但实际 <code>ObstacleKind</code> 与渲染、碰撞均不支持</td>
+            <td><a href="file:///D:/magnetic-rush-mobile/src/data/config.ts#L85-L90">config.ts:85–90</a>、<a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L9-L16">Obstacle.ts:9–16</a>；容易误用，本次正好用 <code>PULSE_LASER</code> 落地“激光”语义</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 2 范围 ================= -->
+<section id="scope">
+  <div class="card">
+    <h2><span class="num">02</span>范围与优先级</h2>
+    <p class="lead">按“能否形成完整玩家旅程”分层，而不是按功能多少分层。P0 必须单独成立：玩家即使不做后续内容，也能感到“有目标、能重玩、不会被卡死”。</p>
+
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>层级</th><th>功能</th><th>为什么在这一层</th><th>依赖</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tag p0">P0</span></td>
+            <td>FR-01 星级目标体系<br>FR-02 连击系统重构<br>FR-03 终点门槛与漏片补救<br>FR-04 移动端跳关<br>FR-13 成就/统计适配（第一阶段）<br>FR-12 设置基础：静音、音量、重置确认</td>
+            <td>不增加任何新关卡元素，只改规则与 UI。完成后“每一关都有明确的三步目标”，且触屏可自救。</td>
+            <td>无新内容依赖；先于一切新关卡上线，否则新关的星级口径会反复改。</td>
+          </tr>
+          <tr>
+            <td><span class="tag p1">P1</span></td>
+            <td>FR-05 第 7 章 31–36 关<br>FR-06 移动浮台 / 相位墙 / 脉冲激光<br>FR-07 无尽模式 2.0<br>FR-08 每日挑战<br>FR-11 编辑器基础扩展（平台 + 参数面板）</td>
+            <td>提供“下一批可玩内容”与长线入口。新机制只增加空间与时间维度，不改变极性核心规则。</td>
+            <td>依赖 FR-01/02 的星级与连击口径；FR-06 依赖障碍渲染与碰撞扩展点。</td>
+          </tr>
+          <tr>
+            <td><span class="tag p2">P2</span></td>
+            <td>FR-05 第 8 章 37–42 关<br>FR-09 磁芯与外观成长线<br>FR-10 联机淘汰赛 / 重连 / 校验<br>FR-12 色弱辅助与动效开关<br>FR-11 编辑器通关性检查</td>
+            <td>长线留存与社区深度。可独立于 P0/P1 延后，不影响核心闭环。</td>
+            <td>依赖 P1 的内容量与数据字段；联机依赖服务端协议改造。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>明确不做（本期范围外）</h3>
+    <ul>
+      <li><b>不做</b>内购、广告、抽卡、体力；磁芯只能由游玩获得。</li>
+      <li><b>不做</b>永久数值成长（移速、额外生命、自动收集、复活次数），避免破坏竞速与星级。</li>
+      <li><b>不做</b>服务端权威物理模拟；联机保持“客户端权威 + 轻量校验”的休闲定位。</li>
+      <li><b>不做</b>小程序重写；仅在第 6 节给出可行性评估。</li>
+      <li><b>不做</b>渲染层重构（Canvas 2D 与现有卡通主题保持不变）。</li>
+    </ul>
+
+    <div class="note green">
+      <b>设计原则：</b>新机制必须与“红蓝极性”正交——要么改变<strong>空间</strong>（平台、墙体），要么改变<strong>时间</strong>（激光节拍）。不要新增第三种颜色或第三套状态，否则会稀释“同色安全”的核心记忆点。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3 模型 ================= -->
+<section id="model">
+  <div class="card">
+    <h2><span class="num">03</span>产品模型与共享规则</h2>
+
+    <h3 id="model-state">3.1 状态流转</h3>
+    <p>现有 <code>GameScene</code> 已有完整的 <code>PLAYING / DYING / WINNING / PAUSED</code> 状态。本次只增加“结算前的目标判定”，不新增运行态。</p>
+    <div class="svgbox">
+      <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="游戏状态机">
+        <defs>
+          <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 z" fill="#5c5480"></path>
+          </marker>
+        </defs>
+        <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="12.5" fill="#2b2350">
+          <rect x="30" y="60" width="140" height="62" rx="12" fill="#dff2ff" stroke="#a9e1ff"></rect>
+          <text x="100" y="84" text-anchor="middle" font-weight="700">COUNTDOWN</text>
+          <text x="100" y="103" text-anchor="middle" font-size="11" fill="#8d87aa">仅联机：3s</text>
+
+          <rect x="250" y="60" width="150" height="62" rx="12" fill="#e6f7ec" stroke="#bfe9cd"></rect>
+          <text x="325" y="84" text-anchor="middle" font-weight="700">PLAYING</text>
+          <text x="325" y="103" text-anchor="middle" font-size="11" fill="#8d87aa">奔跑 / 判定 / 收集</text>
+
+          <rect x="250" y="190" width="150" height="62" rx="12" fill="#ffe3e9" stroke="#ffb6c5"></rect>
+          <text x="325" y="214" text-anchor="middle" font-weight="700">DYING</text>
+          <text x="325" y="233" text-anchor="middle" font-size="11" fill="#8d87aa">0.5s 停顿 → 复活</text>
+
+          <rect x="500" y="60" width="150" height="62" rx="12" fill="#fff3d6" stroke="#ffd98a"></rect>
+          <text x="575" y="84" text-anchor="middle" font-weight="700">WINNING</text>
+          <text x="575" y="103" text-anchor="middle" font-size="11" fill="#8d87aa">目标判定 → 结算</text>
+
+          <rect x="500" y="190" width="150" height="62" rx="12" fill="#f0ecfa" stroke="#d4c6f5"></rect>
+          <text x="575" y="214" text-anchor="middle" font-weight="700">PAUSED</text>
+          <text x="575" y="233" text-anchor="middle" font-size="11" fill="#8d87aa">继续 / 重开 / 跳过 / 设置</text>
+
+          <rect x="760" y="60" width="180" height="62" rx="12" fill="#fff9e8" stroke="#f0d9a8"></rect>
+          <text x="850" y="84" text-anchor="middle" font-weight="700">RESULT</text>
+          <text x="850" y="103" text-anchor="middle" font-size="11" fill="#8d87aa">星星 / 奖励 / 下一关</text>
+
+          <rect x="760" y="190" width="180" height="62" rx="12" fill="#f7f3e8" stroke="#ded8ca"></rect>
+          <text x="850" y="214" text-anchor="middle" font-weight="700">ENDLESS_END</text>
+          <text x="850" y="233" text-anchor="middle" font-size="11" fill="#8d87aa">距离 / 磁芯 / 纪录</text>
+
+          <line x1="170" y1="91" x2="242" y2="91" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar2)"></line>
+          <line x1="325" y1="122" x2="325" y2="182" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar2)"></line>
+          <text x="336" y="158" font-size="11" fill="#b72345">碰撞致命</text>
+          <line x1="325" y1="182" x2="325" y2="130" stroke="#ff4d6d" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#ar2)"></line>
+          <text x="336" y="176" font-size="10.5" fill="#b72345" opacity="0">复活</text>
+          <line x1="400" y1="91" x2="492" y2="91" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar2)"></line>
+          <text x="446" y="82" text-anchor="middle" font-size="11" fill="#8d87aa">到达终点</text>
+          <line x1="575" y1="122" x2="575" y2="182" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar2)"></line>
+          <text x="586" y="158" font-size="11" fill="#8d87aa">ESC / 暂停</text>
+          <line x1="650" y1="103" x2="752" y2="88" stroke="#5c5480" stroke-width="1.6" marker-end="url(#ar2)"></line>
+          <line x1="650" y1="221" x2="752" y2="221" stroke="#5c5480" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar2)"></line>
+          <text x="700" y="240" text-anchor="middle" font-size="11" fill="#8d87aa">无尽：死亡直接结算</text>
+          <text x="850" y="282" text-anchor="middle" font-size="11" fill="#8d87aa">星级判定只在 WINNING 内发生，不改动运行态</text>
+        </g>
+      </svg>
+    </div>
+
+    <h3 id="model-star" class="blue">3.2 星级与连击的唯一口径</h3>
+    <p>以下两条公式是全文档的唯一来源，所有界面、成就、奖励都复用它们，避免同一关出现两套判定。</p>
+
+    <div class="note blue">
+      <b>星级公式（每局独立计算）：</b><br>
+      <code>stars = clear ? (1 + allGems + comboGoal) : 0</code><br>
+      其中 <code>allGems = (totalGems === 0 || collectedGems === totalGems)</code>，<code>comboGoal = (targetCombo === 0 || runMaxCombo &gt;= targetCombo)</code>；<code>targetCombo</code> 取该关 <code>LevelDef.maxCombo</code>。存档只保留历史最高的 <code>stars</code>，永不下降。
+    </div>
+
+    <div class="note">
+      <b>连击来源（新版）：</b>只有“有效通过”才 +1。切换极性本身不再加分。<br>
+      <span class="tag s">+1</span> 安全通过同色尖刺（触发安全粒子，未靠无敌帧）　
+      <span class="tag s">+1</span> 跳过灰墙　
+      <span class="tag s">+1</span> 摆球从身后越过且未死亡　
+      <span class="tag s">+1</span> 收集晶片 / 磁芯　
+      <span class="tag s">+2</span> 首次穿过一对传送门　
+      <span class="tag s">+1</span> 强制极性区退出且未死亡<br>
+      死亡清零；关卡内不衰减；里程碑 5/10/20/30/50 与速度加成 20/30/50 保持不变。
+    </div>
+
+    <div class="demo" id="star-demo">
+      <div class="demo-title">交互试算 · 星级判定</div>
+      <div class="demo-row">
+        <label>到达终点</label>
+        <input type="checkbox" id="d-clear" checked>
+        <span class="val" id="v-clear">是</span>
+      </div>
+      <div class="demo-row">
+        <label>晶片收集</label>
+        <input type="range" id="d-gems" min="0" max="8" value="6">
+        <span class="val" id="v-gems">6 / 8</span>
+        <label style="min-width:auto"><input type="checkbox" id="d-nogem" style="margin-left:6px"> 本关无晶片</label>
+      </div>
+      <div class="demo-row">
+        <label>本局最高连击</label>
+        <input type="range" id="d-combo" min="0" max="30" value="10">
+        <span class="val" id="v-combo">10</span>
+        <label style="min-width:auto">目标 <span class="val" id="v-target">15</span></label>
+      </div>
+      <div class="result">
+        <div class="bigstars" id="d-stars">★★☆</div>
+        <div id="d-explain" style="margin-top:6px"></div>
+      </div>
+    </div>
+
+    <div class="demo" id="combo-demo">
+      <div class="demo-title">交互试算 · 连击来源（旧规则 vs 新规则）</div>
+      <p class="small muted" style="margin-top:-4px">点击事件按钮，观察两种口径下的连击变化。旧规则中反复点“切换极性”即可无限上涨。</p>
+      <div class="btns">
+        <button class="btn primary" data-act="switch">切换极性</button>
+        <button class="btn" data-act="safe">安全通过同色尖刺</button>
+        <button class="btn" data-act="wall">跳过灰墙</button>
+        <button class="btn" data-act="gem">收集晶片</button>
+        <button class="btn" data-act="portal">首次穿传送门</button>
+        <button class="btn" data-act="death" style="border-color:#ffc2cf;color:#b72345">死亡（清零）</button>
+        <button class="btn" data-act="reset">重置</button>
+      </div>
+      <div class="meter">
+        <div class="box"><div class="lab">旧规则连击</div><div class="count" id="old-combo">0</div><div class="small muted">切换 +1 · 任意越障 +1</div></div>
+        <div class="box"><div class="lab">新规则连击</div><div class="count" id="new-combo">0</div><div class="small muted">仅有效通过 / 收集</div></div>
+      </div>
+      <div class="small muted" id="combo-log" style="margin-top:8px;min-height:18px">等待事件…</div>
+    </div>
+
+    <h3 id="model-save" class="gold">3.3 存档、奖励与解锁</h3>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>规则</th><th>口径</th><th>为什么这样定</th></tr></thead>
+        <tbody>
+          <tr><td>关卡解锁</td><td>完成上一关（★1 或跳过）即解锁下一关；跳过不产生星</td><td>沿用现有 <code>isUnlocked</code> 逻辑，不新增门槛，避免玩家因星数被卡住</td></tr>
+          <tr><td>星级写入</td><td>只增不减；跳过关首次重打可正常得星</td><td>现有 <code>recordCompletion</code> 在跳过关重打时会清除跳过标记</td></tr>
+          <tr><td>磁芯发放</td><td>某关首次达到 ★1 / ★2 / ★3 时各发 1 枚；重复通关不再发</td><td>用“首次达到”而不是“每次通关”，避免刷低难度关</td></tr>
+          <tr><td>每日奖励</td><td>每日首次完成挑战发 3 枚；当天后续只更新最好成绩</td><td>鼓励每天来一次，不强迫多次</td></tr>
+          <tr><td>存档版本</td><td>新增 <code>version: 2</code>；旧档迁移时仅把“已通关”折算为 ★1，不补发 ★2/★3 与磁芯</td><td>不追溯奖励，避免老玩家一上线获得大量货币；旧 <code>maxComboEver</code> 保留展示，但因旧连击可刷，不作为任何新判定依据</td></tr>
+          <tr><td>失败定义</td><td>任一非豁免碰撞；终点漏片不再算失败（改为少星）</td><td>把“惩罚”和“目标”分开，失败只保留真正的操作失败</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note red">
+      <b>存档迁移必须做幂等：</b>迁移只执行一次；若写入失败不得清空旧档。当前存档键为 <code>magnetic_rush_save_v1</code>，新档建议保留同键并升级字段（或新键 + 旧键只读回退），实现前需确认。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4 功能需求 ================= -->
+<section id="fr">
+  <div class="card">
+    <h2><span class="num">04</span>功能需求</h2>
+    <p class="lead">每个需求按“触发 → 规则 → 结果/状态 → 边界 → 依赖”描述。改动范围使用 <span class="tag s">小</span> / <span class="tag m">中</span> / <span class="tag l">大</span> 标注。</p>
+
+    <!-- FR-01 -->
+    <h3 id="fr01">FR-01 星级目标体系 <span class="tag p0">P0</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>让每一关在通关后仍有“下一颗星”可追，并把晶片从“通关门槛”变成“可选挑战”。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>触发</th><th>规则</th><th>结果与状态变化</th></tr></thead>
+        <tbody>
+          <tr><td>玩家抵达终点</td><td>按 3.2 公式计算本局星数：★1 通关；★2 全晶片；★3 连击 ≥ 该关 <code>maxCombo</code></td><td><code>LevelRecord</code> 增加 <code>stars</code>（0–3）、<code>bestCombo</code>、<code>zeroDeath</code>；只写更高值；磁芯按首次达到的星级发放</td></tr>
+          <tr><td>打开选关</td><td>每个关卡格显示 3 颗小星；未通关显示锁；已跳过显示“跳过”标记而非星</td><td>选关网格布局不变，仅在关卡格底部增加一行星标</td></tr>
+          <tr><td>打开结算</td><td>三颗星依次点亮；未获得的星显示具体差额（晶片 4/6、连击 12/15）</td><td>结算页增加“目标复盘”区；不改变现有最佳时间/最高连击展示</td></tr>
+          <tr><td>重玩已通关节</td><td>本局星数高于历史才覆盖；低于历史不降级</td><td>允许玩家反复刷 ★3，不损失已有成绩</td></tr>
+          <tr><td>关卡无晶片 / <code>maxCombo = 0</code></td><td>对应条件视为自动满足</td><td>自定义关与特殊测试关不会因缺字段而永远拿不到三星</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>界面示意</h4>
+    <div class="grid2">
+      <div class="wire">
+        <div class="cap">选关格 · 新增底部星标</div>
+        <div class="cellmock">
+          <div class="top"><span class="no">07</span><span class="small muted">最佳 00:31</span></div>
+          <div class="nm">摆锤回廊</div>
+          <div class="stars">
+            <span class="star"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8 5.7 21l1.2-6.9-5-4.9 7-1z" fill="#ffb703"/></svg></span>
+            <span class="star"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8 5.7 21l1.2-6.9-5-4.9 7-1z" fill="#ffb703"/></svg></span>
+            <span class="star off"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8 5.7 21l1.2-6.9-5-4.9 7-1z" fill="#ffb703"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="wire">
+        <div class="cap">结算卡 · 目标复盘</div>
+        <div class="rescard">
+          <div class="ttl">LEVEL 07 · 摆锤回廊</div>
+          <div class="big">通关！</div>
+          <div class="stars" style="margin-bottom:8px">
+            <span class="star"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8 5.7 21l1.2-6.9-5-4.9 7-1z" fill="#ffb703"/></svg></span>
+            <span class="star"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8 5.7 21l1.2-6.9-5-4.9 7-1z" fill="#ffb703"/></svg></span>
+            <span class="star off"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8 5.7 21l1.2-6.9-5-4.9 7-1z" fill="#ffb703"/></svg></span>
+          </div>
+          <div class="rowline"><span>晶片</span><span>6 / 6 · ★2 达成</span></div>
+          <div class="rowline"><span>最高连击</span><span>12 / 15 · 还差 3</span></div>
+          <div class="rowline"><span>用时</span><span>00:31.4</span></div>
+          <div class="rowline" style="border-bottom:none"><span>下次目标</span><span>连击 15 拿 ★3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>★3 目标需要重算：</b>现有 <code>maxCombo</code> 是在“切换也 +1”的旧规则下设定的。改规则后必须按新连击源重新校准，建议公式：<br>
+      <code>targetCombo = round(0.75 × (安全尖刺数 + 可跳灰墙数 + 摆锤数 + 晶片数 + 2 × 传送门对数 + 强制区数))</code>，再与旧值取较大者，最后逐关试玩微调 <code>[TBD]</code>。
+    </div>
+
+    <h4>依赖与改动范围</h4>
+    <ul>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L5-L25">SaveSystem.ts:5–25</a>：<code>LevelRecord</code> 增加 <code>stars / bestCombo / zeroDeath</code>，新增 <code>version</code>。 <span class="tag m">中</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L329-L420">GameScene.ts:329–420</a> <code>win()</code>：结算前计算星级并写入；继续保留原有时间/连击记录。 <span class="tag s">小</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/scenes/ResultScene.ts#L126-L204">ResultScene.ts:126–204</a>：星星与目标复盘。 <span class="tag m">中</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/scenes/LevelSelectScene.ts#L198-L269">LevelSelectScene.ts:198–269</a>：关卡格星标。 <span class="tag m">中</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L21-L38">levels.ts:21–38</a>：字段语义从“展示用”变为“目标用”，不改结构。 <span class="tag s">小</span></li>
+    </ul>
+
+    <!-- FR-02 -->
+    <h3 id="fr02" class="blue">FR-02 连击系统重构 <span class="tag p0">P0</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>让连击只奖励“真的穿过了危险”，而不是“按键够快”。这同时是 ★3 目标成立的前提。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>事件</th><th>旧规则</th><th>新规则</th><th>判定条件</th></tr></thead>
+        <tbody>
+          <tr><td>切换极性</td><td>+1</td><td><b>0</b></td><td>仍然保留 0.18s 冷却与 0.1s 容错无敌，仅不加分</td></tr>
+          <tr><td>通过同色尖刺</td><td>通过即 +1</td><td>+1</td><td>该尖刺已置 <code>triggered = true</code>，且玩家未处于无敌帧；靠无敌硬穿异色尖刺不给分</td></tr>
+          <tr><td>跳过灰墙</td><td>通过即 +1</td><td>+1</td><td>墙体右缘越过玩家且本帧未死亡；贴地撞墙不触发</td></tr>
+          <tr><td>摆锤越过</td><td>+1</td><td>+1</td><td>摆球中心越过玩家 x 且玩家存活；仅在摆锤“通过”标记首次写入时计一次</td></tr>
+          <tr><td>收集晶片 / 磁芯</td><td>0</td><td>+1</td><td>每个物件只计一次；磁芯仅在无尽出现</td></tr>
+          <tr><td>首次穿传送门</td><td>0</td><td>+2</td><td>该 <code>portalId</code> 首次被使用；重复进入不再计分</td></tr>
+          <tr><td>强制极性区</td><td>0</td><td>+1</td><td>退出区域边界时仍在世；被强制后撞死不计</td></tr>
+          <tr><td>死亡</td><td>清零</td><td>清零</td><td>沿用 <code>Player.reset()</code>；复活后从 0 开始</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note red">
+      <b>实现要点：</b>当前 <code>GameScene</code> 用一个 <code>passedObstacles</code> 集合对尖刺/墙/摆锤做“首次越过”拦截，直接复用它作为加分幂等键即可，不需要新集合。移除 <a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L86-L95">Player.ts:86–95</a> 中的 <code>combo++</code> 后，所有既有里程碑、速度加成、彩虹特效都会自动只对有效连击生效。
+    </div>
+
+    <h4>边界</h4>
+    <ul>
+      <li>连击达到 50 后的彩虹态保持到死亡，不因切换而中断（与现有一致）。</li>
+      <li>加速带、星门不额外给连击，避免“奖励再奖励”。</li>
+      <li>旧存档的 <code>maxComboEver</code> 可能因刷切换而偏高：保留展示，但结算页不据此发任何奖励；成就 <code>COMBO_KING</code> 若已解锁不回退。</li>
+      <li>联机模式同样使用新口径；服务端只转发客户端上报的连击，不做校验（休闲定位）。</li>
+    </ul>
+
+    <h4>依赖与改动范围</h4>
+    <ul>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L86-L95">Player.ts:86–95</a>：删除切换加分。 <span class="tag s">小</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L660-L869">GameScene.ts:660–869</a> <code>checkObstacles</code>：按事件源加分；尖刺需判 <code>triggered</code>。 <span class="tag m">中</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L871-L885">GameScene.ts:871–885</a>：里程碑/速度加成逻辑不变，仅输入变干净。 <span class="tag s">小</span></li>
+      <li><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1082-L1222">GameScene.ts:1082–1222</a>：HUD 连击显示不变，可增加“目标连击”小字。 <span class="tag s">小</span></li>
+    </ul>
+
+    <!-- FR-03 -->
+    <h3 id="fr03" class="gold">FR-03 终点门槛与漏片补救 <span class="tag p0">P0</span> <span class="tag s">小</span></h3>
+    <p><b>目标：</b>把“漏收晶片”的惩罚从“整关重开”降为“少一颗星”，让终点成为稳定的正向反馈。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>场景</th><th>旧行为</th><th>新行为</th></tr></thead>
+        <tbody>
+          <tr><td>到达终点且晶片齐全</td><td><code>win()</code></td><td><code>win()</code>，结算 ★2 达成</td></tr>
+          <tr><td>到达终点但缺晶片</td><td><code>die()</code> + 提示“还需收集 X 个”</td><td><code>win()</code>；结算显示“缺 X 个，未获得 ★2”，★1 照常获得</td></tr>
+          <tr><td>距终点 900px 且缺晶片</td><td>无提前提示</td><td>显示一次性横幅“还有 X 个晶片 · 本次最高 ★1”，不阻挡操作</td></tr>
+          <tr><td>教程关</td><td>提示“集齐全部晶片终点开启”</td><td>文案改为“晶片决定 ★2；先跑到终点也可以通关”</td></tr>
+          <tr><td>特殊关 / 彩蛋关</td><td>同普通关硬门槛</td><td>同样改为星级口径；星核仍是独立收集目标，不影响通关</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>边界：</b>若本关 <code>totalGems = 0</code>，终点不会出现“缺片”横幅，★2 自动达成。终点判定不检查连击，不检查星核，不检查是否跳过。<b>失败条件仍是碰撞</b>，终点本身不再是失败点。</p>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L852-L866">GameScene.ts:852–866</a> 的 <code>FINISH</code> 分支、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1198-L1203">GameScene.ts:1198–1203</a> 的终点锁定横幅、<a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L210-L240">levels.ts</a> 教程文案。</p>
+
+    <!-- FR-04 -->
+    <h3 id="fr04" class="green">FR-04 移动端跳关与失败降级 <span class="tag p0">P0</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>触屏玩家在连续失败后能自救，不被单关永久卡住；同时避免误触跳过。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>触发</th><th>规则</th><th>结果</th></tr></thead>
+        <tbody>
+          <tr><td>同一关连续死亡 ≥ 3 次，且 <code>skipCharges &gt; 0</code>，模式为 NORMAL</td><td>暂停菜单出现第 4 项“跳过本关（剩余 N 次）”；HUD 底部出现跳关胶囊</td><td>两种入口都可打开，不自动跳关</td></tr>
+          <tr><td>首次点击跳关入口</td><td>进入 3 秒确认态，按钮文案变为“再次点击确认”</td><td>3 秒内无第二次点击则取消，避免误触</td></tr>
+          <tr><td>确认跳过</td><td>消耗 1 次跳关；记录该关为跳过；解锁下一关；本关 0 星</td><td>不写入通关时间/连击；之后可重打拿星</td></tr>
+          <tr><td>跳关次数为 0</td><td>入口不显示；连续死亡提示改为“重试或返回选关”</td><td>不提供无限降级</td></tr>
+          <tr><td>键盘 K</td><td>保留快捷方式，但同样走确认态</td><td>与触屏行为一致</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>边界：</b>ENDLESS / ONLINE / CUSTOM / SPECIAL 不显示跳关。暂停菜单项数由 3 变为 3 或 4，现有 <a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1082-L1124">GameScene.ts:1082–1124</a> 的菜单命中框是按固定索引写的，需要改为按动态列表渲染与命中。</p>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L544-L552">GameScene.ts:544–552</a>（KeyK）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1206-L1211">GameScene.ts:1206–1211</a>（提示）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L230-L259">GameScene.ts:230–259</a>（<code>handleTap</code> 命中）、<a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L77-L116">SaveSystem.ts:77–116</a>（跳关次数与解锁）。</p>
+
+    <!-- FR-05 -->
+    <h3 id="fr05">FR-05 关卡内容扩充：第 7–8 章 <span class="tag p1">P1</span><span class="tag p2">P2</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>在不改变极性与操作的前提下，用 12 个新关把三种新机制教会并组合起来，形成“第 7 章教学、第 8 章综合”的坡度。</p>
+    <p><b>结构：</b>延续现有“6 章 × 5 关”的编号习惯，第 7 章 = 31–36，第 8 章 = 37–42。每关只引入一个“新变量”，下一关再叠加；同一关内最多同时出现两种新机制。</p>
+
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>关卡</th><th>名称</th><th>主机制</th><th>长度</th><th>目标 ★3 连击</th><th>设计意图</th></tr></thead>
+        <tbody>
+          <tr><td>31</td><td>相位初现</td><td>相位墙（新）</td><td class="num-cell">4200</td><td class="num-cell">8</td><td>用短间隔墙教“同色穿、异色死”，不叠加摆锤</td></tr>
+          <tr><td>32</td><td>浮台回声</td><td>移动浮台（新）</td><td class="num-cell">4600</td><td class="num-cell">10</td><td>垂直浮台 + 晶片，要求观察周期而不是盲跳</td></tr>
+          <tr><td>33</td><td>红色节拍</td><td>脉冲激光（新）</td><td class="num-cell">4400</td><td class="num-cell">10</td><td>先全为“关-开-关”的垂直光柱，建立节奏记忆</td></tr>
+          <tr><td>34</td><td>交错的磁极</td><td>相位墙 + 摆锤</td><td class="num-cell">5200</td><td class="num-cell">14</td><td>极性判断与磁力推拉同时出现，但墙前留 320px 观察区</td></tr>
+          <tr><td>35</td><td>浮空追踪</td><td>移动浮台 + 传送门</td><td class="num-cell">5600</td><td class="num-cell">16</td><td>平台作为传送出口落脚点，考空间预判</td></tr>
+          <tr><td>36</td><td>边境风暴</td><td>三机制综合</td><td class="num-cell">6400</td><td class="num-cell">20</td><td>本章收束，含 2 个检查点</td></tr>
+          <tr><td>37</td><td>极夜序曲</td><td>激光群 + 重力翻转</td><td class="num-cell">6000</td><td class="num-cell">18</td><td>同一周期内的多束光柱，考“等待窗口”</td></tr>
+          <tr><td>38</td><td>相位迷宫</td><td>相位墙 + 强制区</td><td class="num-cell">6600</td><td class="num-cell">20</td><td>强制区会改色，墙的判断不能只靠“当前颜色”</td></tr>
+          <tr><td>39</td><td>移动迷宫</td><td>浮台 + 平台跳跃</td><td class="num-cell">6800</td><td class="num-cell">20</td><td>连续三块错相位浮台，禁止同相位排列</td></tr>
+          <tr><td>40</td><td>双摆风暴</td><td>双摆锤 + 激光</td><td class="num-cell">7000</td><td class="num-cell">22</td><td>磁力轨迹叠加，需提前一次切换</td></tr>
+          <tr><td>41</td><td>三重奏</td><td>三机制综合</td><td class="num-cell">7600</td><td class="num-cell">24</td><td>三种机制每 800px 轮换一次，形成节奏段落</td></tr>
+          <tr><td>42</td><td>磁极核心</td><td>综合终章</td><td class="num-cell">8600</td><td class="num-cell">28</td><td>最长关，含 3 个检查点与一次“磁暴”视觉高潮</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>通用关卡约束（新增关卡必须满足）</h4>
+    <ul>
+      <li><b>反应距离：</b>任何“需要切换极性”的障碍前，同色安全提示至少提前 320px；新机制首次出现提前 520px。</li>
+      <li><b>墙体间距：</b>连续灰墙/相位墙的最小边缘间距 370px（沿用现有生成器安全值），保证单跳可过。</li>
+      <li><b>检查点：</b>长度 ≥ 6000px 的新关在 1/3、2/3 处设置检查点；检查点前后 300px 内不得有障碍，死亡回到检查点时保留已收集晶片（沿用教程关逻辑）。</li>
+      <li><b>晶片：</b>每关 4–8 枚；至少 2 枚在主路径上，其余可作为 ★2 的可选挑战；不得放在实体障碍内部或必须靠无敌帧才能到达的位置。</li>
+      <li><b>字符串与教程：</b>每关开头有一句提示牌文案，触屏与键盘提示分流；第 7 章新机制各配 1 条。</li>
+    </ul>
+
+    <div class="note">
+      <b>编号兼容：</b><a href="file:///D:/magnetic-rush-mobile/src/systems/AchievementSystem.ts#L99-L108">AchievementSystem.ts:99–108</a> 与 <a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts#L102">OnlineLobbyScene.ts:102</a> 都硬编码了 30。新增关卡前必须先改为读取 <code>LEVELS.length</code>，否则成就不更新、联机选不到 31–42。
+    </div>
+
+    <div class="note">
+      <b>编号与章节冲突：</b>现有特殊关 101–103 的 <code>chapter</code> 也是 7，彩蛋关 200 是 8。新增常规第 7/8 章会与它们的内部章节号重叠。由于选关只遍历 <code>LEVELS</code>、特殊关不进入章节 UI，实现时应把特殊关的 <code>chapter</code> 改为 0 或独立区间（如 90+），避免后续做章节标题时出现“第 7 章有两套内容”。<br>
+      <b>时间目标：</b>每关仍需填写 <code>parTime</code>（保持“完美主义者”成就与结算目标时间）。新关首发值建议 <code>parTime = length / 320 × 1.15</code>，再按试玩调整；<code>parTime</code> 不参与星级，只作为“极速”徽章与成就条件。
+    </div>
+
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L744-L751">levels.ts:744–751</a>（<code>LEVELS</code> 数组与章节）、<a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L21-L38">LevelDef</a>（<code>checkpoints / parTime / maxCombo</code> 已有，无需加字段）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/LevelSelectScene.ts">LevelSelectScene.ts</a>（网格自动适配）。</p>
+
+    <!-- FR-06 -->
+    <h3 id="fr06" class="blue">FR-06 三种新障碍机制 <span class="tag p1">P1</span> <span class="tag l">大</span></h3>
+    <p><b>目标：</b>增加“空间移动”和“时间节拍”两个维度，但不新增颜色、不新增操作。三种机制都可以用现有 <code>Obstacle</code> 结构 + <code>meta</code> 参数实现。</p>
+
+    <h4>A. 移动浮台 <code>MOVING_PLATFORM</code></h4>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>字段</th><th>规则</th><th>默认值 / 范围</th></tr></thead>
+        <tbody>
+          <tr><td>运动轴</td><td><code>axis: 'x' | 'y'</code>；默认垂直</td><td>y</td></tr>
+          <tr><td>位移</td><td>相对初始位置的振幅，正弦往复</td><td>60–140 px</td></tr>
+          <tr><td>周期</td><td>完整往返时间；同关多个浮台必须错开相位</td><td>2.4–4.0 s</td></tr>
+          <tr><td>相位</td><td><code>phase: 0–1</code>，用于错开</td><td>0 / 0.33 / 0.66</td></tr>
+          <tr><td>位置公式</td><td><code>pos = base + sin(2π · t / period + phase · 2π) · range</code></td><td>基于关卡时间 <code>t</code>，保证每日/回放确定性</td></tr>
+          <tr><td>碰撞</td><td>单向支撑：仅当玩家下落且脚部高于台面时站立；不造成伤害</td><td>沿用 <a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L186-L199">Player.ts:186–199</a></td></tr>
+          <tr><td>携带</td><td>垂直运动时把玩家 y 同步位移，<code>vy = 0</code>；水平运动不推动玩家 x</td><td>防止玩家被平台“横推”穿过墙体</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>边界：</b>平台不得与尖刺/墙/激光在任意相位下重叠；不得作为传送门出口的唯一落点（出口必须有静态安全落点）。浮台越界时 clamp 在 <code>[CEILING+40, GROUND]</code>。</p>
+
+    <h4>B. 相位墙 <code>POLARITY_WALL</code></h4>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>字段</th><th>规则</th><th>默认值</th></tr></thead>
+        <tbody>
+          <tr><td>墙色</td><td><code>polarity: 'RED' | 'BLUE'</code>，外观为半透明条纹 + 极性符号</td><td>随关卡主题</td></tr>
+          <tr><td>同色通过</td><td>不致死，墙在接触处淡出并标记 <code>triggered</code>；给 +1 连击</td><td>—</td></tr>
+          <tr><td>异色碰撞</td><td>立即死亡，<b>无视 0.1s 切换无敌</b></td><td>与灰墙同级的“硬规则”</td></tr>
+          <tr><td>视觉预判</td><td>墙前 320px 内不得有其他需要切换的障碍</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>为什么不用现有 <code>WALL</code>：</b>灰墙是“跳过去”的空间障碍；相位墙是“换颜色穿过去”的极性障碍。两者并列存在，才能让玩家同时练习两条规则。</p>
+
+    <h4>C. 脉冲激光 <code>PULSE_LASER</code></h4>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>字段</th><th>规则</th><th>默认值 / 范围</th></tr></thead>
+        <tbody>
+          <tr><td>朝向</td><td><code>orientation: 'V' | 'H'</code>；V 为顶天立地光柱，H 为贴近地面的横向光束</td><td>V</td></tr>
+          <tr><td>周期</td><td>预警 → 激活 → 冷却 的完整循环</td><td>2.4–3.2 s</td></tr>
+          <tr><td>预警</td><td>细线闪烁，不致死；给玩家明确的“要来了”</td><td>0.8 s（不得低于 0.8）</td></tr>
+          <tr><td>激活</td><td>粗光束，致死</td><td>0.4–0.6 s</td></tr>
+          <tr><td>相位</td><td>同一关的光柱按 x 坐标错开，形成可记忆的节拍</td><td>由 <code>x / 400</code> 推导</td></tr>
+          <tr><td>H 型</td><td>光束贴地 42px 高，跳过即可；激活时仍致死</td><td>宽 160–260</td></tr>
+          <tr><td>公平性</td><td>传送门出口后 250px 内不得放置激光；激光预警开始时若玩家已无法跳跃（空中），仍保证 0.8s 窗口</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>时间基准：</b>激光开关必须由关卡累计时间 <code>gameTime</code> 计算，不能使用 <code>performance.now()</code> 或每帧累加计时器。否则死亡重试、每日种子回放会出现相位漂移，联机也无法对齐。</p>
+
+    <div class="note blue">
+      <b>渲染与碰撞扩展点：</b>三种机制都加在 <a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L9-L16">ObstacleKinds</a> 联合类型与 <a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L143-L188">Obstacle.ts:143–188</a> 的 render switch；碰撞在 <a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L660-L869">GameScene.ts:660–869</a> 增加三个分支。移动/时间状态建议放 <code>Obstacle.updateMotion(t)</code>，避免散落在 update 循环里。
+    </div>
+
+    <p class="small muted">依赖与范围：<a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L9-L16">Obstacle.ts:9–16</a>（联合类型）、<a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L143-L188">Obstacle.ts:143–188</a>（渲染）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L660-L869">GameScene.ts:660–869</a>（碰撞）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/EditorScene.ts">EditorScene.ts</a>（工具栏）、<a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L21-L25">CustomLevels.ts:21–25</a>（合法类型/清洗）。 <span class="tag l">大</span></p>
+
+    <!-- FR-07 -->
+    <h3 id="fr07" class="gold">FR-07 无尽模式 2.0 <span class="tag p1">P1</span> <span class="tag l">大</span></h3>
+    <p><b>目标：</b>让一局无尽在 2 分钟内至少经历一次“区域变化”和一次“磁暴事件”，把单调的间距缩放变成有起伏的跑图体验。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>区间（按已跑距离）</th><th>主题</th><th>生成内容</th><th>目的</th></tr></thead>
+        <tbody>
+          <tr><td>0–4000</td><td>基础区</td><td>尖刺 45% · 灰墙 20% · 强制区 15% · 加速带 10% · 晶片 10%</td><td>复用现有节奏，作为热身</td></tr>
+          <tr><td>4000–9000</td><td>传送区</td><td>传送门 15% · 尖刺 30% · 灰墙 20% · 加速带 10% · 区域 10% · 晶片 15%</td><td>引入空间跳跃，改变“只往前看”的读图方式</td></tr>
+          <tr><td>9000–13000</td><td>重力区</td><td>重力翻转 20% · 天花板尖刺 25% · 平台 10% · 传送门 10% · 摆锤 10% · 晶片 15%</td><td>把“上下”变成变量，复用 <code>GRAVITY_FLIP</code></td></tr>
+          <tr><td>13000–18000</td><td>摆锤区</td><td>摆锤 20% · 摆锤陷阱 15% · 灰墙 15% · 尖刺 25% · 加速带 10% · 晶片 15%</td><td>磁力轨迹叠加，考提前切换</td></tr>
+          <tr><td>18000+</td><td>磁暴区</td><td>脉冲激光 15% · 相位墙 15% · 移动浮台 15% · 摆锤 15% · 尖刺 20% · 晶片 20%</td><td>三种新机制轮换出现，作为长局终盘</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>拾取与事件</h4>
+    <ul>
+      <li><b>磁芯：</b>复用 <code>COLLECTIBLE</code>，<code>meta.currency = 1</code>；每约 1500px 生成一组 3–5 枚弧线，收集 +1 连击、+1 磁芯；不计入 <code>totalGems</code>，不影响终点（无尽无终点）。</li>
+      <li><b>护盾：</b>复用 <code>SPECIAL_ITEM</code> 并设 <code>meta.itemId = 'SHIELD'</code>；每约 9000px 生成 1 个；最多持有 1 层；触发后免除一次致命碰撞并给 3s 无敌，HUD 显示盾牌图标。 <span class="tag p2">P2</span></li>
+      <li><b>磁暴事件：</b>每 50s 触发一次，持续 12s：速度系数 +0.12，生成密度 +20%，磁芯价值 ×2，屏幕边缘出现红色脉冲（可关闭）。事件开始/结束各有一条横幅。</li>
+      <li><b>速度曲线：</b><code>speedFactor = min(2.0, 1 + floor(t / 40) × 0.08)</code>；替换现有“每 45s +10%、上限 1.8” <code>[TBD：手感校准]</code>。</li>
+      <li><b>安全走廊：</b>每次区域切换后 600px 内不生成需要立即切换的障碍，给玩家看清新主题的时间。</li>
+    </ul>
+
+    <h4>结算</h4>
+    <p>死亡即结束，结算显示：跑距、存活时间、最高连击、到达区域、获得磁芯、是否刷新个人最好。现有无尽结算页已显示时间/距离/连击，新增“区域/磁芯”两行即可。</p>
+    <div class="note">
+      <b>不做每日种子对齐时：</b>无尽仍使用随机生成。每日挑战（FR-08）会传入固定种子，因此生成器必须支持 <code>seed</code> 参数；建议把现有 <code>Math.random()</code> 调用统一替换为可注入的伪随机函数，这是无尽 2.0 与每日挑战的共同前置。
+    </div>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/systems/EndlessGenerator.ts#L23-L158">EndlessGenerator.ts:23–158</a>（重写生成分区与权重）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L437-L462">GameScene.ts:437–462</a>（无尽结算）、<a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L18-L19">SaveSystem.ts:18–19</a>（纪录字段）。 <span class="tag l">大</span></p>
+
+    <!-- FR-08 -->
+    <h3 id="fr08" class="green">FR-08 每日挑战 <span class="tag p1">P1</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>给玩家一个“每天回来一次”的低成本理由，同时复用无尽生成器，不新增关卡编辑成本。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>项</th><th>规则</th></tr></thead>
+        <tbody>
+          <tr><td>入口</td><td>主菜单第 6 格由“重置存档”改为“每日挑战”；重置存档移入设置并加二次确认</td></tr>
+          <tr><td>形式</td><td>固定种子的 3 分钟无尽跑：<code>seed = YYYYMMDD + 固定盐</code>；同一天所有玩家生成相同的关卡序列</td></tr>
+          <tr><td>修正</td><td>当日从 4 个修正中固定抽 2 个：高速（基础速度 +10%）、磁暴频繁（事件间隔 30s）、双倍磁芯、无护盾</td></tr>
+          <tr><td>结束</td><td>3 分钟到点或死亡；以“距离”排名，距离相同看存活时间，再相同看连击</td></tr>
+          <tr><td>次数</td><td>不限制尝试次数；每天首次完成发 3 磁芯，之后只更新最好成绩</td></tr>
+          <tr><td>记录</td><td>本地保存当天最好距离、连续完成天数；不做全球榜（服务端不参与）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>边界：</b>跨天以本地时区 00:00 切换；切后台跨天回到游戏时，若当天未开始则刷新入口，不打断正在进行的跑局。修正组合不得同时出现“高速 + 磁暴频繁”导致速度上限突破 2.0；速度系数统一 clamp。</p>
+    <p class="small muted">依赖：SaveSystem 新增 daily 字段、MenuScene 第 6 格、GameScene 支持 <code>DAILY</code> 模式与 3 分钟计时、EndlessGenerator 支持 seed 与修正参数、ResultScene 增加每日结算。 <span class="tag m">中</span></p>
+
+    <!-- FR-09 -->
+    <h3 id="fr09" class="blue">FR-09 磁芯与外观成长线 <span class="tag p2">P2</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>给通关后的长期奖励一个去处，但严格限制在“看见自己”的层面，不影响任何判定。</p>
+    <div class="grid2">
+      <div>
+        <h4>获取</h4>
+        <ul>
+          <li>关卡首次达成 ★1 / ★2 / ★3：各 +1（单关上限 3）。</li>
+          <li>每日挑战首次完成：+3。</li>
+          <li>无尽磁芯拾取：每个 +1。</li>
+          <li>特殊关星核：每枚 +5（仅首次）。</li>
+        </ul>
+      </div>
+      <div>
+        <h4>消耗（纯外观）</h4>
+        <ul>
+          <li>6 套球体花纹：条纹 / 圆点 / 齿轮 / 闪电 / 星环 / 像素。</li>
+          <li>4 条尾迹：直线 / 波浪 / 粒子 / 磁力线。</li>
+          <li>3 个 HUD 框、3 个称号。</li>
+          <li>价格区间 20–100 <code>[TBD]</code>；无随机、无内购。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note red">
+      <b>硬约束：</b>外观不得改变<strong>极性色</strong>。红/蓝必须始终是“危险/安全”的唯一视觉编码；花纹只能改变球体内部的图案与描边，不能把红球改成绿色，也不能让蓝球看起来像红球。色弱辅助（FR-12）同理，用符号而不是换色。
+    </div>
+    <p class="small muted">依赖：新增 <code>CosmeticSystem</code>（或并入 SaveSystem）、<a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L233-L298">Player.ts:233–298</a> 渲染取当前皮肤、新增外观场景、MenuScene 入口。 <span class="tag m">中</span></p>
+
+    <!-- FR-10 -->
+    <h3 id="fr10" class="purple">FR-10 联机模式扩展 <span class="tag p2">P2</span> <span class="tag l">大</span></h3>
+    <p><b>目标：</b>在不承担服务端权威模拟成本的前提下，提升联机的可复盘性与重开效率。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>能力</th><th>规则</th><th>层级</th></tr></thead>
+        <tbody>
+          <tr><td>重连</td><td>掉线后 30s 内以同一 <code>clientId</code> 回到房间，恢复进度与名次；超时按淘汰处理</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>重赛</td><td>结算页“再来一局”由房主发起，房间保留，3s 倒计时重开</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>快捷短语</td><td>4 条固定短语（“出发！”“好险”“再来”“GG”），不走自由文本，避免审核成本</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>基础校验</td><td>服务端校验进度单调不回退、完赛时间 ≥ 最短路长 / 最大速度；异常成绩标记为“未验证”，不直接剔除</td><td><span class="tag p1">P1</span></td></tr>
+          <tr><td>淘汰赛</td><td>每人 3 条命；死亡扣 1 命并回起点重跑；命尽转为观战；最后存活的玩家或首位完赛者获胜</td><td><span class="tag p2">P2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>失败与边界：</b>房主退出时沿用现有房主迁移；无人可迁移则房间关闭。观战者不能触发陷阱、不能改排名。淘汰赛的命数只在房间局内有效，不写入存档。</p>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/net/OnlineManager.ts">OnlineManager.ts</a>、<a href="file:///D:/magnetic-rush-mobile/server/relay-server.mjs">relay-server.mjs</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts">OnlineLobbyScene.ts</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L900-L980">GameScene.ts</a> 联机排名 HUD。 <span class="tag l">大</span></p>
+
+    <!-- FR-11 -->
+    <h3 id="fr11" class="gold">FR-11 自定义关卡编辑器扩展 <span class="tag p1">P1</span><span class="tag p2">P2</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>让编辑器能表达新机制，同时不把“不可通关”的关卡分享出去。</p>
+    <ul>
+      <li><b>P1：</b>工具栏加入 <code>PLATFORM</code>（现有渲染与碰撞已支持，只是工具没暴露）；选中物件后出现参数面板，可改摆锤幅度/周期、加速带时长、强制区颜色、移动浮台轴/振幅/周期/相位、激光朝向/周期/相位。</li>
+      <li><b>P1：</b>保存前做最小校验：必须有起点、终点、至少一条在最大跳高内可跨越的路径；传送门必须成对；晶片不得与实体重叠；激光预警不得低于 0.8s。</li>
+      <li><b>P2：</b>分享码升级为 v2（保留 v1 解码），新增字段用白名单清洗；超过 20000px 或物件数上限的关卡拒绝导入。</li>
+      <li><b>不做：</b>自定义关加入 <code>SPECIAL_DOOR</code>。现有特殊关快照写死 <code>levelId = 9000</code>，返回时 <code>getLevel(9000)</code> 为空会直接回主菜单；要支持必须先修“自定义关快照恢复”，成本大于收益。</li>
+    </ul>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/scenes/EditorScene.ts#L29-L45">EditorScene.ts:29–45</a>（工具栏）、<a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L21-L25">CustomLevels.ts:21–25</a>（合法类型）、<a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L92-L137">CustomLevels.ts:92–137</a>（清洗与转关卡）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L146-L153">GameScene.ts:146–153</a>（resume 分支）。 <span class="tag m">中</span></p>
+
+    <!-- FR-12 -->
+    <h3 id="fr12" class="green">FR-12 设置与可达性 <span class="tag p0">P0</span><span class="tag p2">P2</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>让“静音/音量/重置确认”这类基础控制真正生效，并为红蓝辨色困难玩家提供不依赖颜色的辅助。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>设置</th><th>规则</th><th>层级</th></tr></thead>
+        <tbody>
+          <tr><td>主音量</td><td>0–100 滑杆，写入 <code>SaveData.volume</code>，调用现有 <code>Audio.setVolume()</code>；0 等同静音</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>静音</td><td>复用已有 <code>SaveData.muted</code>；切换立即生效并持久化</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>重置存档</td><td>从主菜单移入设置；需要“长按 1s + 二次确认”，并明确提示不可恢复</td><td><span class="tag p0">P0</span></td></tr>
+          <tr><td>震屏 / 闪烁</td><td>可关闭屏幕震动与全屏闪白；对光敏与晕动玩家友好</td><td><span class="tag p2">P2</span></td></tr>
+          <tr><td>极性辅助标记</td><td>开启后在球体与尖刺上叠加符号：红 = “+”，蓝 = “−”；相位墙显示同符号。仅增加形状编码，不改变颜色</td><td><span class="tag p2">P2</span></td></tr>
+          <tr><td>低画质</td><td>降低粒子数量与拖尾长度，保留碰撞与判定不变</td><td><span class="tag p2">P2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>入口：</b>主菜单右上角齿轮（不占现有 6 格）；暂停菜单新增“设置”。设置面板用现有 UI 卡片风格，不新建场景，避免与 <code>Scene</code> 栈冲突。</p>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L17">SaveSystem.ts:17</a>（muted 未使用）、<a href="file:///D:/magnetic-rush-mobile/src/core/Audio.ts#L42">Audio.ts:42</a>（setVolume 已有）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L69-L132">MenuScene.ts:69–132</a>（菜单格与重置）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1082-L1124">GameScene.ts:1082–1124</a>（暂停菜单）、<a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L233-L298">Player.ts:233–298</a> 与 <a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L143-L188">Obstacle.ts:143–188</a>（辅助符号）。 <span class="tag m">中</span></p>
+
+    <!-- FR-13 -->
+    <h3 id="fr13">FR-13 成就与统计适配 <span class="tag p0">P0</span> <span class="tag m">中</span></h3>
+    <p><b>目标：</b>让成就跟随内容规模自动扩展，并把新增的星级/磁芯/每日线纳入长线目标。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>成就</th><th>条件</th><th>处理</th></tr></thead>
+        <tbody>
+          <tr><td>全部通关（现有）</td><td>通关全部常规关</td><td>改为读取 <code>LEVELS.length</code>，不再硬编码 30；跳过是否算“通关”沿用现有规则（跳过不算）</td></tr>
+          <tr><td>完美主义者（现有）</td><td>全部常规关最佳时间 ≤ 各关 <code>parTime</code></td><td>保留原语义，让 <code>parTime</code> 继续有意义；新增关卡必须给出可达成的时间目标</td></tr>
+          <tr><td>全星收藏家（新）</td><td>全部常规关 ★3</td><td>最长期目标；不设奖励数值，仅展示</td></tr>
+          <tr><td>磁芯收藏家（新）</td><td>累计获得 100 磁芯</td><td>依赖 FR-09；若 FR-09 未做则此条暂缓</td></tr>
+          <tr><td>每日七日（新）</td><td>连续 7 天完成每日挑战</td><td>依赖 FR-08</td></tr>
+          <tr><td>无尽千里（新）</td><td>单局无尽 ≥ 1000m</td><td>依赖无尽距离口径统一</td></tr>
+          <tr><td>无伤十关（新）</td><td>10 个不同常规关以 0 死亡通关</td><td><code>zeroDeath</code> 写入后统计</td></tr>
+          <tr><td>相位行者（新）</td><td>累计穿过 50 面相位墙</td><td>依赖 FR-06；统计可放局内累计</td></tr>
+          <tr><td>淘汰之王（新）</td><td>赢得 1 场淘汰赛</td><td>依赖 FR-10 P2；未做则暂缓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>统计栏：</b>主菜单现有 4 个数据格（关卡/最高连击/无尽/成就）中的“最高连击”改为“星星总数”，因为连击纪录在新规则下不再具备跨版本可比性。最高连击仍在结算页展示。菜单里写死的“30 关”文案同步改为 <code>LEVELS.length</code>。</p>
+    <p class="small muted">依赖：<a href="file:///D:/magnetic-rush-mobile/src/systems/AchievementSystem.ts#L75-L110">AchievementSystem.ts:75–110</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/AchievementsScene.ts">AchievementsScene.ts</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L140-L200">MenuScene.ts:140–200</a>（统计格）、<a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts#L102">OnlineLobbyScene.ts:102</a>（内置关列表）。 <span class="tag m">中</span></p>
+  </div>
+</section>
+
+<!-- ================= 5 依赖 ================= -->
+<section id="deps">
+  <div class="card">
+    <h2><span class="num">05</span>依赖与改动范围总表</h2>
+    <p class="lead">范围口径：<span class="tag s">小改</span> 单文件、&lt;50 行、不改数据结构；<span class="tag m">中等</span> 2–4 文件、50–200 行、可能加字段；<span class="tag l">较大</span> 新系统/新场景/跨端、&gt;200 行或改存档结构。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>设计点</th><th>优先级</th><th>主要改动位置</th><th>范围</th></tr></thead>
+        <tbody>
+          <tr><td>FR-01 星级目标</td><td><span class="tag p0">P0</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L5-L25">SaveSystem.ts:5–25</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L329-L420">GameScene.ts:329–420</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/ResultScene.ts#L126-L204">ResultScene.ts:126–204</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/LevelSelectScene.ts#L198-L269">LevelSelectScene.ts:198–269</a></td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-02 连击重构</td><td><span class="tag p0">P0</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L86-L95">Player.ts:86–95</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L660-L869">GameScene.ts:660–869</a></td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-03 终点补救</td><td><span class="tag p0">P0</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L852-L866">GameScene.ts:852–866</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1198-L1203">GameScene.ts:1198–1203</a>、<a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts">levels.ts</a> 教程文案</td><td><span class="tag s">小</span></td></tr>
+          <tr><td>FR-04 移动跳关</td><td><span class="tag p0">P0</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L230-L259">GameScene.ts:230–259</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L544-L552">544–552</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1082-L1124">1082–1124</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1206-L1211">1206–1211</a></td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-05 新关卡 31–42</td><td><span class="tag p1">P1</span><span class="tag p2">P2</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L744-L751">levels.ts:744–751</a>、<a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L21-L38">LevelDef</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/LevelSelectScene.ts">LevelSelectScene.ts</a></td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-06 三种新障碍</td><td><span class="tag p1">P1</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L9-L16">Obstacle.ts:9–16</a>、<a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L143-L188">Obstacle.ts:143–188</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L660-L869">GameScene.ts:660–869</a>、<a href="file:///D:/magnetic-rush-mobile/src/data/config.ts#L85-L90">config.ts:85–90</a></td><td><span class="tag l">大</span></td></tr>
+          <tr><td>FR-07 无尽 2.0</td><td><span class="tag p1">P1</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/EndlessGenerator.ts">EndlessGenerator.ts</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L437-L462">GameScene.ts:437–462</a>、<a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L18-L19">SaveSystem.ts:18–19</a></td><td><span class="tag l">大</span></td></tr>
+          <tr><td>FR-08 每日挑战</td><td><span class="tag p1">P1</span></td><td>新增日种子 + 修正组合；<a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L69-L132">MenuScene.ts:69–132</a>、SaveSystem、GameScene 模式分支、ResultScene</td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-09 磁芯/外观</td><td><span class="tag p2">P2</span></td><td>新增 <code>CosmeticSystem</code> + 外观场景；<a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L233-L298">Player.ts:233–298</a>、SaveSystem</td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-10 联机扩展</td><td><span class="tag p2">P2</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/net/OnlineManager.ts">OnlineManager.ts</a>、<a href="file:///D:/magnetic-rush-mobile/server/relay-server.mjs">relay-server.mjs</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts">OnlineLobbyScene.ts</a></td><td><span class="tag l">大</span></td></tr>
+          <tr><td>FR-11 编辑器扩展</td><td><span class="tag p1">P1</span><span class="tag p2">P2</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/EditorScene.ts#L29-L45">EditorScene.ts:29–45</a>、<a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L21-L25">CustomLevels.ts:21–25</a>、<a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L92-L137">92–137</a></td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-12 设置/可达性</td><td><span class="tag p0">P0</span><span class="tag p2">P2</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L17">SaveSystem.ts:17</a>、<a href="file:///D:/magnetic-rush-mobile/src/core/Audio.ts#L42">Audio.ts:42</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L69-L132">MenuScene.ts:69–132</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1082-L1124">GameScene.ts:1082–1124</a></td><td><span class="tag m">中</span></td></tr>
+          <tr><td>FR-13 成就/统计</td><td><span class="tag p0">P0</span></td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/AchievementSystem.ts#L75-L110">AchievementSystem.ts:75–110</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts#L102">OnlineLobbyScene.ts:102</a>、<a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L140-L200">MenuScene.ts:140–200</a></td><td><span class="tag m">中</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>实现顺序建议</h3>
+    <ol>
+      <li><b>P0-A 规则层：</b>FR-02 → FR-01 → FR-03。先让连击干净，再让星级可信，最后放开终点。</li>
+      <li><b>P0-B 可恢复性：</b>FR-04 → FR-13 → FR-12 基础。触屏不再卡关，成就与菜单不出现 30 关硬编码。</li>
+      <li><b>P1-A 内容层：</b>FR-06 → FR-05（31–36）。先有机制再有教学关。</li>
+      <li><b>P1-B 长线层：</b>FR-07 → FR-08 → FR-11 基础。无尽生成器与每日挑战共用种子化。</li>
+      <li><b>P2 层：</b>FR-05（37–42）→ FR-09 → FR-12 完整版 → FR-10。</li>
+    </ol>
+
+    <div class="note blue">
+      <b>跨需求前置项（建议先做）：</b>
+      <ul style="margin-bottom:0">
+        <li>把 <code>LEVELS.length</code> 作为关卡总数唯一来源，清除成就与联机大厅的 30 硬编码。否则每加一关都要改三处。</li>
+        <li>把无尽生成器的随机源改为可注入 seed。FR-07 与 FR-08 共用，避免二次返工。</li>
+        <li>把“障碍运动/激光相位”统一由关卡时间驱动。星级、每日、联机、回放全部依赖这个确定性前提。</li>
+        <li>存档升级前先写迁移测试样例（旧档、缺字段档、损坏档），确保不会因新字段丢失全部进度。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 6 小程序 ================= -->
+<section id="miniapp">
+  <div class="card">
+    <h2><span class="num">06</span>小程序端可行性</h2>
+    <p class="lead"><b>结论：本期不建议做小程序端。</b>本项目是 Vite + Canvas 2D + Capacitor 壳的 Web 游戏，不是 Taro 小程序工程。miniapp-builder 插件面向 Taro 小程序的预览、诊断与上传，直接套用无法产生可运行的小程序包；为“用插件”而改造现有工程，投入产出比不成立。</p>
+
+    <h3>技术依赖对比</h3>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>能力</th><th>当前实现</th><th>小程序环境</th><th>改造代价</th></tr></thead>
+        <tbody>
+          <tr><td>渲染</td><td>Canvas 2D 全量绘制（场景、HUD、编辑器都在 canvas 上）</td><td>微信小游戏可用 <code>wx.createCanvas</code>；小程序页面的 canvas 组件尺寸/层级受限</td><td>需要 canvas 适配层；若走小程序页面还要处理组件层级与全屏</td></tr>
+          <tr><td>音频</td><td>WebAudio 程序化合成音效与音乐（<a href="file:///D:/magnetic-rush-mobile/src/core/Audio.ts">Audio.ts</a>）</td><td>小游戏为 <code>InnerAudioContext</code>，不支持完整 WebAudio 节点图</td><td>大：需要改为音频文件/精灵，或重写合成层</td></tr>
+          <tr><td>存档</td><td><code>localStorage</code> 单键 JSON（<a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts">SaveSystem.ts</a>）</td><td><code>wx.setStorageSync</code> / <code>getStorageSync</code></td><td>小：封装一层存储适配即可</td></tr>
+          <tr><td>联机</td><td>浏览器 <code>WebSocket</code> 连 wss 中继（<a href="file:///D:/magnetic-rush-mobile/src/net/OnlineManager.ts">OnlineManager.ts</a>）</td><td><code>wx.connectSocket</code>，需配置服务器域名白名单</td><td>中：API 替换 + 域名备案/白名单</td></tr>
+          <tr><td>输入</td><td>键盘 + Pointer 事件 + 画布内虚拟按键（<a href="file:///D:/magnetic-rush-mobile/src/core/Input.ts">Input.ts</a>）</td><td>触摸事件</td><td>小：现有触屏路径已存在</td></tr>
+          <tr><td>DOM 浮层</td><td>联机昵称/房间输入使用 HTML 浮层</td><td>无 DOM</td><td>中：需改为小程序输入组件或画布内输入</td></tr>
+          <tr><td>打包</td><td>Vite 构建 + Capacitor 生成 APK</td><td>Taro/原生小游戏工程</td><td>大：构建链与目录结构都要换</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>三个可选路径</h3>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>路径</th><th>做法</th><th>优点</th><th>风险 / 代价</th><th>建议</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>A. web-view 内嵌 H5</b></td>
+            <td>保留现有工程，发布 H5；小程序用一个 web-view 页面打开</td>
+            <td>代码几乎不改；APK 与 H5 同一套逻辑</td>
+            <td>需要业务域名、ICP 备案、类目与游戏内容审核；web-view 能力受平台规则限制，分享/登录体验弱</td>
+            <td><b>若必须做，先做这条试点</b></td>
+          </tr>
+          <tr>
+            <td><b>B. 微信小游戏重写</b></td>
+            <td>以 <code>wx.createCanvas</code> 为入口，替换音频、存储、网络、输入适配层</td>
+            <td>体验最接近原生小游戏，可接平台分享/排行榜</td>
+            <td>渲染循环、音频、UI 浮层、构建链全部要改；等于第二个客户端</td>
+            <td><b>不建议本期</b></td>
+          </tr>
+          <tr>
+            <td><b>C. Taro 小程序工程</b></td>
+            <td>用 Taro 重建页面与 canvas 容器，复用部分纯逻辑模块</td>
+            <td>可跨微信/支付宝/抖音</td>
+            <td>Taro 不解决 Canvas 渲染与 WebAudio 差异；仍要重写大部分表现层</td>
+            <td><b>不建议</b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <b>结论口径：</b>小程序的真正门槛不在代码量，而在“账号体系 + 域名备案 + 游戏类目审核 + 音频/渲染适配”。在没有明确的小程序分发需求前，这部分投入不会改善当前 APK 的核心体验。若未来要做，建议单独立项，并以“H5 + web-view 试点”验证留存后再决定是否重写。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 7 问题 ================= -->
+<section id="questions">
+  <div class="card">
+    <h2><span class="num">07</span>待确认问题</h2>
+    <p class="lead">以下 5 项会改变实现范围或玩家体验，需要先确认；其余参数可在实现后联调。</p>
+
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th style="width:26%">问题</th><th style="width:38%">选项</th><th style="width:36%">影响</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Q1 连击规则</b></td>
+            <td>A. 改为“有效事件计数”（推荐）<br>B. 保留“切换 +1”，仅提高成就阈值</td>
+            <td>A：星级 ★3 可信、速度加成与成就回归技巧；旧纪录需标注不可比。<br>B：实现最小，但刷连击问题仍在，★3 目标会失真。</td>
+          </tr>
+          <tr>
+            <td><b>Q2 终点门槛</b></td>
+            <td>A. 改为星级目标，缺片仍可通关（推荐）<br>B. 保留硬门槛，仅给普通关加检查点</td>
+            <td>A：容错高，但关卡难度整体下降，需要重算 ★3。<br>B：保留紧张感，但“漏 1 片重开整关”的挫败仍在。</td>
+          </tr>
+          <tr>
+            <td><b>Q3 内容批次</b></td>
+            <td>A. 先做 P0 + P1（到 36 关）（推荐）<br>B. 一次做到 42 关<br>C. 只做 P0，不加关</td>
+            <td>决定本次实现的验收范围与关卡设计工作量；B 会把三种新机制的调试与 12 关平衡压在同一批。</td>
+          </tr>
+          <tr>
+            <td><b>Q4 成长线</b></td>
+            <td>A. 纯外观（推荐）<br>B. 允许永久数值升级</td>
+            <td>A：保护竞速、每日、无尽纪录的可比性。<br>B：会与 ★3、每日榜、联机排名产生直接冲突，需要另设“无成长”赛区。</td>
+          </tr>
+          <tr>
+            <td><b>Q5 联机深度</b></td>
+            <td>A. 轻量增强：重连/重赛/短语/基础校验（推荐）<br>B. 淘汰赛 + 服务端权威校验</td>
+            <td>A：改动集中在中继协议与大厅 UI。<br>B：需要服务端模拟与反作弊，工作量与运维成本显著上升。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>不阻塞实现的默认假设（已按此设计）</h3>
+    <ul>
+      <li><b>每日挑战形式：</b>固定种子的 3 分钟无尽跑，而不是每日手工关。理由是复用生成器、无需每日内容生产。<span class="muted">[Assumption, TBD]</span></li>
+      <li><b>磁芯价格：</b>20–100 区间，按外观稀有度分档；不做随机抽取。<span class="muted">[TBD]</span></li>
+      <li><b>新关卡检查点：</b>长度 ≥ 6000px 才设置；30 关以内的旧关不回溯加检查点，避免改变既有最佳时间。<span class="muted">[Assumption, TBD]</span></li>
+      <li><b>每日榜范围：</b>只做本地最好成绩，不做全球榜；全球榜需要服务端账号与反作弊，超出本期。<span class="muted">[Assumption, TBD]</span></li>
+      <li><b>存档键策略：</b>优先同键升级 + <code>version</code> 字段；若迁移风险过高，再采用新键并保留旧键只读回退。<span class="muted">[TBD]</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 8 证据 ================= -->
+<section id="appendix">
+  <div class="card">
+    <h2><span class="num">08</span>代码证据索引</h2>
+    <p class="lead">用于评审时快速核对“现状陈述是否属实”。行号指向当前工作区文件，链接可直接在编辑器中打开。</p>
+    <div class="t-wrap">
+      <table>
+        <thead><tr><th>证据</th><th>位置</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>全局数值常量</td><td><a href="file:///D:/magnetic-rush-mobile/src/data/config.ts#L3-L52">config.ts:3–52</a></td><td>速度 320、跳跃 -520、重力 1400、切换 0.18/0.1、复活 0.5 等基线</td></tr>
+          <tr><td>未使用的障碍类型</td><td><a href="file:///D:/magnetic-rush-mobile/src/data/config.ts#L85-L90">config.ts:85–90</a></td><td><code>BLUE_LASER / SPLIT_PATH</code> 仅有类型声明，实际未实现</td></tr>
+          <tr><td>实际障碍联合类型</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L9-L16">Obstacle.ts:9–16</a></td><td>新增三种机制的类型落点</td></tr>
+          <tr><td>切换即加连击</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L86-L95">Player.ts:86–95</a></td><td>连击可刷的直接原因</td></tr>
+          <tr><td>平台单向支撑</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Player.ts#L186-L199">Player.ts:186–199</a></td><td>移动浮台需要扩展的支撑逻辑</td></tr>
+          <tr><td>摆锤磁力</td><td><a href="file:///D:/magnetic-rush-mobile/src/entities/Obstacle.ts#L128-L141">Obstacle.ts:128–141</a></td><td>现有极性磁力公式</td></tr>
+          <tr><td>越障加连击</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L679-L687">GameScene.ts:679–687</a></td><td>不分颜色、靠无敌穿过也加分</td></tr>
+          <tr><td>死亡复活</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L261-L289">GameScene.ts:261–289</a></td><td>普通关回起点、时间不清零、连击清零</td></tr>
+          <tr><td>终点硬门槛</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L852-L866">GameScene.ts:852–866</a></td><td>缺片触发 <code>die()</code></td></tr>
+          <tr><td>键盘跳关</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L544-L552">GameScene.ts:544–552</a></td><td>仅 <code>KeyK</code></td></tr>
+          <tr><td>跳关提示</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L1206-L1211">GameScene.ts:1206–1211</a></td><td>触屏无入口</td></tr>
+          <tr><td>关卡定义与 maxCombo</td><td><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L21-L38">levels.ts:21–38</a></td><td>目标字段已存在但未被游戏逻辑读取</td></tr>
+          <tr><td>关卡数组</td><td><a href="file:///D:/magnetic-rush-mobile/src/data/levels.ts#L744-L751">levels.ts:744–751</a></td><td>新增 31–42 的插入点</td></tr>
+          <tr><td>成就硬编码 30</td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/AchievementSystem.ts#L99-L108">AchievementSystem.ts:99–108</a></td><td>新增关卡前必须改为 <code>LEVELS.length</code></td></tr>
+          <tr><td>存档结构</td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L5-L25">SaveSystem.ts:5–25</a></td><td>星级、磁芯、每日字段落点；<code>muted</code> 已存在</td></tr>
+          <tr><td>通关记录</td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/SaveSystem.ts#L77-L116">SaveSystem.ts:77–116</a></td><td>星级写入与解锁判断</td></tr>
+          <tr><td>无尽生成器</td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/EndlessGenerator.ts#L23-L158">EndlessGenerator.ts:23–158</a></td><td>分区、种子、拾取物的改造对象</td></tr>
+          <tr><td>菜单与重置</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/MenuScene.ts#L69-L132">MenuScene.ts:69–132</a></td><td>每日入口替换、重置确认</td></tr>
+          <tr><td>选关关卡片</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/LevelSelectScene.ts#L198-L269">LevelSelectScene.ts:198–269</a></td><td>星标显示</td></tr>
+          <tr><td>结算卡</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/ResultScene.ts#L126-L204">ResultScene.ts:126–204</a></td><td>目标复盘</td></tr>
+          <tr><td>编辑器工具栏</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/EditorScene.ts#L29-L45">EditorScene.ts:29–45</a></td><td>缺 <code>PLATFORM</code> 工具</td></tr>
+          <tr><td>自定义关合法类型</td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L21-L25">CustomLevels.ts:21–25</a></td><td>新增类型的白名单</td></tr>
+          <tr><td>自定义关转 LevelDef</td><td><a href="file:///D:/magnetic-rush-mobile/src/systems/CustomLevels.ts#L118-L137">CustomLevels.ts:118–137</a></td><td>id 9000；特殊门恢复会失败的原因</td></tr>
+          <tr><td>resume 分支</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/GameScene.ts#L146-L153">GameScene.ts:146–153</a></td><td>自定义关 + <code>SPECIAL_DOOR</code> 为何不做</td></tr>
+          <tr><td>联机内置关过滤</td><td><a href="file:///D:/magnetic-rush-mobile/src/scenes/OnlineLobbyScene.ts#L102">OnlineLobbyScene.ts:102</a></td><td>id ≤ 30 硬编码</td></tr>
+          <tr><td>中继服务</td><td><a href="file:///D:/magnetic-rush-mobile/server/relay-server.mjs">relay-server.mjs</a></td><td>房间、15Hz 状态、排名</td></tr>
+          <tr><td>音量接口</td><td><a href="file:///D:/magnetic-rush-mobile/src/core/Audio.ts#L42">Audio.ts:42</a></td><td>已有 <code>setVolume</code>，缺 UI 调用</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="foot">
+  Magnetic Rush 磁极冲刺 · 内容完善与逻辑扩展 PRD v0.1 · 设计评审稿 · 2026-11-04<br>
+  本文档只描述产品规则与实现依赖，不包含本次代码改动。
+</div>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 星级试算 ---------- */
+  var clearEl = document.getElementById('d-clear');
+  var gemsEl = document.getElementById('d-gems');
+  var nogemEl = document.getElementById('d-nogem');
+  var comboEl = document.getElementById('d-combo');
+  var targetEl = document.getElementById('v-target');
+  var vClear = document.getElementById('v-clear');
+  var vGems = document.getElementById('v-gems');
+  var vCombo = document.getElementById('v-combo');
+  var starsEl = document.getElementById('d-stars');
+  var explainEl = document.getElementById('d-explain');
+  var TARGET = 15;
+
+  function updateStar(){
+    var clear = clearEl.checked;
+    var nogem = nogemEl.checked;
+    var total = nogem ? 0 : 8;
+    var collected = nogem ? 0 : Number(gemsEl.value);
+    var combo = Number(comboEl.value);
+
+    vClear.textContent = clear ? '是' : '否';
+    vGems.textContent = nogem ? '本关无晶片' : (collected + ' / ' + total);
+    vCombo.textContent = combo;
+    targetEl.textContent = TARGET;
+
+    var s1 = clear ? 1 : 0;
+    var s2 = (total === 0 || collected === total) ? 1 : 0;
+    var s3 = (combo >= TARGET) ? 1 : 0;
+    var totalStars = clear ? (s1 + s2 + s3) : 0;
+
+    var chars = '';
+    for (var i = 0; i < 3; i++) chars += (i < totalStars ? '★' : '☆');
+    starsEl.textContent = chars;
+
+    var lines = [];
+    lines.push('★1 通关：' + (s1 ? '达成' : '未达成（未到终点）'));
+    lines.push('★2 全晶片：' + (s2 ? '达成' : '未达成（' + collected + '/' + total + '）'));
+    lines.push('★3 连击：' + (s3 ? '达成' : '未达成（' + combo + '/' + TARGET + '）'));
+    explainEl.innerHTML = lines.join('<br>');
+  }
+
+  [clearEl, gemsEl, nogemEl, comboEl].forEach(function(el){
+    el.addEventListener('input', updateStar);
+    el.addEventListener('change', updateStar);
+  });
+  updateStar();
+
+  /* ---------- 连击对比 ---------- */
+  var oldCount = 0, newCount = 0;
+  var oldEl = document.getElementById('old-combo');
+  var newEl = document.getElementById('new-combo');
+  var logEl = document.getElementById('combo-log');
+
+  function renderCombo(){
+    oldEl.textContent = oldCount;
+    newEl.textContent = newCount;
+  }
+
+  document.querySelectorAll('#combo-demo [data-act]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var act = btn.getAttribute('data-act');
+      if (act === 'reset') {
+        oldCount = 0; newCount = 0;
+        logEl.textContent = '已重置。';
+      } else if (act === 'switch') {
+        oldCount += 1;
+        logEl.textContent = '切换极性：旧规则 +1，新规则不计分。';
+      } else if (act === 'safe') {
+        oldCount += 1; newCount += 1;
+        logEl.textContent = '安全通过同色尖刺：两种规则都 +1。';
+      } else if (act === 'wall') {
+        oldCount += 1; newCount += 1;
+        logEl.textContent = '跳过灰墙：两种规则都 +1。';
+      } else if (act === 'gem') {
+        newCount += 1;
+        logEl.textContent = '收集晶片：旧规则不计分，新规则 +1。';
+      } else if (act === 'portal') {
+        oldCount += 0; newCount += 2;
+        logEl.textContent = '首次穿过传送门：旧规则不加，新规则 +2。';
+      } else if (act === 'death') {
+        oldCount = 0; newCount = 0;
+        logEl.textContent = '死亡：连击清零。';
+      }
+      renderCombo();
+    });
+  });
+  renderCombo();
+
+  /* ---------- 侧栏高亮 ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.side a'));
+  var sections = links.map(function(a){
+    var id = a.getAttribute('href').slice(1);
+    return document.getElementById(id);
+  }).filter(Boolean);
+
+  function setActive(id){
+    links.forEach(function(a){
+      a.classList.toggle('on', a.getAttribute('href') === '#' + id);
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting) setActive(en.target.id);
+      });
+    }, { rootMargin: '-10% 0px -72% 0px', threshold: 0.01 });
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

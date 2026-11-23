@@ -1,0 +1,74 @@
+# ---------- 依赖 / 构建产物（能重新生成的不入库）----------
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# Android / Gradle
+android/app/build/
+android/build/
+android/.gradle/
+.gradle-home/
+.gradle/
+android/capacitor-cordova-android-plugins/build/
+android/local.properties
+*.iml
+
+# cap sync 从 dist 生成的 WebView 资源（克隆后执行 npx cap sync android 即可重建）
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+
+# 打包产物（源码在 deploy/ 与 server/ 下，可由脚本重建）
+deploy/*.zip
+server/*.zip
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# ---------- 密钥 / 签名（严禁入库）----------
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+keystore.properties
+signing.properties
+release/
+
+# ---------- 本地工具与缓存 ----------
+.tools/
+.cache/
+*.log
+logs/
+*.tmp
+*.temp
+tmp/
+temp/
+.eslintcache
+
+# ---------- 配置 / 凭据 / 运行时数据 ----------
+# 真实 relay.env（含后台账号密码）不入库；示例见 deploy/linux-server/relay.env.example
+relay.env
+!deploy/windows-server/relay.env
+.env
+.env.*
+!.env.example
+
+# 玩家上传关卡 / 运维统计 / 后台账号哈希：只在服务器数据目录，不入库
+server/data/
+deploy/*/data/*
+!deploy/windows-server/data/.keep
+
+# ---------- 编辑器 / 系统 / 临时工作目录 ----------
+.idea/
+.vscode/
+.screenshots/
+.workbuddy/
+.trae-html-share-packages/
+.DS_Store
+Thumbs.db
+desktop.ini

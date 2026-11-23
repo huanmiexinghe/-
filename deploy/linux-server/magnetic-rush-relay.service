@@ -1,0 +1,54 @@
+# Magnetic Rush 联机中转服务 · systemd unit
+# 安装位置：/etc/systemd/system/magnetic-rush-relay.service（install.sh 负责复制并改写 ExecStart）
+# 日志：journalctl -u magnetic-rush-relay -f
+[Unit]
+Description=Magnetic Rush Relay Server (WebSocket + 自制关卡 API + 运维后台)
+Documentation=file:/opt/magnetic-rush/README.md
+After=network-online.target
+Wants=network-online.target
+# 崩溃后无限重试（默认 10 秒内 5 次就放弃）；配合 RestartSec 不会打满 CPU
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=magnetic-rush
+Group=magnetic-rush
+WorkingDirectory=/opt/magnetic-rush
+# install.sh 会把这一行改成本机实际的 node 绝对路径
+ExecStart=/usr/bin/node /opt/magnetic-rush/relay-server.mjs
+
+# 端口 / 监听地址 / 数据目录 / 引导管理员都在这里（root:magnetic-rush 0640）
+EnvironmentFile=/etc/magnetic-rush/relay.env
+
+# 崩溃、被 kill、OOM 后都自动拉起
+Restart=always
+RestartSec=5
+# systemd 发 SIGTERM → 服务端先把统计落盘再退出
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+# 日志统一进 journald（不写文件，不用管轮转）
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=magnetic-rush-relay
+
+# ---- 加固：只允许写数据目录，其余文件系统只读 ----
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+# 必须包含 AF_NETLINK：node os.networkInterfaces() 走 getifaddrs/netlink，
+# 缺 AF_NETLINK 时启动即抛 ERR_SYSTEM_ERROR（uv_interface_addresses, error 97）
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+RestrictNamespaces=true
+LockPersonality=true
+ReadWritePaths=/var/lib/magnetic-rush
+UMask=0027
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

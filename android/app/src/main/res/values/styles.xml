@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <!-- 沉浸式：内容可绘制到刘海区域（API 28+ 生效，低版本忽略），
+             横屏时避免左侧/右侧被系统裁成黑边。
+             注：不使用 android:windowFullscreen —— 它会固定隐藏状态栏，
+             破坏 MainActivity 里"下拉临时唤出、超时自动隐藏"的 sticky 行为。 -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <!-- Android 11 及以下：整屏启动图（已同步为新图标居中版） -->
+        <item name="android:background">@drawable/splash</item>
+        <!-- Android 12+ 系统启动页使用应用图标，同时显式指定底色与图标，
+             避免沿用旧图标或在启动阶段出现空白 -->
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- 启动页阶段就按同一套缺口策略布局，避免进入游戏时二次跳变 -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

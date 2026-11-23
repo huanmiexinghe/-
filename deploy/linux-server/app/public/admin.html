@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>运维统计 · Magnetic Rush</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0b0e14;
+    --panel: #121722;
+    --panel-2: #171e2b;
+    --line: #263145;
+    --text: #e9effb;
+    --muted: #94a3b8;
+    --cyan: #22d3ee;
+    --red: #fb7185;
+    --green: #34d399;
+    --amber: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(34, 211, 238, .10), transparent 60%),
+      radial-gradient(900px 500px at 5% 0%, rgba(251, 113, 133, .08), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    font: 15px/1.55 "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    padding: 24px 20px 48px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .top {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+    justify-content: space-between; margin-bottom: 20px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .logo {
+    width: 46px; height: 46px; border-radius: 13px;
+    display: grid; place-items: center;
+    background: linear-gradient(145deg, #1b2a3d, #0f1621);
+    border: 1px solid var(--line);
+    color: var(--cyan); font-weight: 800; letter-spacing: .5px;
+    box-shadow: inset 0 0 18px rgba(34, 211, 238, .18);
+  }
+  h1 { margin: 0; font-size: 20px; letter-spacing: .3px; }
+  .sub { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; }
+  .actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .stamp { color: var(--muted); font-size: 12.5px; }
+  .badge {
+    padding: 3px 10px; border-radius: 999px; font-size: 12px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--muted);
+  }
+  .badge.admin { color: #a5f3fc; border-color: rgba(34, 211, 238, .45); background: rgba(34, 211, 238, .09); }
+  .badge.viewer { color: #fde68a; border-color: rgba(251, 191, 36, .4); background: rgba(251, 191, 36, .08); }
+  .btn {
+    appearance: none; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--panel-2); color: var(--text);
+    padding: 8px 13px; font-size: 13px;
+  }
+  .btn:hover { border-color: #3b4a63; }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn.small { padding: 5px 9px; font-size: 12px; border-radius: 8px; }
+  .btn.primary {
+    border: 0; font-weight: 700;
+    background: linear-gradient(135deg, #22d3ee, #0ea5b7);
+    color: #06232a;
+  }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.danger {
+    border-color: rgba(251, 113, 133, .45);
+    background: rgba(251, 113, 133, .08);
+    color: #fecdd3;
+  }
+  .btn.danger:hover { border-color: rgba(251, 113, 133, .75); }
+  form { margin: 0; }
+  .error {
+    margin: 0 0 16px; padding: 10px 14px; border-radius: 10px;
+    background: rgba(251, 113, 133, .10);
+    border: 1px solid rgba(251, 113, 133, .35);
+    color: #fecdd3; font-size: 13px;
+  }
+  .error.ok {
+    background: rgba(52, 211, 153, .09);
+    border-color: rgba(52, 211, 153, .35);
+    color: #a7f3d0;
+  }
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .card, .chart-card, .table-card, .panel-card {
+    background: linear-gradient(180deg, rgba(255,255,255,.025), transparent 45%), var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+  }
+  .card { padding: 16px 17px 14px; }
+  .card h2 {
+    margin: 0 0 12px; font-size: 13px; font-weight: 600;
+    color: var(--muted); letter-spacing: 1px; text-transform: uppercase;
+  }
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; }
+  .metric { min-width: 0; }
+  .metric .label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 2px; }
+  .metric strong {
+    display: block; font-size: 23px; line-height: 1.2;
+    font-variant-numeric: tabular-nums; letter-spacing: .2px;
+  }
+  .metric small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+  .c-cyan { color: var(--cyan); }
+  .c-red { color: var(--red); }
+  .c-green { color: var(--green); }
+  .c-amber { color: var(--amber); }
+  .chart-card, .table-card, .panel-card { margin-top: 14px; padding: 16px 17px 18px; }
+  .panel-card { margin-top: 18px; }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .card-head h2 { margin: 0; font-size: 14px; }
+  .legend { display: flex; gap: 14px; color: var(--muted); font-size: 12px; }
+  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: 1px; }
+  .chart {
+    margin-top: 18px; display: flex; gap: 10px; align-items: flex-end;
+    height: 172px; padding-top: 8px; overflow-x: auto;
+  }
+  .day {
+    flex: 1 0 54px; min-width: 54px; height: 100%;
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
+    text-align: center;
+  }
+  .bars { height: 132px; display: flex; gap: 4px; align-items: flex-end; justify-content: center; }
+  .bar { width: 15px; min-height: 2px; border-radius: 4px 4px 1px 1px; transition: height .25s ease; }
+  .bar.rooms { background: linear-gradient(180deg, #67e8f9, #0891b2); }
+  .bar.matches { background: linear-gradient(180deg, #fda4af, #e11d48); }
+  .day .d { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .day .v { color: var(--text); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .empty { color: var(--muted); font-size: 13px; margin: 14px 0 2px; }
+  .table-box { margin-top: 14px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 9px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr.today td { background: rgba(34, 211, 238, .045); }
+  tbody tr.pwd-row td { background: rgba(34, 211, 238, .04); text-align: left; }
+  .tag {
+    display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px;
+    font-size: 11px; border: 1px solid var(--line); color: var(--muted);
+  }
+  .tag.admin { color: #a5f3fc; border-color: rgba(34, 211, 238, .4); }
+  .tag.viewer { color: #fde68a; border-color: rgba(251, 191, 36, .35); }
+  .tag.off { color: #fecdd3; border-color: rgba(251, 113, 133, .4); }
+  .tag.self { color: #a7f3d0; border-color: rgba(52, 211, 153, .4); }
+  .form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-top: 14px; }
+  .field { display: flex; flex-direction: column; gap: 5px; min-width: 150px; }
+  .field label { color: var(--muted); font-size: 12px; }
+  .field input, .field select, td input[type=password], td select {
+    padding: 8px 10px; border-radius: 9px; border: 1px solid var(--line);
+    background: #0d131d; color: var(--text); font-size: 13px; outline: none;
+  }
+  .field input:focus, .field select:focus, td input:focus, td select:focus {
+    border-color: rgba(34, 211, 238, .6); box-shadow: 0 0 0 3px rgba(34, 211, 238, .1);
+  }
+  .cell-actions { display: flex; gap: 6px; align-items: center; justify-content: flex-start; flex-wrap: wrap; }
+  .reader-note {
+    margin: 0; padding: 12px 15px; border-radius: 12px; font-size: 13px;
+    background: rgba(251, 191, 36, .07);
+    border: 1px solid rgba(251, 191, 36, .3);
+    color: #fde68a;
+  }
+  .foot { margin-top: 16px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+  .foot code { color: #cbd5e1; background: #1a2231; padding: 1px 6px; border-radius: 5px; }
+  @media (max-width: 900px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">MR</div>
+      <div>
+        <h1>运维统计</h1>
+        <p class="sub">Magnetic Rush 联机中转 · 账号权限后台</p>
+      </div>
+    </div>
+    <div class="actions">
+      <span class="badge" id="roleBadge" hidden>—</span>
+      <span class="stamp" id="updated">加载中…</span>
+      <button class="btn" id="refresh" type="button">立即刷新</button>
+      <form method="post" action="/admin/logout">
+        <button class="btn" type="submit">退出登录</button>
+      </form>
+    </div>
+  </header>
+
+  <div class="error" id="error" hidden></div>
+  <p class="reader-note" id="readerNote" hidden>当前为游客账号：只能查看看板。账号管理、清零统计、删除自制地图等修改操作会被服务端拒绝。</p>
+
+  <section class="cards">
+    <article class="card">
+      <h2>房间</h2>
+      <div class="metrics">
+        <div class="metric"><span class="label">累计创建房间</span><strong class="c-cyan" id="roomsCreated">–</strong></div>
+        <div class="metric"><span class="label">当前在线房间</span><strong id="roomsNow">–</strong></div>
+        <div class="metric"><span class="label">当前在线人数</span><strong class="c-green" id="playersNow">–</strong></div>
+        <div class="metric"><span class="label">历史峰值在线</span><strong class="c-amber" id="peakPlayers">–</strong><small id="peakAt">—</small></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>玩家</h2>
+      <div class="metrics">
+        <div class="metric"><span class="label">累计不同会话</span><strong id="sessions">–</strong></div>
+        <div class="metric"><span class="label">累计对局</span><strong class="c-red" id="matches">–</strong></div>
+        <div class="metric"><span class="label">累计完赛</span><strong class="c-green" id="completions">–</strong></div>
+        <div class="metric"><span class="label">服务器时间</span><strong id="serverTime" style="font-size:16px">–</strong><small>本地时区</small></div>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>自制地图</h2>
+      <div class="metrics">
+        <div class="metric"><span class="label">累计上传</span><strong class="c-cyan" id="uploads">–</strong></div>
+        <div class="metric"><span class="label">累计下载</span><strong id="downloads">–</strong></div>
+        <div class="metric"><span class="label">当前库存</span><strong class="c-amber" id="levelStock">–</strong><small>data/levels.json</small></div>
+        <div class="metric"><span class="label">数据文件</span><strong style="font-size:16px">stats.json</strong><small>重启保留</small></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="chart-card">
+    <div class="card-head">
+      <h2>最近 7 天</h2>
+      <div class="legend">
+        <span><i style="background:#22d3ee"></i>新建房间</span>
+        <span><i style="background:#fb7185"></i>开局对局</span>
+      </div>
+    </div>
+    <div class="chart" id="chart"></div>
+    <p class="empty" id="chartEmpty" hidden>最近 7 天还没有数据，出现建房或对局后这里会显示柱状图。</p>
+  </section>
+
+  <section class="table-card">
+    <div class="card-head">
+      <h2>逐日数字（最近 7 天）</h2>
+      <span class="stamp">按服务器本地日期统计</span>
+    </div>
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>新建房间</th>
+            <th>会话</th>
+            <th>对局</th>
+            <th>完赛</th>
+            <th>上传</th>
+            <th>下载</th>
+            <th>峰值在线</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div id="adminOnly" hidden>
+    <section class="panel-card">
+      <div class="card-head">
+        <h2>账号管理</h2>
+        <span class="stamp" id="acctHint">管理员可新建账号、改角色、禁用/启用、重置密码、删除</span>
+      </div>
+      <form id="createForm" class="form-row" autocomplete="off">
+        <div class="field">
+          <label for="newUser">用户名</label>
+          <input id="newUser" maxlength="32" required placeholder="1–32 位">
+        </div>
+        <div class="field">
+          <label for="newRole">角色</label>
+          <select id="newRole">
+            <option value="viewer">游客（只读）</option>
+            <option value="admin">管理员（完整权限）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="newPass">初始密码</label>
+          <input id="newPass" type="password" minlength="6" maxlength="128" required placeholder="至少 6 位">
+        </div>
+        <button class="btn primary" type="submit">新建账号</button>
+      </form>
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>用户名</th>
+              <th>角色</th>
+              <th>状态</th>
+              <th>创建时间</th>
+              <th style="text-align:left">操作</th>
+            </tr>
+          </thead>
+          <tbody id="acctRows"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="acctEmpty" hidden>还没有账号。</p>
+    </section>
+
+    <section class="panel-card">
+      <div class="card-head">
+        <h2>数据修改</h2>
+        <span class="stamp">仅管理员；游客调用会被服务端 403 拒绝</span>
+      </div>
+      <div class="form-row" style="justify-content:space-between;align-items:center">
+        <div>
+          <strong style="font-size:13.5px">清零运维统计</strong>
+          <p class="sub" style="margin:2px 0 0">清空累计计数与最近 30 天按天数据（stats.json），不影响联机与自制地图。</p>
+        </div>
+        <button class="btn danger" id="resetStats" type="button">清零统计</button>
+      </div>
+      <div class="table-box">
+        <div class="card-head" style="margin-top:16px">
+          <h2 style="font-size:13px">自制地图</h2>
+          <span class="stamp" id="levelHint">—</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>分享码</th>
+              <th>名称</th>
+              <th>物件数</th>
+              <th>创建时间</th>
+              <th style="text-align:left">操作</th>
+            </tr>
+          </thead>
+          <tbody id="levelRows"></tbody>
+        </table>
+        <p class="empty" id="levelEmpty" hidden>服务器上还没有自制地图。</p>
+      </div>
+    </section>
+  </div>
+
+  <p class="foot">
+    统计口径：累计计数写入 <code>stats.json</code>，只保存计数与日期，不保存 IP、昵称或会话 token 原文。
+    账号与密码哈希写入同目录的 <code>accounts.json</code>（scrypt + 每账号独立 salt，不保存明文）。
+    管理员可管理账号并清零统计 / 删除自制地图；游客只能查看看板，写操作由服务端强制拒绝。
+  </p>
+</div>
+
+<script>
+  const nf = new Intl.NumberFormat('zh-CN');
+  const $id = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2, '0');
+  let currentUser = null;
+  let msgTimer = null;
+
+  function num(v) {
+    return nf.format(Number(v) || 0);
+  }
+
+  function fmtTime(ts) {
+    if (!ts) return '尚无峰值记录';
+    const d = new Date(Number(ts));
+    if (Number.isNaN(d.getTime())) return '—';
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function fmtDate(ts) {
+    const d = new Date(Number(ts));
+    if (Number.isNaN(d.getTime())) return '—';
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function shortDate(dateStr) {
+    return dateStr ? dateStr.slice(5) : '—';
+  }
+
+  function setText(id, text) {
+    $id(id).textContent = text;
+  }
+
+  function showError(message) {
+    const el = $id('error');
+    el.classList.remove('ok');
+    el.hidden = false;
+    el.textContent = message;
+  }
+
+  function showSuccess(message) {
+    const el = $id('error');
+    el.classList.add('ok');
+    el.hidden = false;
+    el.textContent = message;
+    clearTimeout(msgTimer);
+    msgTimer = setTimeout(() => {
+      if (el.classList.contains('ok')) el.hidden = true;
+    }, 3500);
+  }
+
+  function clearError() {
+    const el = $id('error');
+    if (!el.classList.contains('ok')) el.hidden = true;
+  }
+
+  async function parseJson(res) {
+    try { return await res.json(); } catch { return null; }
+  }
+
+  function authFailed() {
+    location.replace('/admin/login');
+  }
+
+  async function apiGet(url) {
+    const res = await fetch(url, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json' },
+    });
+    if (res.status === 401) { authFailed(); throw new Error('登录已过期'); }
+    const data = await parseJson(res);
+    if (!res.ok || !data || data.ok !== true) throw new Error((data && data.error) || `HTTP ${res.status}`);
+    return data;
+  }
+
+  async function apiWrite(url, method, { body, confirm } = {}) {
+    const headers = { Accept: 'application/json', 'X-Admin-Action': '1' };
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+    if (confirm) headers['X-Admin-Confirm'] = confirm;
+    const res = await fetch(url, {
+      method,
+      cache: 'no-store',
+      credentials: 'same-origin',
+      headers,
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    if (res.status === 401) { authFailed(); throw new Error('登录已过期'); }
+    const data = await parseJson(res);
+    if (!res.ok || !data || data.ok !== true) throw new Error((data && data.error) || `HTTP ${res.status}`);
+    return data;
+  }
+
+  function applyUser(user) {
+    currentUser = user;
+    const badge = $id('roleBadge');
+    badge.hidden = false;
+    badge.className = `badge ${user.role === 'admin' ? 'admin' : 'viewer'}`;
+    badge.textContent = `${user.username} · ${user.role === 'admin' ? '管理员' : '游客'}`;
+    $id('adminOnly').hidden = user.role !== 'admin';
+    $id('readerNote').hidden = user.role !== 'viewer';
+  }
+
+  function renderChart(days) {
+    const chart = $id('chart');
+    chart.textContent = '';
+    const max = Math.max(1, ...days.map(d => Math.max(d.rooms || 0, d.matches || 0)));
+    const any = days.some(d => (d.rooms || 0) + (d.matches || 0) > 0);
+    $id('chartEmpty').hidden = any;
+
+    for (const day of days) {
+      const group = document.createElement('div');
+      group.className = 'day';
+
+      const bars = document.createElement('div');
+      bars.className = 'bars';
+      for (const [key, cls] of [['rooms', 'rooms'], ['matches', 'matches']]) {
+        const bar = document.createElement('div');
+        bar.className = `bar ${cls}`;
+        const value = Number(day[key]) || 0;
+        bar.style.height = value > 0 ? `${Math.max(3, Math.round(value / max * 100))}%` : '0';
+        bar.title = `${day.date} ${key === 'rooms' ? '新建房间' : '开局对局'}：${num(value)}`;
+        bars.appendChild(bar);
+      }
+
+      const d = document.createElement('div');
+      d.className = 'd';
+      d.textContent = shortDate(day.date);
+
+      const v = document.createElement('div');
+      v.className = 'v';
+      v.textContent = `${num(day.rooms)} / ${num(day.matches)}`;
+
+      group.append(bars, d, v);
+      chart.appendChild(group);
+    }
+  }
+
+  function renderRows(days) {
+    const tbody = $id('rows');
+    tbody.textContent = '';
+    const today = days.length ? days[days.length - 1].date : '';
+    const ordered = [...days].reverse();
+    for (const day of ordered) {
+      const tr = document.createElement('tr');
+      if (day.date === today) tr.className = 'today';
+      const cells = [
+        day.date,
+        num(day.rooms),
+        num(day.sessions),
+        num(day.matches),
+        num(day.completions),
+        num(day.uploads),
+        num(day.downloads),
+        num(day.peakPlayers),
+      ];
+      for (const value of cells) {
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    }
+  }
+
+  function render(data) {
+    applyUser(data.user);
+    setText('roomsCreated', num(data.totals.roomsCreated));
+    setText('roomsNow', num(data.current.rooms));
+    setText('playersNow', num(data.current.players));
+    setText('peakPlayers', num(data.peak.players));
+    setText('peakAt', data.peak.at ? `发生于 ${fmtTime(data.peak.at)}` : '尚无峰值记录');
+    setText('sessions', num(data.totals.sessions));
+    setText('matches', num(data.totals.matches));
+    setText('completions', num(data.totals.completions));
+    setText('uploads', num(data.totals.uploads));
+    setText('downloads', num(data.totals.downloads));
+    setText('levelStock', num(data.current.levelStock));
+    setText('serverTime', fmtTime(data.now));
+    setText('updated', `更新于 ${fmtTime(data.now)}`);
+    renderChart(data.last7 || []);
+    renderRows(data.last7 || []);
+  }
+
+  function confirmOnce(button, confirmText, action) {
+    if (!button.dataset.armed) {
+      button.dataset.armed = '1';
+      button.dataset.label = button.textContent;
+      button.textContent = confirmText;
+      clearTimeout(button._timer);
+      button._timer = setTimeout(() => resetConfirm(button), 5000);
+      return;
+    }
+    resetConfirm(button);
+    action();
+  }
+
+  function resetConfirm(button) {
+    clearTimeout(button._timer);
+    if (button.dataset.label) button.textContent = button.dataset.label;
+    delete button.dataset.armed;
+    delete button.dataset.label;
+  }
+
+  function addTag(cell, text, cls) {
+    const tag = document.createElement('span');
+    tag.className = `tag ${cls || ''}`.trim();
+    tag.textContent = text;
+    cell.appendChild(tag);
+  }
+
+  function buildAccountRow(acc, selfId) {
+    const tr = document.createElement('tr');
+
+    const nameCell = document.createElement('td');
+    nameCell.textContent = acc.username;
+    if (acc.id === selfId) addTag(nameCell, '当前', 'self');
+    tr.appendChild(nameCell);
+
+    const roleCell = document.createElement('td');
+    const roleSelect = document.createElement('select');
+    for (const [value, label] of [['viewer', '游客'], ['admin', '管理员']]) {
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = label;
+      roleSelect.appendChild(opt);
+    }
+    roleSelect.value = acc.role;
+    roleSelect.addEventListener('change', async () => {
+      roleSelect.disabled = true;
+      try {
+        await apiWrite(`/admin/api/accounts/${acc.id}`, 'PATCH', { body: { role: roleSelect.value } });
+        showSuccess(`已将 ${acc.username} 的角色改为 ${roleSelect.value === 'admin' ? '管理员' : '游客'}`);
+        await refreshAccounts();
+      } catch (e) {
+        roleSelect.value = acc.role;
+        showError(`修改角色失败：${e.message}`);
+      } finally {
+        roleSelect.disabled = false;
+      }
+    });
+    roleCell.appendChild(roleSelect);
+    tr.appendChild(roleCell);
+
+    const statusCell = document.createElement('td');
+    statusCell.textContent = acc.disabled ? '已禁用' : '启用中';
+    tr.appendChild(statusCell);
+
+    const createdCell = document.createElement('td');
+    createdCell.textContent = fmtDate(acc.createdAt);
+    tr.appendChild(createdCell);
+
+    const actionCell = document.createElement('td');
+    const box = document.createElement('div');
+    box.className = 'cell-actions';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.type = 'button';
+    toggleBtn.className = 'btn small';
+    toggleBtn.textContent = acc.disabled ? '启用' : '禁用';
+    toggleBtn.addEventListener('click', async () => {
+      toggleBtn.disabled = true;
+      try {
+        await apiWrite(`/admin/api/accounts/${acc.id}`, 'PATCH', { body: { disabled: !acc.disabled } });
+        showSuccess(acc.disabled ? `已启用 ${acc.username}` : `已禁用 ${acc.username}`);
+        await refreshAccounts();
+      } catch (e) {
+        showError(`修改状态失败：${e.message}`);
+      } finally {
+        toggleBtn.disabled = false;
+      }
+    });
+    box.appendChild(toggleBtn);
+
+    const pwdBtn = document.createElement('button');
+    pwdBtn.type = 'button';
+    pwdBtn.className = 'btn small';
+    pwdBtn.textContent = '重置密码';
+    pwdBtn.addEventListener('click', () => {
+      const detail = tr.nextElementSibling;
+      if (detail && detail.classList.contains('pwd-row')) {
+        detail.hidden = !detail.hidden;
+        if (!detail.hidden) detail.querySelector('input').focus();
+        return;
+      }
+      const row = document.createElement('tr');
+      row.className = 'pwd-row';
+      const cell = document.createElement('td');
+      cell.colSpan = 5;
+      const input = document.createElement('input');
+      input.type = 'password';
+      input.minLength = 6;
+      input.maxLength = 128;
+      input.placeholder = '新密码（至少 6 位）';
+      input.style.width = '220px';
+      const save = document.createElement('button');
+      save.type = 'button';
+      save.className = 'btn small primary';
+      save.textContent = '保存新密码';
+      save.style.marginLeft = '8px';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'btn small';
+      cancel.textContent = '取消';
+      cancel.style.marginLeft = '6px';
+      cancel.addEventListener('click', () => { row.hidden = true; input.value = ''; });
+      save.addEventListener('click', async () => {
+        if (input.value.length < 6) { showError('密码至少 6 位'); return; }
+        save.disabled = true;
+        try {
+          await apiWrite(`/admin/api/accounts/${acc.id}/password`, 'POST', { body: { password: input.value } });
+          input.value = '';
+          row.hidden = true;
+          showSuccess(`已重置 ${acc.username} 的密码（该账号其他登录会话已失效）`);
+          await refreshAccounts();
+        } catch (e) {
+          showError(`重置密码失败：${e.message}`);
+        } finally {
+          save.disabled = false;
+        }
+      });
+      cell.append(input, save, cancel);
+      row.appendChild(cell);
+      tr.after(row);
+      input.focus();
+    });
+    box.appendChild(pwdBtn);
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn small danger';
+    delBtn.textContent = '删除';
+    delBtn.addEventListener('click', () => {
+      confirmOnce(delBtn, '确认删除', async () => {
+        delBtn.disabled = true;
+        try {
+          await apiWrite(`/admin/api/accounts/${acc.id}`, 'DELETE', { confirm: 'DELETE_ACCOUNT' });
+          showSuccess(`已删除账号 ${acc.username}`);
+          await refreshAccounts();
+        } catch (e) {
+          showError(`删除账号失败：${e.message}`);
+        } finally {
+          delBtn.disabled = false;
+        }
+      });
+    });
+    box.appendChild(delBtn);
+
+    actionCell.appendChild(box);
+    tr.appendChild(actionCell);
+    return tr;
+  }
+
+  async function refreshAccounts() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    try {
+      const data = await apiGet('/admin/api/accounts');
+      const tbody = $id('acctRows');
+      tbody.textContent = '';
+      for (const acc of data.accounts) tbody.appendChild(buildAccountRow(acc, data.selfId));
+      $id('acctEmpty').hidden = data.accounts.length > 0;
+      $id('acctHint').textContent = `共 ${data.accounts.length} 个账号，${data.enabledAdmins} 个启用中的管理员`;
+    } catch (e) {
+      showError(`加载账号失败：${e.message}`);
+    }
+  }
+
+  function buildLevelRow(level) {
+    const tr = document.createElement('tr');
+    const cells = [level.code, level.name, num(level.count), fmtDate(level.createdAt)];
+    for (const value of cells) {
+      const td = document.createElement('td');
+      td.textContent = value;
+      tr.appendChild(td);
+    }
+    const actionCell = document.createElement('td');
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn small danger';
+    delBtn.textContent = '删除';
+    delBtn.addEventListener('click', () => {
+      confirmOnce(delBtn, '确认删除', async () => {
+        delBtn.disabled = true;
+        try {
+          await apiWrite(`/admin/api/levels/${encodeURIComponent(level.code)}`, 'DELETE', { confirm: 'DELETE_LEVEL' });
+          showSuccess(`已删除自制地图 ${level.code}`);
+          await Promise.all([refreshLevels(), load()]);
+        } catch (e) {
+          showError(`删除地图失败：${e.message}`);
+        } finally {
+          delBtn.disabled = false;
+        }
+      });
+    });
+    actionCell.appendChild(delBtn);
+    tr.appendChild(actionCell);
+    return tr;
+  }
+
+  async function refreshLevels() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    try {
+      const data = await apiGet('/admin/api/levels');
+      const tbody = $id('levelRows');
+      tbody.textContent = '';
+      for (const level of data.levels) tbody.appendChild(buildLevelRow(level));
+      $id('levelEmpty').hidden = data.levels.length > 0;
+      $id('levelHint').textContent = `当前库存 ${data.levels.length} 张（最多展示 200 张）`;
+    } catch (e) {
+      showError(`加载自制地图失败：${e.message}`);
+    }
+  }
+
+  async function load(withPanels = false) {
+    try {
+      const data = await apiGet('/admin/api/stats');
+      clearError();
+      render(data);
+      if (withPanels && currentUser && currentUser.role === 'admin') {
+        await Promise.all([refreshAccounts(), refreshLevels()]);
+      }
+    } catch (e) {
+      showError(`加载失败：${e.message}（看板数据仍保留在服务器，稍后会自动重试）`);
+    }
+  }
+
+  $id('refresh').addEventListener('click', () => load(true));
+
+  $id('createForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    const username = $id('newUser').value.trim();
+    const role = $id('newRole').value;
+    const password = $id('newPass').value;
+    if (!username) { showError('请填写用户名'); return; }
+    if (password.length < 6) { showError('初始密码至少 6 位'); return; }
+    const btn = event.target.querySelector('button[type=submit]');
+    btn.disabled = true;
+    try {
+      await apiWrite('/admin/api/accounts', 'POST', { body: { username, role, password } });
+      $id('newUser').value = '';
+      $id('newPass').value = '';
+      showSuccess(`已新建账号 ${username}（${role === 'admin' ? '管理员' : '游客'}）`);
+      await refreshAccounts();
+    } catch (e) {
+      showError(`新建账号失败：${e.message}`);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  $id('resetStats').addEventListener('click', () => {
+    const btn = $id('resetStats');
+    confirmOnce(btn, '再次点击确认清零', async () => {
+      btn.disabled = true;
+      try {
+        await apiWrite('/admin/api/maintenance/reset-stats', 'POST', { confirm: 'RESET_STATS' });
+        showSuccess('已清零运维统计（stats.json 中的累计与按天数据已归零）');
+        await load();
+      } catch (e) {
+        showError(`清零统计失败：${e.message}`);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+
+  load(true);
+  setInterval(() => load(false), 20_000);
+</script>
+</html>

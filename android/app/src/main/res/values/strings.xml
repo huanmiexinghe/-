@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">磁极冲刺</string>
+    <string name="title_activity_main">磁极冲刺</string>
+    <string name="package_name">com.experiment.magneticrush</string>
+    <string name="custom_url_scheme">com.experiment.magneticrush</string>
+</resources>

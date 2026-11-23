@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnetic Rush · 主菜单重设计预览</title>
+<style>
+  :root{
+    --ink:#2b2350;
+    --ink-soft:rgba(43,35,80,.32);
+    --paper:#ffffff;
+    --cream:#f6f1e7;
+    --accent:#ff4d6d;
+    --gold:#ffb703;
+    --mint:#3fd0c9;
+    --grape:#a97cff;
+    --lemon:#ffcf4d;
+    --sky:#35b6ff;
+    --sub:#6f6796;
+    --success:#3fc76a;
+    --danger:#ff6b6b;
+    --mono:Consolas,"Courier New",monospace;
+    --ui:"Segoe UI","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--ui);
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(1200px 600px at 12% -10%, rgba(255,183,3,.16), transparent 60%),
+      radial-gradient(1000px 600px at 92% 4%, rgba(255,77,109,.12), transparent 62%);
+  }
+  .wrap{position:relative;z-index:1;max-width:1720px;margin:0 auto;padding:56px 40px 96px}
+  .narrow{max-width:1080px}
+
+  /* ------------------------------------------------------------ 页头 */
+  .masthead{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-end;justify-content:space-between;
+    border-bottom:3px solid var(--ink);padding-bottom:28px;margin-bottom:36px}
+  .eyebrow{font:700 12px/1 var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
+  h1{font:700 clamp(34px,4vw,54px)/1.12 var(--ui);margin:14px 0 12px;letter-spacing:-.02em}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lede{max-width:620px;margin:0;color:var(--sub);font-size:16px;line-height:1.7}
+  .meta{display:flex;gap:10px;flex-wrap:wrap}
+  .meta span{border:2px solid var(--ink);border-radius:999px;padding:8px 14px;font:700 12px/1 var(--ui);
+    background:#fff;box-shadow:0 3px 0 rgba(43,35,80,.18)}
+
+  /* ------------------------------------------------------------ 通用区块 */
+  section{margin-top:64px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+  .sec-num{font:700 12px/1 var(--mono);color:var(--accent);letter-spacing:.12em}
+  .sec-head h2{font:700 24px/1.2 var(--ui);margin:0}
+  .sec-head p{margin:0 0 0 auto;color:var(--sub);font-size:13px}
+  .rule{height:2px;background:var(--ink);opacity:.14;margin:52px 0}
+
+  /* ------------------------------------------------------------ 层级图 */
+  .tiers{display:grid;gap:14px}
+  .tier{display:grid;grid-template-columns:132px 1fr 92px;gap:18px;align-items:center;
+    background:#fff;border:2px solid var(--ink);border-radius:18px;padding:16px 20px;
+    box-shadow:0 4px 0 rgba(43,35,80,.16)}
+  .tier-tag{font:700 12px/1.4 var(--mono);letter-spacing:.08em;color:var(--sub)}
+  .tier-tag b{display:block;font:700 22px/1.3 var(--ui);color:var(--ink);letter-spacing:0}
+  .tier-items{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{border-radius:999px;padding:8px 14px;font:700 13px/1 var(--ui);border:2px solid var(--ink);
+    background:#fff}
+  .pill.primary{background:var(--accent);color:#fff}
+  .pill.daily{background:rgba(255,183,3,.18);border-color:var(--gold)}
+  .pill.mode{background:#fff}
+  .pill.sub{background:#f2f0fa;border-color:var(--ink-soft);color:var(--sub)}
+  .weight{display:flex;flex-direction:column;gap:6px;justify-self:end;width:92px}
+  .weight i{display:block;height:8px;border-radius:4px;background:var(--accent);opacity:.9}
+  .weight small{font:700 10px/1 var(--mono);color:var(--sub);letter-spacing:.06em}
+
+  /* ------------------------------------------------------------ 手机画框 */
+  .phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(640px,1fr));gap:34px}
+  .phone-block{min-width:0}
+  .phone{position:relative;width:100%;aspect-ratio:844/390;border-radius:38px;background:#0b1020;
+    padding:0;overflow:hidden;border:0;
+    box-shadow:0 22px 40px rgba(43,35,80,.22),0 4px 0 rgba(43,35,80,.35)}
+  .phone::after{ /* 横屏刘海（左侧） */
+    content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:17px;height:96px;border-radius:0 12px 12px 0;background:#0b1020;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);z-index:3;pointer-events:none}
+  .screen{position:absolute;inset:0;overflow:hidden;background:#0e1224}
+  .stage{
+    position:absolute;left:50%;top:50%;width:960px;height:540px;
+    transform:translate(-50%,-50%) scale(var(--s,1));
+    transform-origin:center;
+    font-family:var(--ui);color:var(--ink);
+    background:
+      radial-gradient(circle at 16% 20%, rgba(255,255,255,.55) 0 6%, transparent 6.4%),
+      radial-gradient(ellipse 220px 40px at 40% 26%, rgba(255,255,255,.42), transparent 70%),
+      linear-gradient(#6fc4f2 0%, #a9e1ff 46%, #e9f8ff 74%);
+    overflow:hidden;
+  }
+  .stage::before{ /* 远山 */
+    content:"";position:absolute;left:-60px;right:-60px;bottom:-90px;height:260px;
+    background:radial-gradient(ellipse 420px 200px at 22% 100%, #8fd98a 0 70%, transparent 72%),
+               radial-gradient(ellipse 520px 220px at 62% 100%, #7fd47f 0 70%, transparent 72%),
+               radial-gradient(ellipse 420px 180px at 96% 100%, #8fd98a 0 70%, transparent 72%);
+  }
+  .stage::after{ /* 近地 */
+    content:"";position:absolute;left:0;right:0;bottom:0;height:56px;
+    background:linear-gradient(#d9f2b0,#c7e99b);
+    border-top:2px solid rgba(43,35,80,.10);
+  }
+  .caption{display:flex;align-items:baseline;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .caption b{font:700 15px/1 var(--ui)}
+  .caption span{font:12px/1.5 var(--sub);color:var(--sub)}
+  .caption em{font:700 11px/1 var(--mono);font-style:normal;color:var(--accent);letter-spacing:.06em}
+
+  /* ------------------------------------------------------------ 画布内组件（1:1 逻辑像素） */
+  .abs{position:absolute}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:16px;
+    box-shadow:0 5px 0 rgba(43,35,80,.22);overflow:hidden}
+  .hero{
+    background:var(--accent);border:4px solid var(--ink);border-radius:24px;
+    box-shadow:0 6px 0 rgba(43,35,80,.26);color:#fff;
+  }
+  .hero .play{
+    position:absolute;left:22px;top:35px;width:48px;height:48px;border-radius:50%;
+    background:#fff;border:3px solid var(--ink);display:grid;place-items:center;
+  }
+  .hero .play i{
+    width:0;height:0;border:9px solid transparent;border-left:14px solid var(--accent);
+    margin-left:4px;display:block;
+  }
+  .hero .t{position:absolute;left:86px;top:22px;font:700 27px/1.15 var(--ui);letter-spacing:.01em}
+  .hero .d{position:absolute;left:86px;top:56px;font:700 13px/1 var(--ui);color:rgba(255,255,255,.92)}
+  .hero .badge{
+    position:absolute;right:18px;top:14px;height:28px;padding:0 13px;border-radius:999px;
+    background:rgba(255,255,255,.92);border:2.5px solid var(--ink);
+    display:flex;align-items:center;font:700 12px/1 var(--ui);color:var(--accent);
+  }
+  .hero .track{position:absolute;left:86px;right:24px;top:86px;height:10px;border-radius:5px;
+    background:rgba(255,255,255,.34);overflow:hidden}
+  .hero .track span{display:block;height:100%;border-radius:5px;background:#fff}
+  .hero .pct{position:absolute;right:24px;top:80px;font:700 11px/1 var(--mono);color:rgba(255,255,255,.95)}
+
+  .daily{padding:0}
+  .daily .ribbon{
+    position:absolute;left:14px;top:14px;height:26px;padding:0 12px;border-radius:999px;
+    background:var(--gold);border:2.5px solid var(--ink);display:flex;align-items:center;gap:6px;
+    font:700 12px/1 var(--ui);color:var(--ink)}
+  .daily .status{position:absolute;right:14px;top:16px;font:700 12px/1 var(--ui);color:#c07a00}
+  .daily .status.done{color:var(--success)}
+  .chips{position:absolute;left:14px;top:50px;display:flex;gap:8px}
+  .chip{height:24px;padding:0 10px;border-radius:999px;display:flex;align-items:center;
+    background:rgba(255,183,3,.16);border:2px solid var(--ink-soft);font:700 11px/1 var(--ui);color:var(--sub)}
+  .daily .remain{position:absolute;left:14px;bottom:15px;font:700 15px/1 var(--mono);color:var(--ink)}
+  .daily .streak{position:absolute;right:14px;bottom:16px;font:700 11px/1 var(--ui);color:var(--sub)}
+
+  .mode{padding-left:18px;display:flex;align-items:center;gap:16px}
+  .icon-box{width:44px;height:44px;border-radius:10px;border:2.5px solid var(--ink);
+    display:grid;place-items:center;flex:none}
+  .mode .txt b{display:block;font:700 21px/1.2 var(--ui)}
+  .mode .txt small{display:block;margin-top:4px;font:700 12px/1 var(--ui);color:var(--sub)}
+  .chev{margin-left:auto;font:700 28px/1 var(--ui);color:rgba(255,77,109,.8);padding-right:20px}
+
+  .sec-card{padding-left:14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 0 rgba(43,35,80,.2)}
+  .sec-card .icon-box{width:28px;height:28px;border-radius:8px;border-width:2px}
+  .sec-card .txt b{display:block;font:700 16px/1.2 var(--ui)}
+  .sec-card .txt small{display:block;margin-top:3px;font:700 11px/1 var(--ui);color:var(--sub)}
+
+  .gear{width:64px;height:64px;border-radius:16px;display:grid;place-items:center}
+  .stat{display:flex;flex-direction:column;justify-content:center;gap:6px;padding-left:22px;
+    background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:0 4px 0 rgba(43,35,80,.22);
+    position:relative;overflow:hidden}
+  .stat .strip{position:absolute;left:5px;top:5px;bottom:5px;width:8px;border-radius:4px}
+  .stat small{font:700 11px/1 var(--ui);color:var(--sub)}
+  .stat b{font:700 17px/1 var(--mono);color:var(--ink);letter-spacing:-.01em}
+
+  .brand-title{position:absolute;left:92px;top:21px;font:700 30px/1 var(--ui);color:#fff;
+    -webkit-text-stroke:7px var(--ink);paint-order:stroke fill;letter-spacing:.005em}
+  .brand-sub{position:absolute;left:94px;top:51px;font:700 12px/1 var(--ui);color:var(--accent);
+    -webkit-text-stroke:5px #fff;paint-order:stroke fill}
+  .logo{position:absolute;left:38px;top:20px;width:44px;height:44px}
+  .hint{position:absolute;left:0;right:0;bottom:22px;text-align:center;font:700 12px/1 var(--ui);
+    color:var(--ink);-webkit-text-stroke:5px #fff;paint-order:stroke fill}
+
+  /* 旧版网格 */
+  .old-cell{height:52px;border-radius:14px;border:3px solid var(--ink);background:#fff;
+    box-shadow:0 4px 0 rgba(43,35,80,.2);display:flex;align-items:center;justify-content:center;
+    font:700 16px/1 var(--ui)}
+  .old-hero{position:absolute;left:320px;top:170px;width:320px;height:68px;border-radius:20px;
+    background:var(--accent);border:4px solid var(--ink);box-shadow:0 6px 0 rgba(43,35,80,.26);
+    display:flex;align-items:center;justify-content:center;color:#fff;font:700 24px/1 var(--ui);
+    -webkit-text-stroke:0}
+
+  /* ------------------------------------------------------------ 弹层 */
+  .overlay{position:absolute;inset:0;background:rgba(38,28,72,.55)}
+  .panel{position:absolute;background:#fff;border:4px solid var(--ink);border-radius:32px;
+    box-shadow:0 8px 0 rgba(43,35,80,.24)}
+  .panel h3{position:absolute;left:0;right:0;top:20px;text-align:center;margin:0;
+    font:700 26px/1 var(--ui);color:var(--accent);-webkit-text-stroke:7px #fff;paint-order:stroke fill}
+  .panel .psub{position:absolute;left:0;right:0;top:50px;text-align:center;font:700 12px/1 var(--ui);color:var(--sub)}
+  .btn{position:absolute;border-radius:999px;border:3px solid var(--ink);display:flex;align-items:center;
+    justify-content:center;font:700 19px/1 var(--ui);box-shadow:0 4px 0 rgba(43,35,80,.22)}
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.ghost{background:#fff;color:var(--ink)}
+  .btn.danger{background:var(--danger);color:#fff}
+  .btn.small{font-size:23px}
+  .vol-label{position:absolute;left:0;right:0;top:141px;text-align:center;font:700 13px/1 var(--ui);color:var(--sub)}
+  .vol-track{position:absolute;left:332px;top:263px;width:272px;height:12px;border-radius:6px;
+    background:rgba(43,35,80,.12);overflow:hidden}
+  .vol-track span{display:block;height:100%;background:var(--accent);border-radius:6px}
+  .reset-row{position:absolute;border-radius:999px;display:flex;align-items:center;justify-content:center;
+    font:700 15px/1 var(--ui);color:#c33b3b;background:rgba(255,107,107,.12);
+    border:2.5px solid rgba(255,107,107,.55);box-shadow:0 3px 0 rgba(43,35,80,.16)}
+  .confirm h3{color:var(--accent)}
+  .confirm .warn{position:absolute;left:0;right:0;top:118px;text-align:center;font:14px/1.5 var(--ui);color:var(--sub)}
+
+  /* ------------------------------------------------------------ 说明区 */
+  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .note{background:#fff;border:2px solid var(--ink);border-radius:18px;padding:22px 24px;
+    box-shadow:0 4px 0 rgba(43,35,80,.16)}
+  .note h4{margin:0 0 10px;font:700 17px/1.2 var(--ui)}
+  .note p{margin:0;color:var(--sub);font-size:14px;line-height:1.75}
+  .note code{font:700 12px/1 var(--mono);background:rgba(43,35,80,.07);padding:2px 5px;border-radius:5px;color:var(--ink)}
+  .diff{width:100%;border-collapse:collapse;background:#fff;border:2px solid var(--ink);border-radius:16px;
+    overflow:hidden;box-shadow:0 4px 0 rgba(43,35,80,.16)}
+  .diff th,.diff td{padding:14px 18px;text-align:left;border-bottom:1px solid rgba(43,35,80,.1);font-size:14px;vertical-align:top}
+  .diff th{font:700 12px/1 var(--mono);letter-spacing:.08em;background:rgba(255,183,3,.14);color:var(--ink)}
+  .diff tr:last-child td{border-bottom:0}
+  .diff td:first-child{font-weight:700;white-space:nowrap}
+  .diff s{color:var(--sub);text-decoration-color:rgba(255,77,109,.5)}
+  .diff b{color:var(--accent)}
+
+  footer{margin-top:64px;padding-top:24px;border-top:2px solid var(--ink);
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;color:var(--sub);font-size:13px}
+  footer b{color:var(--ink);font-family:var(--mono)}
+
+  @media (max-width:720px){
+    .wrap{padding:36px 20px 64px}
+    .tier{grid-template-columns:1fr;gap:10px}
+    .weight{justify-self:start;width:100%}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .tier,.note,.phone-block{animation:rise .5s ease-out both}
+    .tier:nth-child(2){animation-delay:.06s}
+    .tier:nth-child(3){animation-delay:.12s}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">Magnetic Rush · Menu Redesign</div>
+      <h1>把 8 个平铺入口<br>收成 <em>3 层</em> 视觉权重</h1>
+      <p class="lede">不新增玩法，只重排信息架构与呈现：主 CTA 独占视觉重心，每日挑战升为「有状态的特写」，模式与工具各自降级。沿用原有糖果色 + 深靛描边 + 硬投影的贴纸语言。</p>
+    </div>
+    <div class="meta">
+      <span>逻辑画布 960×540</span>
+      <span>实机 844×390（画布 693×390）</span>
+      <span>最小命中区 46 CSS px</span>
+      <span>键盘路径保留</span>
+    </div>
+  </header>
+
+  <!-- ---------------------------------------------------------- 01 结构 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>重设计后的结构</h2>
+      <p>同一屏内，自上而下三层；数值为视觉权重</p>
+    </div>
+    <div class="tiers">
+      <div class="tier">
+        <div class="tier-tag"><b>第 1 层</b>首要动作</div>
+        <div class="tier-items">
+          <span class="pill primary">继续 / 开始游戏 · 560×118</span>
+          <span class="pill daily">每日挑战特写 · 268×118</span>
+        </div>
+        <div class="weight"><i style="width:100%"></i><small>100% · 85 CSS px 高</small></div>
+      </div>
+      <div class="tier">
+        <div class="tier-tag"><b>第 2 层</b>核心模式</div>
+        <div class="tier-items">
+          <span class="pill mode">关卡选择 · 414×88</span>
+          <span class="pill mode">无尽模式 · 414×88</span>
+        </div>
+        <div class="weight"><i style="width:66%;opacity:.75"></i><small>66% · 63 CSS px 高</small></div>
+      </div>
+      <div class="tier">
+        <div class="tier-tag"><b>第 3 层</b>次级入口</div>
+        <div class="tier-items">
+          <span class="pill sub">联机竞速 · 272×64</span>
+          <span class="pill sub">自定义关卡 · 272×64</span>
+          <span class="pill sub">成就 · 272×64</span>
+          <span class="pill sub">设置齿轮 · 64×64（右上角）</span>
+        </div>
+        <div class="weight"><i style="width:42%;opacity:.45"></i><small>42% · 46 CSS px 高</small></div>
+      </div>
+    </div>
+    <p style="margin:18px 0 0;color:var(--sub);font-size:13px;line-height:1.7">
+      位置：品牌栏在 y=14–78（徽记 / 标题 / 磁芯 / 齿轮）；第 1 层 y=90–208；第 2 层 y=224–312；第 3 层 y=326–390；战绩条 y=412–456；底部提示 y≈502–514。左右统一留白 56 逻辑像素。
+    </p>
+  </section>
+
+  <!-- ---------------------------------------------------------- 02 前后 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>重设计前后</h2>
+      <p>左侧为旧版示意；右侧按与游戏相同的逻辑坐标（960×540）还原新版布局</p>
+    </div>
+    <div class="phones">
+      <div class="phone-block">
+        <div class="phone"><div class="screen"><div class="stage" data-stage="old"></div></div></div>
+        <div class="caption">
+          <em>BEFORE</em><b>旧版 · 8 个入口平权</b>
+          <span>2×4 网格，主 CTA 与工具入口同样大小；每日挑战只是其中一格，状态无处可放。</span>
+        </div>
+      </div>
+      <div class="phone-block">
+        <div class="phone"><div class="screen"><div class="stage" data-stage="default"></div></div></div>
+        <div class="caption">
+          <em>AFTER</em><b>新版 · 默认态（无存档）</b>
+          <span>主 CTA 为「开始游戏 · 新手教程」；每日挑战显示倒计时与当日修正。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------- 03 状态 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>关键状态</h2>
+      <p>状态只改文案、徽标与强调色，结构不跳变</p>
+    </div>
+    <div class="phones">
+      <div class="phone-block">
+        <div class="phone"><div class="screen"><div class="stage" data-stage="continue"></div></div></div>
+        <div class="caption">
+          <em>STATE 01</em><b>有存档 · 继续游戏</b>
+          <span>标题旁是「第 12 关 · 磁暴回廊」，右上徽标 11 / 36 关，底部白色进度条。</span>
+        </div>
+      </div>
+      <div class="phone-block">
+        <div class="phone"><div class="screen"><div class="stage" data-stage="daily"></div></div></div>
+        <div class="caption">
+          <em>STATE 02</em><b>每日挑战 · 键盘焦点</b>
+          <span>金色描边 + 淡金底表示选中；显示「今日已完成」、连续 5 天与两条当日修正。</span>
+        </div>
+      </div>
+      <div class="phone-block">
+        <div class="phone"><div class="screen"><div class="stage" data-stage="settings"></div></div></div>
+        <div class="caption">
+          <em>STATE 03</em><b>设置弹层（含重置入口）</b>
+          <span>设置与重置折叠进右上齿轮；重置仅在此处以危险行出现，点击后仍需二次确认。</span>
+        </div>
+      </div>
+      <div class="phone-block">
+        <div class="phone"><div class="screen"><div class="stage" data-stage="confirm"></div></div></div>
+        <div class="caption">
+          <em>STATE 04</em><b>重置二次确认</b>
+          <span>默认焦点在「取消」；明确写出会被删除的内容，确认按钮用危险色。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ---------------------------------------------------------- 04 说明 -->
+  <section style="margin-top:0">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>关键取舍与实现说明</h2>
+    </div>
+    <div class="notes">
+      <div class="note">
+        <h4>层级：先给「下一步」让路</h4>
+        <p>主 CTA 从 320×68 放大到 560×118，并与每日挑战并排占据首屏最重的一行；关卡与无尽退为等宽模式卡；联机、自定义、成就收成 64 高的小卡。设置从独立入口改为右上 64×64 齿轮，重置折叠进设置弹层，仍然二次确认。</p>
+      </div>
+      <div class="note">
+        <h4>间距：三条水平线规整节奏</h4>
+        <p>全部左右留白统一 56；行间距固定 16 / 22；卡片高度只用 118 / 88 / 64 / 44 四档。信息密度靠高度分层，而不是靠字号堆叠，避免小屏拥挤。</p>
+      </div>
+      <div class="note">
+        <h4>点击区：按实机换算后仍 ≥ 44</p>
+        <p>横屏 844×390 时画布等比缩放到 693×390（缩放 0.722）。最小卡 64 逻辑像素 → <code>46.2 CSS px</code>；齿轮 64 → 46.2；模式卡 88 → 63.5；主 CTA 118 → 85.3。所有入口都大于 44 px 的拇指命中下限。</p>
+      </div>
+      <div class="note">
+        <h4>触屏与键盘互不打架</h4>
+        <p>点击沿用上一轮的「抬起且未拖动（阈值 12px）才触发」，拖动不会误开场景；<code>onPointerDown</code> 只负责按下态。键盘用 ↑↓←→ 在同一视觉行内移动、跨行按最近中心点选取，回车确认；设置弹层内 Esc 逐层关闭。</p>
+      </div>
+    </div>
+
+    <table class="diff" style="margin-top:26px">
+      <thead><tr><th>维度</th><th>旧版</th><th>新版</th></tr></thead>
+      <tbody>
+        <tr><td>入口排列</td><td><s>2×4 等权网格，8 个入口同样大小</s></td><td><b>3 层</b>：主 CTA + 每日特写 / 模式行 / 次级行</td></tr>
+        <tr><td>每日挑战</td><td><s>与「选关」同尺寸的一格，没有状态位</s></td><td><b>固定特写卡</b>：倒计时、连续天数、当日修正、首通磁芯</td></tr>
+        <tr><td>设置 / 重置</td><td><s>与玩法入口并列的整格按钮</s></td><td><b>右上齿轮</b>；重置折叠进设置，二次确认</td></tr>
+        <tr><td>继续 / 开始</td><td><s>文案固定，进度只靠底部战绩条</s></td><td><b>三态文案</b>（开始 / 继续 / 再次挑战）+ 卡内进度条</td></tr>
+        <tr><td>触屏命中</td><td><s>网格单元约 54 高 → 39 CSS px</s></td><td><b>最小 46 CSS px</b>，主 CTA 85 CSS px</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <span>预览稿：<b>docs/menu-redesign-preview.html</b> · 静态示意，不与游戏代码联动</span>
+    <span>对应实现：<b>src/scenes/MenuScene.ts</b> · 视觉令牌沿用 <b>src/ui/theme.ts</b></span>
+  </footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   画布 mock：按 MenuScene.ts 的逻辑坐标 1:1 输出，再整体缩放。
+   --------------------------------------------------------------- */
+const C = {
+  ink:'#2b2350', sub:'#6f6796', accent:'#ff4d6d', gold:'#ffb703',
+  mint:'#3fd0c9', grape:'#a97cff', lemon:'#ffcf4d', sky:'#35b6ff',
+  success:'#3fc76a', danger:'#ff6b6b'
+};
+
+const ICONS = {
+  play:'<svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg>',
+  levels:'<svg viewBox="0 0 24 24" width="100%" height="100%"><g fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></g></svg>',
+  endless:'<svg viewBox="0 0 24 24" width="100%" height="100%"><g fill="none" stroke="currentColor" stroke-width="3"><circle cx="7.5" cy="12" r="4"/><circle cx="16.5" cy="12" r="4"/></g></svg>',
+  online:'<svg viewBox="0 0 24 24" width="100%" height="100%"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="16" r="2.4" fill="currentColor" stroke="none"/><path d="M6.6 12.2a7.4 7.4 0 0110.8 0"/><path d="M3.4 8.6a12 12 0 0117.2 0"/></g></svg>',
+  create:'<svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M4 20l3.6-1 11-11-2.6-2.6-11 11z" fill="currentColor"/></svg>',
+  trophy:'<svg viewBox="0 0 24 24" width="100%" height="100%"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z" fill="currentColor"/></svg>',
+  daily:'<svg viewBox="0 0 24 24" width="100%" height="100%"><g fill="currentColor"><rect x="3" y="6" width="18" height="15" rx="3"/><path d="M9 3v4M15 3v4" stroke="currentColor" stroke-width="2.4" fill="none"/></g></svg>',
+  settings:'<svg viewBox="0 0 24 24" width="100%" height="100%"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="3.1"/><circle cx="12" cy="12" r="7.2"/><path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></g></svg>'
+};
+
+const icon = (k, size, color) =>
+  `<div style="width:${size}px;height:${size}px;color:${color};display:grid;place-items:center">${ICONS[k]}</div>`;
+
+function header(state) {
+  return `
+    <div class="logo">
+      <svg viewBox="0 0 60 64" width="100%" height="100%">
+        <path d="M13 26a17 17 0 0134 0v20h-10v-20a7 7 0 00-14 0v20H13z" fill="#ff4d6d"/>
+        <path d="M30 26a7 7 0 0117 0v20h-10v-20a7 7 0 00-7-7z" fill="#35b6ff"/>
+        <path d="M13 26a17 17 0 0134 0v20h-10v-20a7 7 0 00-14 0v20H13z" fill="none" stroke="#2b2350" stroke-width="3.6" stroke-linejoin="round"/>
+        <rect x="13" y="38" width="10" height="7" rx="3" fill="#f2f2f8" stroke="#2b2350" stroke-width="2.6"/>
+        <rect x="37" y="38" width="10" height="7" rx="3" fill="#f2f2f8" stroke="#2b2350" stroke-width="2.6"/>
+      </svg>
+    </div>
+    <div class="brand-title">MAGNETIC RUSH</div>
+    <div class="brand-sub">磁极冲刺</div>
+    <div class="stat" style="position:absolute;left:696px;top:24px;width:132px;height:44px">
+      <i class="strip" style="background:${C.gold}"></i>
+      <small>磁芯</small><b>${state.cores}</b>
+    </div>
+    <div class="card gear" style="left:840px;top:14px;border-radius:16px">
+      ${icon('settings', 24, C.ink)}
+    </div>`;
+}
+
+function hero(state, focus) {
+  const pct = Math.round(state.progress * 100);
+  return `
+    <div class="abs hero ${focus ? 'focus' : ''}" style="left:56px;top:90px;width:560px;height:118px">
+      <div class="play"><i></i></div>
+      <div class="t">${state.heroTitle}</div>
+      <div class="d">${state.heroDesc}</div>
+      <div class="badge">${state.badge}</div>
+      <div class="track"><span style="width:${pct}%"></span></div>
+      <div class="pct">${pct}%</div>
+    </div>`;
+}
+
+function daily(state, focus) {
+  const chips = state.mods.map(m => `<span class="chip">${m}</span>`).join('');
+  return `
+    <div class="abs card daily" style="left:636px;top:90px;width:268px;height:118px;
+      ${focus ? `border:4px solid ${C.gold};background:rgba(255,183,3,.16);` : ''}">
+      <div class="ribbon">${icon('daily', 15, C.ink)}每日挑战</div>
+      <div class="status ${state.dailyDone ? 'done' : ''}">${state.dailyDone ? '今日已完成' : '首通 +3 磁芯'}</div>
+      <div class="chips">${chips}</div>
+      <div class="remain">剩余 ${state.remain}</div>
+      <div class="streak">${state.streak}</div>
+    </div>`;
+}
+
+function mode(state, focus) {
+  return `
+    <div class="abs card mode" style="left:490px;top:224px;width:414px;height:88px;
+      ${state.focusEndless ? `border:4px solid ${C.lemon};background:rgba(255,207,77,.16);` : ''}">
+      <div class="icon-box" style="background:rgba(255,207,77,.22)">${icon('endless', 23, C.lemon)}</div>
+      <div class="txt"><b>无尽模式</b><small>${state.endlessDesc}</small></div>
+      <div class="chev" style="color:rgba(255,183,3,.85)">›</div>
+    </div>
+    <div class="abs card mode" style="left:56px;top:224px;width:414px;height:88px">
+      <div class="icon-box" style="background:rgba(63,208,201,.22)">${icon('levels', 23, C.mint)}</div>
+      <div class="txt"><b>关卡选择</b><small>36 关 · ${state.cleared} 关已通关</small></div>
+      <div class="chev" style="color:rgba(63,208,201,.85)">›</div>
+    </div>`;
+}
+
+function secondary(state, focusIdx) {
+  const items = [
+    ['online', '联机竞速', '最多 4 人 · 实时排名', C.sky],
+    ['create', '自定义关卡', '创作并分享你的关卡', C.grape],
+    ['trophy', '成就', `${state.ach} / 20 已解锁`, C.gold]
+  ];
+  return items.map(([ic, label, desc, accent], i) => `
+    <div class="abs card sec-card" style="left:${56 + i * 288}px;top:326px;width:272px;height:64px;
+      ${i === focusIdx ? `border-color:${accent};border-width:3.5px;background:rgba(255,255,255,.9)` : ''}">
+      <div class="icon-box" style="background:${accent}33;border-color:rgba(43,35,80,.32)">${icon(ic, 16, accent)}</div>
+      <div class="txt"><b>${label}</b><small>${desc}</small></div>
+    </div>`).join('');
+}
+
+function stats(state) {
+  const data = [
+    ['关卡进度', `${state.cleared} / 36`, C.accent],
+    ['星星', `${state.stars} / 108`, C.gold],
+    ['最高连击', `${state.combo}`, C.lemon],
+    ['无尽纪录', `${state.meters} m`, C.sky],
+    ['成就', `${state.ach} / 20`, C.grape]
+  ];
+  return data.map(([label, value, accent], i) => `
+    <div class="stat" style="left:${176 + i * 124}px;top:412px;width:112px;height:44px">
+      <i class="strip" style="background:${accent}"></i>
+      <small>${label}</small><b>${value}</b>
+    </div>`).join('');
+}
+
+function stage(state) {
+  const focusIdx = state.focusSecondary ?? -1;
+  return header(state) + hero(state, state.focusHero) + daily(state, state.focusDaily) +
+    mode(state, state.focusEndless) + secondary(state, focusIdx) + stats(state) +
+    `<div class="hint">${state.hint}</div>`;
+}
+
+function oldStage() {
+  const cells = ['选关', '无尽', '每日挑战', '联机竞速', '编辑器', '成就', '设置', '重置'];
+  const grid = cells.map(t => `<div class="old-cell">${t}</div>`).join('');
+  return `
+    <div style="position:absolute;left:0;right:0;top:34px;text-align:center">
+      <div style="font:700 46px/1 var(--ui);color:#fff;-webkit-text-stroke:8px #2b2350;paint-order:stroke fill">MAGNETIC RUSH</div>
+      <div style="margin-top:10px;font:700 13px/1 var(--ui);color:#ff4d6d;-webkit-text-stroke:5px #fff;paint-order:stroke fill">磁极冲刺</div>
+    </div>
+    <div class="old-hero">开始游戏</div>
+    <div style="position:absolute;left:29px;top:252px;width:902px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${grid}
+    </div>
+    <div style="position:absolute;left:0;right:0;bottom:30px;text-align:center;font:700 12px/1 var(--ui);color:#2b2350;-webkit-text-stroke:5px #fff;paint-order:stroke fill">点击入口 · 8 个入口同样大小</div>`;
+}
+
+const BASE = {
+  cores: 12, heroTitle: '开始游戏', heroDesc: '新手教程 · 从零掌握四个基础操作',
+  badge: '新手教程', progress: 0, cleared: 0, stars: 0, combo: 0, meters: 0, ach: 3,
+  mods: ['疾风', '富矿'], remain: '06:42:10', streak: '尚未开始', dailyDone: false,
+  endlessDesc: '无限冲刺 · 挑战最远距离', hint: '点击卡片开始 · 右上角齿轮可设置'
+};
+
+const STATES = {
+  default: { ...BASE },
+  continue: {
+    ...BASE, heroTitle: '继续游戏', heroDesc: '第 12 关 · 磁暴回廊', badge: '11 / 36 关',
+    progress: 11 / 36, cleared: 11, stars: 24, combo: 46, meters: 842, ach: 9,
+    dailyDone: true, streak: '连续 5 天', remain: '06:42:10'
+  },
+  daily: {
+    ...BASE, heroTitle: '继续游戏', heroDesc: '第 12 关 · 磁暴回廊', badge: '11 / 36 关',
+    progress: 11 / 36, cleared: 11, stars: 24, combo: 46, meters: 842, ach: 9,
+    dailyDone: true, focusDaily: true, streak: '连续 5 天', remain: '06:42:10',
+    hint: '↑↓←→ 选择 · 回车确认 · 右上角齿轮设置'
+  }
+};
+
+const settingsOverlay = `
+  <div class="overlay"></div>
+  <div class="panel" style="left:220px;top:90px;width:520px;height:360px">
+    <h3>设置</h3>
+    <div class="psub">声音、音量与存档管理</div>
+    <div class="btn primary" style="left:32px;top:68px;width:456px;height:52px">声音：开启</div>
+    <div class="vol-label" style="top:150px">主音量 80%</div>
+    <div class="btn ghost small" style="left:32px;top:154px;width:64px;height:48px">−</div>
+    <div class="btn ghost small" style="left:424px;top:154px;width:64px;height:48px">＋</div>
+    <div class="vol-track" style="left:112px;top:173px;width:296px"><span style="width:80%"></span></div>
+    <div class="reset-row" style="left:32px;top:226px;width:456px;height:48px">重置存档 · 清空全部进度</div>
+    <div class="btn ghost" style="left:32px;top:296px;width:456px;height:44px;font-size:18px">返回菜单</div>
+  </div>`;
+
+const confirmOverlay = `
+  <div class="overlay" style="background:rgba(38,28,72,.32)"></div>
+  <div class="panel confirm" style="left:240px;top:140px;width:480px;height:220px">
+    <h3>清空全部进度？</h3>
+    <div class="warn" style="top:82px">关卡星级、跳关次数、无尽纪录都会被删除</div>
+    <div class="btn primary" style="left:40px;top:152px;width:180px;height:48px">取消</div>
+    <div class="btn danger" style="left:260px;top:152px;width:180px;height:48px">确认清空</div>
+  </div>`;
+
+document.querySelectorAll('[data-stage]').forEach(el => {
+  const key = el.dataset.stage;
+  if (key === 'old') { el.innerHTML = oldStage(); return; }
+  const state = STATES[key] || STATES.default;
+  let html = stage(state);
+  if (key === 'settings') html += settingsOverlay;
+  if (key === 'confirm') html += settingsOverlay + confirmOverlay;
+  el.innerHTML = html;
+});
+
+/* 画布等比缩放：始终按 960×540 适配画框，两侧留黑边（与实机一致） */
+function fitAll() {
+  document.querySelectorAll('.phone').forEach(phone => {
+    const st = phone.querySelector('.stage');
+    if (!st) return;
+    const w = phone.clientWidth, h = phone.clientHeight;
+    st.style.setProperty('--s', String(Math.min(w / 960, h / 540)));
+  });
+}
+const ro = new ResizeObserver(fitAll);
+document.querySelectorAll('.phone').forEach(p => ro.observe(p));
+window.addEventListener('resize', fitAll);
+fitAll();
+</script>
+</body>
+</html>

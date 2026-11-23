@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《磁极狂奔》美术方向方案 · 铁屑沙盘</title>
+<style>
+  :root{
+    --b950:#12151A;
+    --b900:#1E2329;
+    --b800:#2B323A;
+    --b700:#39424C;
+    --b500:#6B7783;
+    --d200:#9AA5B1;
+    --d050:#E6E1D6;
+    --red:#FF6B47;
+    --blue:#2E6BFF;
+    --amber:#FFB020;
+    --max:1080px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--b950); color:var(--d200);
+    font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+    font-size:15px; line-height:1.75; letter-spacing:.01em;
+    -webkit-font-smoothing:antialiased;
+  }
+  body.mode-gray .figframe{filter:grayscale(1)}
+  body.mode-deut .figframe{filter:url(#f-deut)}
+  a{color:var(--d050); text-decoration:none; border-bottom:1px solid rgba(230,225,214,.28)}
+  a:hover{border-bottom-color:var(--d050)}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 32px}
+
+  /* ---------- 顶栏 ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:rgba(18,21,26,.94); backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(230,225,214,.10);
+  }
+  .topbar .wrap{display:flex; align-items:center; gap:22px; height:52px}
+  .brand{font-weight:700; color:var(--d050); font-size:13px; letter-spacing:.18em; white-space:nowrap}
+  .nav{display:flex; gap:18px; overflow-x:auto; scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{font-size:12.5px; color:var(--b500); border:0; white-space:nowrap}
+  .nav a:hover{color:var(--d050)}
+
+  /* ---------- 封面 ---------- */
+  .hero{padding:84px 0 64px; border-bottom:1px solid rgba(230,225,214,.10)}
+  .kicker{
+    font-size:11.5px; letter-spacing:.32em; color:var(--b500);
+    text-transform:uppercase; margin-bottom:22px;
+  }
+  h1{
+    font-size:clamp(38px,6.4vw,68px); line-height:1.06; margin:0 0 8px;
+    color:var(--d050); font-weight:800; letter-spacing:-.02em;
+  }
+  h1 .thin{color:var(--b500); font-weight:300}
+  .hero .lede{font-size:17px; max-width:64ch; color:var(--d200); margin:22px 0 0}
+  .hero .lede b{color:var(--d050); font-weight:600}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:10px 28px; margin-top:34px;
+    font-size:12px; color:var(--b500); font-family:Consolas,monospace;
+  }
+  .meta span b{color:var(--d200); font-weight:600}
+
+  /* ---------- 章节 ---------- */
+  section{padding:64px 0 8px; border-bottom:1px solid rgba(230,225,214,.08)}
+  section:last-of-type{border-bottom:0}
+  .sec-no{
+    font-family:Consolas,monospace; font-size:12px; color:var(--amber);
+    letter-spacing:.16em; margin-bottom:10px;
+  }
+  h2{
+    font-size:clamp(24px,3.4vw,34px); line-height:1.25; margin:0 0 6px;
+    color:var(--d050); font-weight:750; letter-spacing:-.01em;
+  }
+  h2 small{display:block; font-size:13px; font-weight:400; color:var(--b500); letter-spacing:.04em; margin-top:8px}
+  h3{
+    font-size:17px; margin:38px 0 12px; color:var(--d050); font-weight:650;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  h3 .tag{
+    font-family:Consolas,monospace; font-size:11px; color:var(--b500);
+    border:1px solid rgba(230,225,214,.16); border-radius:2px; padding:1px 6px; font-weight:400;
+  }
+  h4{font-size:14px; margin:24px 0 8px; color:var(--d050); font-weight:600}
+  p{margin:12px 0}
+  ul,ol{margin:12px 0; padding-left:22px}
+  li{margin:6px 0}
+  strong{color:var(--d050); font-weight:600}
+  code{
+    font-family:Consolas,"Cascadia Mono",monospace; font-size:12.5px;
+    background:rgba(230,225,214,.07); color:#D8D2C4;
+    border-radius:3px; padding:1.5px 5px;
+  }
+  .ref{
+    font-family:Consolas,monospace; font-size:12px; color:var(--d200);
+    background:rgba(46,107,255,.10); border-left:2px solid var(--blue);
+    padding:1px 7px; border-radius:0 3px 3px 0; white-space:nowrap;
+  }
+
+  /* ---------- 通用块 ---------- */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:22px}
+  @media(max-width:800px){.grid2{grid-template-columns:1fr}}
+  .card{
+    background:var(--b900); border:1px solid rgba(230,225,214,.10);
+    border-radius:4px; padding:20px 22px;
+  }
+  .card .k{font-size:11px; letter-spacing:.2em; color:var(--b500); margin-bottom:8px; text-transform:uppercase}
+  .card .v{font-size:26px; font-weight:700; color:var(--d050); font-family:Consolas,monospace; line-height:1.2}
+  .card .n{font-size:12.5px; color:var(--b500); margin-top:6px; line-height:1.6}
+
+  table{width:100%; border-collapse:collapse; margin:18px 0; font-size:13.5px}
+  th{
+    text-align:left; font-weight:600; color:var(--d050); font-size:11.5px;
+    letter-spacing:.1em; text-transform:uppercase; padding:8px 10px;
+    border-bottom:1px solid rgba(230,225,214,.22); white-space:nowrap;
+  }
+  td{padding:9px 10px; border-bottom:1px solid rgba(230,225,214,.07); vertical-align:top}
+  td.mono,th.mono{font-family:Consolas,monospace; font-size:12.5px; white-space:nowrap}
+  tr:hover td{background:rgba(230,225,214,.025)}
+  .fail{color:#FF6B47; font-weight:600}
+  .pass{color:#7BC96F; font-weight:600}
+  .warn{color:var(--amber); font-weight:600}
+
+  .diag{border-left:2px solid rgba(230,225,214,.16); padding:2px 0 2px 20px; margin:26px 0}
+  .diag .h{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+  .diag .num{font-family:Consolas,monospace; color:var(--b500); font-size:12px}
+  .diag .t{color:var(--d050); font-weight:650; font-size:15.5px}
+  .diag .fix{font-size:13px; color:#7BC96F; margin-top:6px}
+  .diag .fix b{color:#9ADE8E; font-weight:600}
+
+  .note{
+    background:rgba(255,176,32,.055); border:1px solid rgba(255,176,32,.22);
+    border-radius:4px; padding:16px 20px; margin:24px 0; font-size:13.5px;
+  }
+  .note .t{color:var(--amber); font-weight:650; font-size:12px; letter-spacing:.14em; margin-bottom:6px}
+  .note p{margin:6px 0}
+
+  /* ---------- 色卡 ---------- */
+  .swatches{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0}
+  @media(max-width:760px){.swatches{grid-template-columns:repeat(2,1fr)}}
+  .sw{border:1px solid rgba(230,225,214,.10); border-radius:4px; overflow:hidden; background:var(--b900)}
+  .sw .chip{height:64px; box-shadow:inset 0 0 0 1px rgba(230,225,214,.13); border-bottom:1px solid rgba(230,225,214,.10)}
+  .sw .body{padding:10px 12px 12px}
+  .sw .nm{font-size:12.5px; color:var(--d050); font-weight:600}
+  .sw .hx{font-family:Consolas,monospace; font-size:11.5px; color:var(--b500); margin-top:2px}
+  .sw .role{font-size:11px; color:var(--b500); margin-top:6px; line-height:1.5}
+
+  /* ---------- 图 ---------- */
+  figure{margin:26px 0 10px}
+  .figframe{
+    border:1px solid rgba(230,225,214,.12); border-radius:4px; overflow:hidden;
+    background:var(--b900);
+  }
+  figure svg{display:block; width:100%; height:auto}
+  figcaption{font-size:12px; color:var(--b500); margin-top:10px; line-height:1.7; display:flex; gap:10px; flex-wrap:wrap}
+  .badge{
+    display:inline-block; font-family:Consolas,monospace; font-size:10.5px;
+    padding:1px 7px; border-radius:2px; letter-spacing:.1em; flex:none; height:19px; line-height:17px;
+  }
+  .badge.b{background:rgba(255,107,71,.14); color:#FF8E72; border:1px solid rgba(255,107,71,.3)}
+  .badge.a{background:rgba(123,201,111,.13); color:#9ADE8E; border:1px solid rgba(123,201,111,.3)}
+
+  .toggle{display:flex; gap:8px; flex-wrap:wrap; margin:18px 0 0}
+  .toggle button{
+    font-family:inherit; font-size:12px; cursor:pointer;
+    background:var(--b900); color:var(--b500);
+    border:1px solid rgba(230,225,214,.16); border-radius:3px; padding:7px 14px;
+    transition:.15s;
+  }
+  .toggle button.on{background:rgba(230,225,214,.10); color:var(--d050); border-color:rgba(230,225,214,.38)}
+  .toggle button:hover{color:var(--d050)}
+
+  /* ---------- 清单 ---------- */
+  .check{list-style:none; padding:0; margin:16px 0}
+  .check li{
+    position:relative; padding:9px 0 9px 30px; margin:0;
+    border-bottom:1px solid rgba(230,225,214,.06); font-size:13.5px;
+  }
+  .check li::before{
+    content:""; position:absolute; left:2px; top:16px; width:9px; height:9px;
+    border:1.5px solid var(--b500); border-radius:2px;
+  }
+  .check li b{color:var(--d050); font-weight:600}
+  .check li em{font-style:normal; color:var(--b500); font-size:12px; display:block; margin-top:2px}
+
+  .tier{display:grid; grid-template-columns:76px 1fr; gap:0; border-top:1px solid rgba(230,225,214,.10)}
+  .tier > div{padding:18px 0; border-bottom:1px solid rgba(230,225,214,.10)}
+  .tier .label{
+    font-family:Consolas,monospace; font-size:20px; font-weight:700; color:var(--d050);
+    padding-right:18px;
+  }
+  .tier .label small{display:block; font-size:10px; letter-spacing:.14em; color:var(--b500); font-weight:400; margin-top:2px}
+  .tier .detail .h{color:var(--d050); font-weight:600; font-size:14.5px; margin-bottom:6px}
+  .tier .detail p{margin:4px 0; font-size:13.5px}
+  .tier .detail .cost{font-family:Consolas,monospace; font-size:12px; color:var(--amber); margin-top:8px}
+
+  footer{padding:52px 0 80px; font-size:12px; color:var(--b500); border-top:1px solid rgba(230,225,214,.08)}
+  footer .row{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="f-deut" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+  </filter>
+</svg>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">ART DIRECTION</div>
+    <nav class="nav">
+      <a href="#s1">01 体检</a>
+      <a href="#s2">02 诊断</a>
+      <a href="#s3">03 母题</a>
+      <a href="#s4">04 配色</a>
+      <a href="#s5">05 图形语言</a>
+      <a href="#s6">06 改造对比</a>
+      <a href="#s7">07 可读性底线</a>
+      <a href="#s8">08 操作清单</a>
+      <a href="#s9">09 落地成本</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Magnetic Rush · Canvas 2D · 960 × 540</div>
+    <h1>铁屑沙盘<span class="thin"> / Filing Board</span></h1>
+    <p class="lede">
+      整个游戏发生在一块铺满细铁屑的巨型磁性板面上。<b>只有带电的东西才有颜色</b>——
+      环境是哑光的铁灰，玩家、障碍、蓄能警告是饱和的漆。
+      这不是换一套配色，而是换一条规则：<b>颜色从此只用来表示"这里有没有电、是什么极"</b>。
+    </p>
+    <div class="meta">
+      <span>绘制入口 <b>widgets.ts · Player.ts · Obstacle.ts</b></span>
+      <span>色值实测 <b>71 个 hex / 261 次出现</b></span>
+      <span>对比度实测 <b>极性蓝对天空 1.17:1</b></span>
+      <span>本文档 <b>不改任何游戏代码</b></span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ 01 -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-no">01 / CURRENT STATE</div>
+    <h2>现状体检：代码里到底在画什么
+      <small>不看设计意图，只看实际取值。下面每个数字都能在源码里数出来。</small>
+    </h2>
+
+    <p>项目的绘制是干净的、可维护的：统一走 <code>Canvas 2D</code>，UI 组件收敛在
+      <span class="ref">src/ui/widgets.ts</span>，设计令牌收敛在
+      <span class="ref">src/ui/theme.ts</span>，障碍全部在
+      <span class="ref">src/entities/Obstacle.ts</span> 的 21 个
+      <code>render*()</code> 里。问题不在工程结构，在<strong>取值</strong>。</p>
+
+    <table>
+      <thead>
+        <tr><th>绘制对象</th><th>落点</th><th>实际用的值</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>天空 / 太阳 / 云</td>
+          <td class="mono">widgets.ts · drawToonSky()<br>L117–211</td>
+          <td>三段线性渐变 <code>#6fc4f2 → #b7e6ff → #e9f8ff</code>；太阳 <code>#ffd84d</code> + 描边 <code>#efb02c</code>，<b>12 条等角光芒</b>（6px、alpha 0.6，长度 ±4px 正弦抖动）；4 朵云固定 y / 速度 / 透明度；远山近山各一条纯正弦叠加（<b>仅菜单/大厅启用</b>，GameScene 传 <code>hills:false</code>）</td>
+        </tr>
+        <tr>
+          <td>地面 / 草</td>
+          <td class="mono">GameScene.ts · renderBackground()<br>L1833–1869</td>
+          <td>草地 <code>#8ede63</code>，压边 <code>#5fbf46</code>；草簇<b>精确 90px 等距</b>；连击 ≥5 时全屏叠 <code>rgba(255,77,109,·)</code></td>
+        </tr>
+        <tr>
+          <td>角色</td>
+          <td class="mono">Player.ts · drawRunner()<br>L30–100</td>
+          <td><code>roundRect</code> 圆角 = 短边 32%；填充 <code>#ff4d6d</code>；描边 <code>#2b2350</code> / 3px；白色椭圆高光；两只眼白 + 瞳孔；硬投影 <code>rgba(43,35,80,.20)</code> 偏移 4px</td>
+        </tr>
+        <tr>
+          <td>尖刺</td>
+          <td class="mono">Obstacle.ts · renderSpikes()<br>L404–457</td>
+          <td>底座条 + N 个圆角三角（间距 20px，尖端倒角 7px）；描边 3px；每个尖刺一块白色高光四边形</td>
+        </tr>
+        <tr>
+          <td>石柱</td>
+          <td class="mono">Obstacle.ts · renderPillar()<br>L460–543</td>
+          <td><code>#8b83ad</code> 柱身 + 3px 描边 + 圆角 10；左高光 / 右暗部 / 26px 分段横纹；法兰盘 + 2.4px 螺栓；黄黑警示帽；脉冲警示灯</td>
+        </tr>
+        <tr>
+          <td>摆锤</td>
+          <td class="mono">Obstacle.ts · renderPendulum()<br>L735–883</td>
+          <td>绳子双描边（5px 深靛 + 2px <code>#ffe9b0</code>）；球 = 圆 + 3px 描边 + 椭圆高光 + 两只眼睛 + N/S 字母 + 预警圆环</td>
+        </tr>
+        <tr>
+          <td>光晕（所有元素）</td>
+          <td class="mono">portal / laser / gem / star / pendulum</td>
+          <td>同一套配方：<b>同色 + 外扩 4–14px + alpha 0.20–0.35</b>。实测：激光激活 <code>fillRect(x−5, w+10) @0.28</code>、终点外发光 <code>roundRect(x−4, w+8)</code> 线宽 5 @0.35–0.75、磁芯雨外圈 <code>r+6 @0.22</code>、极性区填充 <code>@0.28</code> + 圆角 14</td>
+        </tr>
+        <tr>
+          <td>UI / HUD</td>
+          <td class="mono">widgets.ts · toonShape() 等</td>
+          <td>统一「厚描边圆角矩形 + 底部硬投影 4–7px」；文字一律白色贴纸描边；按钮圆角 pill</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid2" style="margin-top:26px">
+      <div class="card">
+        <div class="k">lineWidth 出现次数</div>
+        <div class="v">3px × 76</div>
+        <div class="n">4px × 53 · 5px × 32 · 2px × 27 · 6px × 12 · 7px × 8 · 8px × 6 · 9px × 2 · 14px × 1<br>
+        共约 230 处描边设置，<b>34% 挤在同一个值上</b>。</div>
+      </div>
+      <div class="card">
+        <div class="k">圆角半径取值</div>
+        <div class="v">8 个近值</div>
+        <div class="n">6 / 7 / 8 / 9 / 10 / 12 / 14 / 16 —— 每个都接近元素短边的 20–25%，
+        所以<b>大面板和小底座看起来一样软</b>。</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="t">反直觉发现</div>
+      <p>很多人以为"AI 味"来自满屏渐变。但全项目 <code>createLinearGradient</code> <b>只有一处</b>（天空），
+      <code>createRadialGradient</code> <b>零处</b>。柔和感的真正来源不是渐变，而是
+      <b>统一圆角 + 统一硬投影 + 每个物体都挂一圈同色光晕</b>。所以"去掉渐变"这个常见建议在这里是无效的——
+      要动的是圆角、光晕和描边权重。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 02 -->
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-no">02 / DIAGNOSIS</div>
+    <h2>为什么它看起来「像 AI 生成的」</h2>
+    <p>八条可验证的诊断。每条都给出代码里的实际取值或实测数据，不给"感觉"。</p>
+
+    <div class="diag">
+      <div class="h"><span class="num">D1</span><span class="t">两套互斥的世界观同时存在于仓库里</span></div>
+      <p><span class="ref">src/data/levels.ts</span> 里 36 个关卡每个都写了 <code>bg</code>，取值是
+      <code>#0a0a0f</code>、<code>#141026</code>、<code>#2a1018</code> 这类暗色——是上一版"暗色霓虹"美术的遗产。
+      而 <span class="ref">GameScene.ts:1760</span> 先用它清屏，紧接着
+      <span class="ref">GameScene.ts:1839</span> 的 <code>drawToonSky()</code> 又把整块 960×540 覆盖成糖果天空。
+      <strong>36 个关卡的背景配置 100% 是死代码。</strong></p>
+      <p style="font-size:13px;color:#9ADE8E" class="fix"><b>这说明：</b>项目经历过一次美术转向，但没有做完——旧配色没有被删除，新配色也没有被定义成唯一来源。观众看到的"不协调"不是形状问题，是<b>没有一个做决定的人</b>。</p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D2</span><span class="t">颜色是平权的：71 个色值，语义重复</span></div>
+      <p>统计 <code>src/</code> 下所有十六进制字面量：<strong>71 个不同色值、261 次出现</strong>。其中：</p>
+      <table style="margin:10px 0">
+        <thead><tr><th>色系</th><th class="mono">色值</th><th>它们各自承担什么</th></tr></thead>
+        <tbody>
+          <tr><td>红 5 个</td><td class="mono">#ff4d6d<br>#ff2d5e<br>#ff6b6b<br>#ff6f8b<br>#ff8585</td><td>极性红 / 激光 / danger / 按钮 hover / danger hover</td></tr>
+          <tr><td>绿 6 个</td><td class="mono">#3fc76a<br>#5ce85c<br>#4ddb9e<br>#8fd98a<br>#5fc46a<br>#8ede63</td><td>success / 重力翻转 / 传送门 B / 远山 / 近山 / 草地</td></tr>
+          <tr><td>金 5 个</td><td class="mono">#ffb703<br>#ffcf4d<br>#ffc233<br>#ffd84d<br>#efb02c</td><td>gold / lemon / 收集物 / 太阳 / 太阳描边</td></tr>
+        </tbody>
+      </table>
+      <p>红系 5 个值里 <code>#ff4d6d</code> 和 <code>#ff2d5e</code> 的色相只差 <strong>1°</strong>（349° vs 348°），
+      人眼基本无法区分，但代码里一个是"极性"、一个是"致命"。<strong>颜色在这里不携带信息，只携带热闹。</strong>
+      没有主色—辅色—强调色的从属关系，只有一堆"彼此独立的漂亮颜色"。</p>
+      <p style="font-size:13px;color:#9ADE8E" class="fix"><b>这就是最典型的 AI 味：</b>生成式配色倾向于在同一个明度/饱和度带上，用等间距的色相铺满，
+      每个颜色单独看都"没错"，放在一起没有主次。</p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D3</span><span class="t">玩法颜色 = 背景颜色（实测对比度最低 1.17:1）</span></div>
+      <p>极性蓝 <code>COLORS.BLUE = #35b6ff</code> 同时就是 <code>UI.color.accent2</code> 和
+      <code>UI.color.sky</code>，而天空顶部是 <code>#6fc4f2</code>。用 WCAG 相对亮度公式实测：</p>
+      <table style="margin:10px 0">
+        <thead><tr><th>前景</th><th>背景</th><th class="mono">对比度</th><th>判定（图形元素阈值 3:1）</th></tr></thead>
+        <tbody>
+          <tr><td>极性蓝 <code>#35b6ff</code></td><td>天空顶部 <code>#6fc4f2</code></td><td class="mono fail">1.17 : 1</td><td class="fail">几乎不可见</td></tr>
+          <tr><td>极性蓝 <code>#35b6ff</code></td><td>天空中部 <code>#b7e6ff</code></td><td class="mono fail">1.70 : 1</td><td class="fail">不合格</td></tr>
+          <tr><td>极性红 <code>#ff4d6d</code></td><td>天空底部 <code>#e9f8ff</code></td><td class="mono fail">2.96 : 1</td><td class="fail">压线不合格</td></tr>
+          <tr><td>收集物 <code>#ffcf4d</code></td><td>天空底部 <code>#e9f8ff</code></td><td class="mono fail">1.35 : 1</td><td class="fail">基本看不见</td></tr>
+          <tr><td>教程文字 <code>#ffb703</code></td><td>天空中部 <code>#b7e6ff</code></td><td class="mono fail">1.31 : 1</td><td class="fail">靠白描边硬撑</td></tr>
+          <tr><td>极性红 <code>#ff4d6d</code></td><td>极性蓝 <code>#35b6ff</code></td><td class="mono fail">1.42 : 1</td><td class="fail">色盲玩家完全无法区分</td></tr>
+        </tbody>
+      </table>
+      <p>一个跑酷游戏，<strong>最需要被看见的三种东西——蓝障碍、红障碍、收集物——是画面上对比度最低的三种</strong>。
+      这不是审美问题，是玩法问题。</p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D4</span><span class="t">所有元素同一种描边，等于没有主次</span></div>
+      <p><code>toonShape()</code> 默认 <code>lineWidth = 3</code>；角色 3、尖刺 3、石柱 3、平台 3、相位墙 3、终点 3、HUD 胶囊 3、按钮 3。
+      全画面 <strong>76 处 3px</strong>。当 40px 的角色和 600px 的面板用同一条粗细的线，视觉上就没有"主体 / 结构 / 纹样"的层级，
+      所有东西都在同一个平面上喊叫。</p>
+      <p style="font-size:13px;color:#9ADE8E" class="fix"><b>修法：</b>线宽必须变成 3–4 级的<b>信息</b>，而不是一个默认值。</p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D5</span><span class="t">圆角一刀切，所有东西一样软</span></div>
+      <p>实际用到 6 / 7 / 8 / 9 / 10 / 12 / 14 / 16 八个近值，且每个都按元素短边的固定比例取。
+      结果：尖刺底座是圆的、石柱是圆的、平台是圆的、角色是圆的、终点是圆的、连坑口都是圆的。
+      <strong>当"危险"和"可站立"拥有相同的柔软度，玩家只能靠颜色分辨危险——而颜色刚好又不可辨（见 D3）。</strong></p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D6</span><span class="t">光晕是公式化的：每个物体都被无理由地强调</span></div>
+      <p>激光 <code>fillRect(x−5, w+10) @0.28</code>、终点外发光 <code>lineWidth 5 @0.35–0.75</code>、磁芯雨外圈 <code>r+6 @0.22</code>、
+      极性区填充 <code>@0.28</code>、摆锤充能环 <code>0.30–0.65</code>、石柱警示灯 <code>0.20–0.45</code>。
+      <strong>六种完全不同的东西，同一套"同色半透明外扩"配方。</strong>当每个元素都发光，光就不代表任何东西了。
+      编辑器/联机 HUD 里还继续沿用同一套硬投影 + 圆角卡片，于是整个画面是同一种质感的无限复制。</p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D7</span><span class="t">数学上的完美重复——这是最硬的一条</span></div>
+      <p>太阳 <strong>12 条光芒等角分布</strong>（每 30° 一条）；<strong>4 朵云</strong>写死在数组里；草簇<strong>精确 90px 等距</strong>；
+      远山近山是两条<strong>纯正弦函数</strong>（菜单背景）；晶片浮动 <code>sin(time*3 + x)</code>；就连障碍间距也基本是整数。
+      人手画的云不会四朵等间距，手画的太阳光不会 12 条一样长。</p>
+      <p style="font-size:13px;color:#9ADE8E" class="fix"><b>这是"像 AI"最直接的物理证据：</b>画面里没有任何一处随机扰动、粗细变化、端点收笔、错位。
+      所谓"手绘感"，技术上就是<b>可控的不规则</b>。</p>
+    </div>
+
+    <div class="diag">
+      <div class="h"><span class="num">D8</span><span class="t">细节密度均质 + 可爱三件套</span></div>
+      <p>每个障碍都被塞进同样多的装饰：柱身左高光 + 右暗部 + 26px 横纹 + 法兰螺栓 + 黄黑帽 + 呼吸灯 + 圆角。
+      平台也要有云朵托底 + 顶面高光 + 木纹 + 两颗螺栓。而背景（山、草）几乎零细节。
+      <strong>没有"主角细节多、中景少、远景只剩剪影"的景深分层。</strong></p>
+      <p>再加上：<strong>圆角 + 两只眼睛 + 白色椭圆高光</strong>——角色有眼睛，摆锤球也有眼睛。这是"可爱安全牌"的三件套，
+      是生成式卡通最常见的选择，也是最能被一眼认出来的。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 03 -->
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-no">03 / MOTIF</div>
+    <h2>视觉母题：一块铁屑沙盘</h2>
+
+    <div class="note" style="border-color:rgba(255,176,32,.35);background:rgba(255,176,32,.07)">
+      <div class="t">一句话母题</div>
+      <p style="font-size:16px;color:#E6E1D6;line-height:1.85;margin:4px 0">
+        世界是一块铺满<span style="color:#fff">细铁屑</span>的磁性板面；<br>
+        磁极走过的地方，铁屑会立起来、排成<span style="color:#fff">力线</span>；<br>
+        全画面只有带电的东西有颜色 —— 铁是灰的，电是亮的。
+      </p>
+    </div>
+
+    <h3>为什么是"铁屑"，而不是"赛博 / 扁平 / 几何"</h3>
+    <p>磁极唯一真实的视觉形态就是<strong>铁屑实验</strong>：撒一把铁粉在磁铁周围，粉末会沿磁场方向立起来，形成一道道梳齿。
+    这比霓虹光效、能量线、粒子爆发都更有出处——它来自物理，不来自特效库。所以美术不用"发明"一个风格，
+    只需要<strong>忠于这个设定本身</strong>。</p>
+
+    <h3>这个母题能直接推出四条可执行规则</h3>
+    <table>
+      <thead><tr><th>设定中的事实</th><th>推出来的美术规则</th></tr></thead>
+      <tbody>
+        <tr><td>铁屑是灰色的，只有被磁化的地方才有方向</td><td><b>环境永不带饱和色。</b>板面/结构/远景一律铁灰，占画面 85% 面积</td></tr>
+        <tr><td>磁极会"拉"铁屑，铁屑跟着磁极动</td><td><b>粒子与尾迹统一为铁屑，不留圆形光点。</b>摆锤的磁力场、切换冲击波都变成"铁屑被吸起"的短线</td></tr>
+        <tr><td>真实磁铁两端刻着 N / S</td><td><b>极性必须带刻印。</b>红极 = "+"、蓝极 = "−"，这条形状编码贯穿所有元素，同时解决色弱可辨</td></tr>
+        <tr><td>铁屑是脏的、不齐的、有毛边的</td><td><b>装饰必须是可手绘的颗粒与力线。</b>禁止云、太阳、彩虹、星星、光晕等"生成式默认装饰"</td></tr>
+        <tr><td>沙盘是桌面上的一个物理装置</td><td><b>一切结构是"加工件"。</b>平台是切出来的板，石柱是车出来的轴，尖刺是磨出来的刃——有硬边、有倒角、有加工痕</td></tr>
+      </tbody>
+    </table>
+
+    <p>落地到元素名词上，整套美术只需要记 6 个词：
+      <strong>板面（board）· 铁屑（filings）· 力线（field line）· 带电体（charged）· 极性刻印（+/−）· 刃口（edge）</strong>。</p>
+  </div>
+</section>
+
+<!-- ============================================================ 04 -->
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-no">04 / PALETTE</div>
+    <h2>配色系统：85% 无彩，15% 带电</h2>
+    <p>整套配色只有 <strong>11 个值</strong>：7 个铁灰/铁屑 + 2 个极性 + 1 个蓄能 + 1 个暗层。
+    对比现在的 71 个，这是一次<b>做减法</b>。</p>
+
+    <h3>A. 铁屑层（环境，约 85% 面积，<span class="tag">saturation ≤ 8%</span>）</h3>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#12151A"></div><div class="body">
+        <div class="nm">板底 / 坑 / 面板底</div><div class="hx">#12151A</div>
+        <div class="role">最暗层。天花板外、断桥坑底、任何"真空区"</div></div></div>
+      <div class="sw"><div class="chip" style="background:#1E2329"></div><div class="body">
+        <div class="nm">板面主色</div><div class="hx">#1E2329</div>
+        <div class="role">背景基准。所有对比度都以它为分母</div></div></div>
+      <div class="sw"><div class="chip" style="background:#2B323A"></div><div class="body">
+        <div class="nm">结构块</div><div class="hx">#2B323A</div>
+        <div class="role">地面、平台、石柱本体、静态地形</div></div></div>
+      <div class="sw"><div class="chip" style="background:#39424C"></div><div class="body">
+        <div class="nm">结构亮边</div><div class="hx">#39424C</div>
+        <div class="role">受光面、加工倒角、分隔线</div></div></div>
+      <div class="sw"><div class="chip" style="background:#6B7783"></div><div class="body">
+        <div class="nm">次级文字 / 网格</div><div class="hx">#6B7783</div>
+        <div class="role">副标题、单位、非关键 HUD</div></div></div>
+      <div class="sw"><div class="chip" style="background:#9AA5B1"></div><div class="body">
+        <div class="nm">主文字 / 刻线</div><div class="hx">#9AA5B1</div>
+        <div class="role">正文、刻痕、力线（低透明度复用）</div></div></div>
+      <div class="sw"><div class="chip" style="background:#E6E1D6"></div><div class="body">
+        <div class="nm">铁屑亮边 / 白字</div><div class="hx">#E6E1D6</div>
+        <div class="role">带电体轮廓、标题、高光。<b>刻意偏暖，不用纯白</b></div></div></div>
+    </div>
+
+    <h3>B. 带电层（玩法信息，约 15% 面积，<span class="tag">saturation ≥ 85%</span>）</h3>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#FF6B47"></div><div class="body">
+        <div class="nm">红极 · RED</div><div class="hx">#FF6B47</div>
+        <div class="role">极性 A。刻印 <b>+</b>。纹理：细密圆点颗粒</div></div></div>
+      <div class="sw"><div class="chip" style="background:#2E6BFF"></div><div class="body">
+        <div class="nm">蓝极 · BLUE</div><div class="hx">#2E6BFF</div>
+        <div class="role">极性 B。刻印 <b>−</b>。纹理：横向短刻线</div></div></div>
+      <div class="sw"><div class="chip" style="background:#FFB020"></div><div class="body">
+        <div class="nm">蓄能 · CHARGE</div><div class="hx">#FFB020</div>
+        <div class="role">唯一非极性的饱和色。<b>只表示"即将发生"</b>：激光预警、摆锤充能、跳关倒数</div></div></div>
+    </div>
+
+    <div class="note">
+      <div class="t">关键取舍：危险不再是"第三种颜色"</div>
+      <p>现在 danger <code>#ff6b6b</code> 和极性红 <code>#ff4d6d</code> 几乎同色，玩家无法区分"这里红是因为它是红极"还是"这里红是因为会死"。</p>
+      <p>新系统里：<b>致命性由"极性"表达（红/蓝），"即将致命"由琥珀表达。</b>
+      不再有独立的 danger 色。琥珀永远是<b>时间</b>信息（0.8s 预警、充能、倒计时），不是身份信息。
+      收集物从金色改为<b>铁屑白</b>——它本来就不该抢走极性色的注意力。</p>
+    </div>
+
+    <h3>C. 对比度实测表（对照板面 <code>#1E2329</code>）</h3>
+    <table>
+      <thead><tr><th>前景</th><th class="mono">相对亮度 L</th><th class="mono">对比度</th><th>用途判定</th></tr></thead>
+      <tbody>
+        <tr><td>铁屑亮边 <code>#E6E1D6</code></td><td class="mono">0.755</td><td class="mono pass">12.13 : 1</td><td class="pass">白字、标题，绝对安全</td></tr>
+        <tr><td>蓄能 <code>#FFB020</code></td><td class="mono">0.524</td><td class="mono pass">8.65 : 1</td><td class="pass">预警线，任何背景上都跳出来</td></tr>
+        <tr><td>主文字 <code>#9AA5B1</code></td><td class="mono">0.370</td><td class="mono pass">6.32 : 1</td><td class="pass">正文可读</td></tr>
+        <tr><td>红极 <code>#FF6B47</code></td><td class="mono">0.322</td><td class="mono pass">5.61 : 1</td><td class="pass">合格</td></tr>
+        <tr><td>蓝极 <code>#2E6BFF</code></td><td class="mono">0.183</td><td class="mono pass">3.51 : 1</td><td class="pass">合格（刚好过 3:1）</td></tr>
+        <tr><td>次级文字 <code>#6B7783</code></td><td class="mono">0.180</td><td class="mono pass">3.46 : 1</td><td class="pass">仅用于大字/辅助</td></tr>
+        <tr><td>结构块 <code>#2B323A</code></td><td class="mono">0.031</td><td class="mono">1.22 : 1</td><td>有意低对比：环境要退后</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>两个必须记住的边界情况：</strong></p>
+    <ul>
+      <li>蓝极放在<b>结构块</b> <code>#2B323A</code> 上时，对比度降到 <span class="warn">2.88:1</span>（不足 3:1）。
+      所以规则是：<b>带电体一律带 2px 铁屑亮边</b>（亮边对蓝极 3.45:1），靠轮廓而不是填充来保底。</li>
+      <li>红极与蓝极互相之间的对比度只有 <span class="warn">1.60:1</span>——<b>这是设计上的必然</b>：只要两者都要在暗板上够亮，
+      它们的明度就注定接近。所以极性区分<b>不能只靠颜色</b>，必须靠下面三件事。</li>
+    </ul>
+
+    <h3>D. 色弱策略：三重编码，任何一项失效都还有两项</h3>
+    <table>
+      <thead><tr><th>通道</th><th>实现</th><th>效果</th></tr></thead>
+      <tbody>
+        <tr><td><b>色相</b></td><td>红 9° / 蓝 222°，跨越红绿盲轴</td><td>对约 92% 的玩家直接可辨；红蓝色对是最安全的极性组合</td></tr>
+        <tr><td><b>明度</b></td><td>红 L 0.322 vs 蓝 L 0.183（ΔL* ≈ 30）</td><td>灰度下仍能读出"亮 / 暗"两档</td></tr>
+        <tr><td><b>形状</b></td><td>红 = <b>+</b> 刻印 + 圆点颗粒；蓝 = <b>−</b> 刻印 + 横刻线</td><td>完全色盲也能读；且与现有相位墙的 +/− 符号一致，无需新增约定</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--b500)">现有代码里相位墙已经用了 <code>renderPolarityWall()</code> 的 "+/−" 形状编码——这是项目里唯一一处正确做法，
+    新方案只是把它推广到所有元素。</p>
+  </div>
+</section>
+
+<!-- ============================================================ 05 -->
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-no">05 / GRAPHIC LANGUAGE</div>
+    <h2>图形语言：四组数值，一套硬软分配</h2>
+
+    <h3>核心规则：<span style="color:var(--red)">硬 = 会伤人</span> ｜ <span style="color:var(--blue)">软 = 可通过</span></h3>
+    <p>这是整套系统里最重要的一条。现在所有东西都软（圆角 + 眼睛 + 高光），玩家无法从形状判断危险。
+    新规则让<strong>形状本身携带玩法信息</strong>，颜色只做加强。</p>
+    <table>
+      <thead><tr><th>类别</th><th>圆角</th><th>描边</th><th>高光</th><th>细节密度</th></tr></thead>
+      <tbody>
+        <tr><td><b>致命物</b>（尖刺 / 激光 / 摆球 / 石柱）</td><td class="mono">0–2px（刃口）</td><td class="mono">2px 铁屑亮边</td><td>无椭圆高光，只有一条 1px 刃线</td><td>低：≤3 个装饰</td></tr>
+        <tr><td><b>可通过物</b>（平台 / 传送门 / 加速带）</td><td class="mono">8px</td><td class="mono">2px 亮边</td><td>无</td><td>中：功能提示为主</td></tr>
+        <tr><td><b>角色</b></td><td class="mono">4px</td><td class="mono">3px 铁屑亮边</td><td>无；改为内侧 1px 刻痕</td><td>高：唯一允许有面部信息</td></tr>
+        <tr><td><b>环境结构</b>（地面 / 平台底板 / 远景）</td><td class="mono">0px</td><td class="mono">2px 暗边（比填充暗一档）</td><td>顶面一条亮唇</td><td>极低：只剩颗粒</td></tr>
+        <tr><td><b>UI 面板</b></td><td class="mono">8 / 12px</td><td class="mono">1px 亮边</td><td>无</td><td>低</td></tr>
+      </tbody>
+    </table>
+
+    <h3>数值规范</h3>
+    <table>
+      <thead><tr><th>项</th><th class="mono">取值</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>基准网格</td><td class="mono">6 px</td><td>960×540 都能被 6 整除（160×90 格）。所有刻线、颗粒、力线端点对齐网格</td></tr>
+        <tr><td>模块 / 边距</td><td class="mono">12 px / 24 px</td><td>HUD 边距 24，面板内边距 12</td></tr>
+        <tr><td>线宽（只允许 4 级）</td><td class="mono">1 / 2 / 3 / 4</td><td><b>1</b>=铁屑刻线；<b>2</b>=带电体亮边、结构暗边；<b>3</b>=角色；<b>4</b>=仅充能状态的危险物（唯一"变粗"的特权）</td></tr>
+        <tr><td>圆角（只允许 4 级）</td><td class="mono">0 / 4 / 8 / 12</td><td>0–2 刃口、4 角色、8 可通过物、12 面板。删除 6/7/9/10/14/16</td></tr>
+        <tr><td>角度</td><td class="mono">15° 的倍数</td><td>尖刺顶角只用 30° / 45° / 60°；斜面只用 15° / 30°。禁止手调的任意角度</td></tr>
+        <tr><td>比例（以角色 40px 为基准）</td><td class="mono">0.45–0.75 R</td><td>尖刺高 18–30；石柱宽 ≥24（0.6R）；收集物 18–24；摆球直径 ≥36（0.9R）</td></tr>
+        <tr><td>危险物间距</td><td class="mono">≥ 60 px（1.5 R）</td><td>避免两个危险物在视觉上粘连成一个"大块"</td></tr>
+        <tr><td>环境颗粒密度</td><td class="mono">≤ 8%</td><td>每 96×96 区域最多 3 条 1px 短线，透明度 0.06–0.14</td></tr>
+        <tr><td>带电体颗粒密度</td><td class="mono">≤ 3%</td><td>颗粒只做"材质"，不能干扰剪影</td></tr>
+        <tr><td>阴影</td><td class="mono">仅 1 种</td><td>地面接触硬阴影：偏移 4px、<code>#12151A</code> @0.55、高度压扁至 0.35。删除所有元素自带的"顶部硬投影"</td></tr>
+        <tr><td>光晕</td><td class="mono">仅 1 种，仅 1 处</td><td>只有<b>蓄能中的危险物</b>允许外扩：琥珀 2px 虚线 + 6Hz 脉冲。其余一切光晕删除</td></tr>
+      </tbody>
+    </table>
+
+    <h3>手绘感的三个可控参数（"反 AI"的技术落点）</h3>
+    <ul>
+      <li><b>端点收笔</b>：所有刻线/力线用 <code>lineCap='round'</code>，但两端长度 ±2px 随机，且不做闭合路径。</li>
+      <li><b>不规则节奏</b>：草簇/铁屑间距不用固定 90，改为 <code>52 + rand(0,64)</code>，用关卡 seed 做确定性随机（保持回放一致）。</li>
+      <li><b>颗粒错位</b>：颗粒 1px 短线允许 ±0.5px 亚像素偏移，让边缘"脏"起来——这是区分"矢量化"和"画出来"的关键。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================ 06 -->
+<section id="s6">
+  <div class="wrap">
+    <div class="sec-no">06 / BEFORE · AFTER</div>
+    <h2>三个关键元素的改造对比</h2>
+    <p>下面的图全部是可运行的 SVG（同尺寸、同构图、同比例），右侧为方案目标态。用下方按钮可以切换灰度与绿色盲模拟，
+    直接检验"形状编码是否真的独立于颜色生效"。</p>
+
+    <div class="toggle">
+      <button data-mode="none" class="on">正常</button>
+      <button data-mode="gray">灰度（去色）</button>
+      <button data-mode="deut">绿色盲模拟</button>
+    </div>
+
+    <!-- ---------------- 1. 角色 ---------------- -->
+    <h3>① 主角 <span class="tag">Player.ts → drawRunner() L30–100</span></h3>
+    <figure>
+      <div class="figframe">
+        <svg viewBox="0 0 800 260" role="img" aria-label="主角改造前后对比">
+          <defs>
+            <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6fc4f2"/>
+              <stop offset=".52" stop-color="#b7e6ff"/>
+              <stop offset="1" stop-color="#e9f8ff"/>
+            </linearGradient>
+          </defs>
+
+          <!-- BEFORE -->
+          <g>
+            <rect width="400" height="260" fill="url(#sky1)"/>
+            <rect x="0" y="200" width="400" height="60" fill="#8ede63"/>
+            <rect x="0" y="200" width="400" height="3" fill="#5fbf46"/>
+            <g fill="#5fbf46">
+              <path d="M20 204 l6 -13 l6 13z"/><path d="M56 204 l5 -10 l5 10z"/>
+              <path d="M104 204 l6 -14 l6 14z"/><path d="M300 204 l5 -11 l5 11z"/>
+              <path d="M352 204 l6 -13 l6 13z"/>
+            </g>
+            <!-- shadow -->
+            <rect x="140" y="84" width="120" height="120" rx="38" fill="rgba(43,35,80,.20)"/>
+            <!-- body -->
+            <rect x="140" y="80" width="120" height="120" rx="38" fill="#ff4d6d" stroke="#2b2350" stroke-width="9"/>
+            <!-- highlight -->
+            <ellipse cx="182" cy="113" rx="21" ry="12" transform="rotate(-28 182 113)" fill="rgba(255,255,255,.5)"/>
+            <!-- eyes -->
+            <circle cx="180" cy="133" r="13" fill="#fff" stroke="#2b2350" stroke-width="6"/>
+            <circle cx="220" cy="133" r="13" fill="#fff" stroke="#2b2350" stroke-width="6"/>
+            <circle cx="184" cy="136" r="6.5" fill="#2b2350"/>
+            <circle cx="224" cy="136" r="6.5" fill="#2b2350"/>
+            <!-- caption -->
+            <text x="200" y="240" fill="rgba(43,35,80,.55)" font-family="Consolas,monospace" font-size="11" text-anchor="middle">#ff4d6d · 描边 3px · 圆角 38.4 · 椭圆高光 · 眼睛</text>
+          </g>
+
+          <!-- AFTER -->
+          <g class="after" transform="translate(400,0)">
+            <rect width="400" height="260" fill="#1E2329"/>
+            <!-- field arcs -->
+            <g stroke="#E6E1D6" fill="none" opacity=".07">
+              <path d="M-40 210 C 60 190, 120 150, 150 60" stroke-width="1"/>
+              <path d="M-20 230 C 90 205, 150 165, 185 70" stroke-width="1"/>
+              <path d="M440 200 C 340 180, 290 140, 262 50" stroke-width="1"/>
+            </g>
+            <!-- filings speckle -->
+            <g stroke="#E6E1D6" stroke-width="1" opacity=".13">
+              <path d="M42 60 l3 3"/><path d="M86 120 l4 2"/><path d="M60 168 l3 -3"/>
+              <path d="M330 70 l3 3"/><path d="M300 150 l4 -2"/><path d="M356 175 l3 2"/>
+              <path d="M120 36 l2 4"/><path d="M270 30 l3 3"/>
+            </g>
+            <!-- ground slab -->
+            <rect x="0" y="200" width="400" height="60" fill="#2B323A"/>
+            <rect x="0" y="200" width="400" height="2" fill="#9AA5B1" opacity=".55"/>
+            <g stroke="#6B7783" stroke-width="1" opacity=".5">
+              <path d="M28 204 l4 -9"/><path d="M74 204 l3 -6"/><path d="M150 204 l4 -10"/>
+              <path d="M258 204 l3 -7"/><path d="M322 204 l4 -9"/><path d="M378 204 l3 -6"/>
+            </g>
+            <!-- contact shadow -->
+            <rect x="142" y="196" width="116" height="9" rx="4" fill="#12151A" opacity=".6"/>
+            <!-- movement trail (filings) -->
+            <g stroke="#FF6B47" stroke-linecap="round">
+              <path d="M52 118 l26 0" stroke-width="2" opacity=".30"/>
+              <path d="M66 148 l18 0" stroke-width="2" opacity=".20"/>
+              <path d="M78 176 l12 0" stroke-width="2" opacity=".12"/>
+            </g>
+            <!-- body: hard corners 4px, dust rim -->
+            <rect x="140" y="80" width="120" height="120" rx="4" fill="#FF6B47" stroke="#E6E1D6" stroke-width="3"/>
+            <!-- inner etch -->
+            <rect x="152" y="92" width="96" height="96" rx="2" fill="none" stroke="#12151A" stroke-width="1" opacity=".22"/>
+            <!-- grain: dots -->
+            <g fill="#12151A" opacity=".18">
+              <circle cx="160" cy="102" r="1.2"/><circle cx="186" cy="120" r="1.2"/>
+              <circle cx="206" cy="98" r="1.2"/><circle cx="240" cy="126" r="1.2"/>
+              <circle cx="168" cy="156" r="1.2"/><circle cx="232" cy="164" r="1.2"/>
+              <circle cx="216" cy="186" r="1.2"/><circle cx="158" cy="188" r="1.2"/>
+            </g>
+            <!-- visor -->
+            <rect x="168" y="100" width="64" height="16" rx="2" fill="#12151A"/>
+            <rect x="172" y="104" width="16" height="3" fill="#E6E1D6" opacity=".55"/>
+            <!-- polarity glyph -->
+            <g stroke="#E6E1D6" stroke-width="3.5" stroke-linecap="round" opacity=".92">
+              <path d="M188 172 h24"/><path d="M200 160 v24"/>
+            </g>
+            <text x="200" y="240" fill="#6B7783" font-family="Consolas,monospace" font-size="11" text-anchor="middle">#FF6B47 · 亮边 2px · 圆角 4 · 刻印 + · 铁屑拖尾</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        <span class="badge b">BEFORE</span><span>糖果粉 + 38px 圆角 + 3px 深靛描边 + 椭圆高光 + 两只眼睛。它是"可爱的方块"，但和尖刺、平台、按钮共用同一套柔软度和同一套高光。</span>
+      </figcaption>
+      <figcaption>
+        <span class="badge a">AFTER</span><span>硬角 4px + 铁屑亮边 + 深色护目条 + 蚀刻的极性符号。眼睛改为一条<span style="color:#E6E1D6">单向护目条</span>（更符合"跑酷"的速度方向），高光块删除，改为内侧 1px 刻痕；拖尾变成三道短铁屑线，而不是圆形光点。</span>
+      </figcaption>
+    </figure>
+
+    <!-- ---------------- 2. 尖刺 ---------------- -->
+    <h3>② 尖刺 <span class="tag">Obstacle.ts → renderSpikes() L404–457</span></h3>
+    <figure>
+      <div class="figframe">
+        <svg viewBox="0 0 800 260" role="img" aria-label="尖刺改造前后对比">
+          <defs>
+            <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6fc4f2"/>
+              <stop offset=".52" stop-color="#b7e6ff"/>
+              <stop offset="1" stop-color="#e9f8ff"/>
+            </linearGradient>
+          </defs>
+
+          <!-- BEFORE -->
+          <g>
+            <rect width="400" height="260" fill="url(#sky2)"/>
+            <rect x="0" y="190" width="400" height="70" fill="#8ede63"/>
+            <rect x="0" y="190" width="400" height="3" fill="#5fbf46"/>
+            <!-- base bar -->
+            <rect x="44" y="182" width="312" height="24" rx="18" fill="rgba(255,77,109,.7)" stroke="#2b2350" stroke-width="9"/>
+            <!-- 5 spikes -->
+            <g fill="#ff4d6d" stroke="#2b2350" stroke-width="9" stroke-linejoin="round">
+              <path d="M48 190 L76 100 Q88 88 100 100 L128 190 Z"/>
+              <path d="M104 190 L132 100 Q144 88 156 100 L184 190 Z"/>
+              <path d="M160 190 L188 100 Q200 88 212 100 L240 190 Z"/>
+              <path d="M216 190 L244 100 Q256 88 268 100 L296 190 Z"/>
+              <path d="M272 190 L300 100 Q312 88 324 100 L352 190 Z"/>
+            </g>
+            <!-- highlight quads -->
+            <g fill="rgba(255,255,255,.34)">
+              <path d="M59 186 L73 128 L80 129 L66 186 Z"/>
+              <path d="M115 186 L129 128 L136 129 L122 186 Z"/>
+              <path d="M171 186 L185 128 L192 129 L178 186 Z"/>
+              <path d="M227 186 L241 128 L248 129 L234 186 Z"/>
+              <path d="M283 186 L297 128 L304 129 L290 186 Z"/>
+            </g>
+            <text x="200" y="240" fill="rgba(43,35,80,.55)" font-family="Consolas,monospace" font-size="11" text-anchor="middle">圆角尖 + 3px 深靛描边 + 每个尖刺一块高光</text>
+          </g>
+
+          <!-- AFTER -->
+          <g class="after" transform="translate(400,0)">
+            <rect width="400" height="260" fill="#1E2329"/>
+            <g stroke="#E6E1D6" stroke-width="1" opacity=".10">
+              <path d="M30 52 l3 3"/><path d="M120 34 l3 2"/><path d="M210 60 l3 3"/>
+              <path d="M300 40 l3 2"/><path d="M356 74 l3 3"/><path d="M170 96 l3 2"/>
+            </g>
+            <!-- slab -->
+            <rect x="0" y="190" width="400" height="70" fill="#2B323A"/>
+            <rect x="0" y="190" width="400" height="2" fill="#9AA5B1" opacity=".5"/>
+            <!-- red blades -->
+            <g fill="#FF6B47" stroke="#E6E1D6" stroke-width="2" stroke-linejoin="miter">
+              <path d="M38 190 L60 116 L82 190 Z"/>
+              <path d="M88 190 L110 116 L132 190 Z"/>
+              <path d="M138 190 L160 116 L182 190 Z"/>
+            </g>
+            <!-- red blade scratch -->
+            <g stroke="#12151A" stroke-width="1" opacity=".30">
+              <path d="M64 178 L65 130"/><path d="M114 178 L115 130"/><path d="M164 178 L165 130"/>
+            </g>
+            <!-- blue blades -->
+            <g fill="#2E6BFF" stroke="#E6E1D6" stroke-width="2" stroke-linejoin="miter">
+              <path d="M226 190 L248 116 L270 190 Z"/>
+              <path d="M276 190 L298 116 L320 190 Z"/>
+              <path d="M326 190 L348 116 L370 190 Z"/>
+            </g>
+            <!-- blue blade hatch -->
+            <g stroke="#12151A" stroke-width="1" opacity=".28">
+              <path d="M236 176 h20"/><path d="M242 158 h16"/>
+              <path d="M286 176 h20"/><path d="M292 158 h16"/>
+              <path d="M336 176 h20"/><path d="M342 158 h16"/>
+            </g>
+            <!-- base etch glyphs -->
+            <g stroke="#E6E1D6" stroke-width="3" stroke-linecap="round" opacity=".85">
+              <path d="M96 212 h16"/><path d="M104 204 v16"/>
+              <path d="M284 212 h16"/>
+            </g>
+            <text x="200" y="240" fill="#6B7783" font-family="Consolas,monospace" font-size="11" text-anchor="middle">刃口 45° · 亮边 2px · 红(+) / 蓝(−) 刻印</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        <span class="badge b">BEFORE</span><span>圆角三角 + 厚深靛描边 + 每根尖刺一块白色高光。它是"漂亮的糖果"，但和平台、按钮的柔软度完全一样，玩家只能靠颜色判断危险。</span>
+      </figcaption>
+      <figcaption>
+        <span class="badge a">AFTER</span><span>机加工刃口（45°、直角、无圆角）+ 2px 铁屑亮边 + 一条内侧磨痕。危险感来自<span style="color:#E6E1D6">形状</span>而不是颜色；底座上的 <b>+ / −</b> 刻印让红蓝在完全去色后依然可辨（点"灰度"按钮验证）。</span>
+      </figcaption>
+    </figure>
+
+    <!-- ---------------- 3. 背景 ---------------- -->
+    <h3>③ 背景与天空 <span class="tag">widgets.ts → drawToonSky() L117–211 · GameScene.ts → renderBackground() L1833</span></h3>
+    <figure>
+      <div class="figframe">
+        <svg viewBox="0 0 840 480" role="img" aria-label="背景改造前后对比">
+          <defs>
+            <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6fc4f2"/>
+              <stop offset=".52" stop-color="#b7e6ff"/>
+              <stop offset="1" stop-color="#e9f8ff"/>
+            </linearGradient>
+            <clipPath id="clip3"><rect width="840" height="240"/></clipPath>
+          </defs>
+
+          <!-- BEFORE -->
+          <g clip-path="url(#clip3)">
+            <rect width="840" height="120" fill="url(#sky3)"/>
+            <!-- sun -->
+            <g>
+              <g stroke="rgba(255,216,77,.6)" stroke-width="3" stroke-linecap="round">
+                <path d="M760 24 v-14"/><path d="M760 96 v14"/><path d="M724 60 h-14"/><path d="M796 60 h14"/>
+                <path d="M735 35 l-10 -10"/><path d="M785 85 l10 10"/><path d="M785 35 l10 -10"/><path d="M735 85 l-10 10"/>
+                <path d="M742 60 l-13 -4"/><path d="M778 60 l13 4"/><path d="M742 60 l-13 4"/><path d="M778 60 l13 -4"/>
+              </g>
+              <circle cx="760" cy="60" r="22" fill="#ffd84d" stroke="#efb02c" stroke-width="2.5"/>
+            </g>
+            <!-- clouds -->
+            <g fill="#fff" opacity=".95">
+              <g transform="translate(150,34) scale(.7)">
+                <circle cx="-24" cy="6" r="17"/><circle cx="2" cy="-6" r="23"/><circle cx="28" cy="6" r="16"/>
+                <rect x="-38" y="4" width="78" height="20" rx="10"/>
+              </g>
+              <g transform="translate(420,58) scale(.5)">
+                <circle cx="-24" cy="6" r="17"/><circle cx="2" cy="-6" r="23"/><circle cx="28" cy="6" r="16"/>
+                <rect x="-38" y="4" width="78" height="20" rx="10"/>
+              </g>
+            </g>
+            <!-- hills -->
+            <path d="M0 120 L0 96 Q120 74 240 92 T480 90 T720 88 L840 84 L840 120Z" fill="#8fd98a"/>
+            <path d="M0 120 L0 108 Q140 92 280 104 T560 100 T840 98 L840 120Z" fill="#5fc46a"/>
+            <!-- ground -->
+            <rect x="0" y="120" width="840" height="120" fill="#8ede63"/>
+            <rect x="0" y="120" width="840" height="4" fill="#5fbf46"/>
+            <g fill="#5fbf46">
+              <path d="M40 124 l6 -13 l6 13z"/><path d="M130 124 l6 -13 l6 13z"/>
+              <path d="M220 124 l6 -13 l6 13z"/><path d="M310 124 l6 -13 l6 13z"/>
+              <path d="M400 124 l6 -13 l6 13z"/><path d="M490 124 l6 -13 l6 13z"/>
+              <path d="M580 124 l6 -13 l6 13z"/><path d="M670 124 l6 -13 l6 13z"/>
+              <path d="M760 124 l6 -13 l6 13z"/>
+            </g>
+            <!-- player + spikes: the contrast problem -->
+            <rect x="150" y="86" width="34" height="34" rx="11" fill="#ff4d6d" stroke="#2b2350" stroke-width="2.5"/>
+            <g fill="#ff4d6d" stroke="#2b2350" stroke-width="2.5" stroke-linejoin="round">
+              <path d="M520 120 L538 78 L556 120 Z"/>
+              <path d="M560 120 L578 78 L596 120 Z"/>
+            </g>
+            <g fill="#35b6ff" stroke="#2b2350" stroke-width="2.5" stroke-linejoin="round">
+              <path d="M650 120 L668 78 L686 120 Z"/>
+              <path d="M690 120 L708 78 L726 120 Z"/>
+            </g>
+            <!-- gems -->
+            <g fill="#ffcf4d" stroke="#2b2350" stroke-width="2">
+              <path d="M610 60 l10 10 l-10 10 l-10 -10 Z"/>
+              <path d="M300 48 l9 9 l-9 9 l-9 -9 Z"/>
+            </g>
+          </g>
+          <g clip-path="url(#clip3)" transform="translate(0,240)">
+            <rect width="840" height="120" fill="#1E2329"/>
+            <g stroke="#E6E1D6" fill="none" opacity=".09">
+              <path d="M-30 110 C 120 90, 200 40, 240 -30" stroke-width="1"/>
+              <path d="M0 120 C 160 98, 250 44, 296 -34" stroke-width="1"/>
+              <path d="M470 120 C 620 96, 700 44, 744 -30" stroke-width="1"/>
+              <path d="M520 124 C 660 104, 736 52, 780 -20" stroke-width="1"/>
+            </g>
+            <g stroke="#E6E1D6" stroke-width="1" opacity=".12">
+              <path d="M80 40 l3 3"/><path d="M170 80 l4 2"/><path d="M360 34 l3 3"/>
+              <path d="M440 72 l3 -3"/><path d="M600 30 l3 3"/><path d="M700 84 l4 2"/>
+              <path d="M250 22 l2 4"/><path d="M560 100 l3 2"/>
+            </g>
+            <!-- ground slab -->
+            <rect x="0" y="120" width="840" height="120" fill="#2B323A"/>
+            <rect x="0" y="120" width="840" height="2" fill="#9AA5B1" opacity=".55"/>
+            <g stroke="#6B7783" stroke-width="1" opacity=".55">
+              <path d="M44 124 l4 -10"/><path d="M118 124 l3 -6"/><path d="M206 124 l4 -9"/>
+              <path d="M286 124 l3 -7"/><path d="M402 124 l4 -10"/><path d="M512 124 l3 -6"/>
+              <path d="M636 124 l4 -9"/><path d="M744 124 l3 -7"/><path d="M818 124 l4 -8"/>
+            </g>
+            <!-- player -->
+            <rect x="150" y="86" width="34" height="34" rx="3" fill="#FF6B47" stroke="#E6E1D6" stroke-width="2"/>
+            <rect x="162" y="92" width="16" height="5" rx="1" fill="#12151A"/>
+            <g stroke="#E6E1D6" stroke-width="1.6" stroke-linecap="round" opacity=".9">
+              <path d="M163 110 h8"/><path d="M167 106 v8"/>
+            </g>
+            <rect x="150" y="116" width="34" height="4" rx="2" fill="#12151A" opacity=".7"/>
+            <!-- spikes -->
+            <g fill="#FF6B47" stroke="#E6E1D6" stroke-width="2">
+              <path d="M520 120 L536 78 L552 120 Z"/>
+              <path d="M556 120 L572 78 L588 120 Z"/>
+            </g>
+            <g fill="#2E6BFF" stroke="#E6E1D6" stroke-width="2">
+              <path d="M650 120 L666 78 L682 120 Z"/>
+              <path d="M686 120 L702 78 L718 120 Z"/>
+            </g>
+            <!-- gems as filings white -->
+            <g fill="#E6E1D6" stroke="#1E2329" stroke-width="1.5">
+              <path d="M610 54 l8 8 l-8 8 l-8 -8 Z"/>
+              <path d="M300 44 l7 7 l-7 7 l-7 -7 Z"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <figcaption>
+        <span class="badge b">BEFORE</span><span>三段渐变 + 12 芒太阳 + 等距云 + 双正弦山（山取自菜单版天空，游戏内 <code>hills:false</code>）+ 90px 等距草。注意左侧：红色尖刺和蓝色尖刺在这一片亮蓝里几乎糊掉（实测 1.70:1 / 2.96:1），金色晶片只剩一个淡黄印子（1.35:1）。</span>
+      </figcaption>
+      <figcaption>
+        <span class="badge a">AFTER</span><span>板面几乎没有"风景"：只有力线、铁屑颗粒、一道水平刻线、一条受光唇边。代价是画面变暗，收益是<span style="color:#E6E1D6">所有带电体都跳出来了</span>——红 5.61:1、蓝 3.51:1、晶片 12.13:1。晶片改成铁屑白，不再和琥珀预警抢注意力。</span>
+      </figcaption>
+    </figure>
+
+    <div class="note">
+      <div class="t">改动落点（三张图对应的真实代码）</div>
+      <p><b>① 主角</b>：<span class="ref">src/entities/Player.ts</span> <code>drawRunner()</code> —— 改 <code>r = 0.32*w</code> → <code>4</code>；删 <code>ctx.ellipse</code> 高光；<code>strokeStyle</code> 改铁屑亮边；眼睛段替换为护目条 + 极性刻印。</p>
+      <p><b>② 尖刺</b>：<span class="ref">src/entities/Obstacle.ts</span> <code>renderSpikes()</code> —— 删 <code>quadraticCurveTo</code> 圆角尖与白色高光四边形；<code>lineWidth 3</code> → 2px 亮边 + 1px 磨痕；底座加 +/− 刻印。</p>
+      <p><b>③ 背景</b>：<span class="ref">src/ui/widgets.ts</span> <code>drawToonSky()</code> —— 删太阳光芒循环、云数组、双正弦山；<code>drawCloud()</code> 整个函数删除；<span class="ref">GameScene.ts</span> <code>renderBackground()</code> —— 草地色改结构灰、草簇改确定性随机间距 + 颗粒。同时删除 <code>levels.ts</code> 里失效的 <code>bg</code> 字段（D1）。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 07 -->
+<section id="s7">
+  <div class="wrap">
+    <div class="sec-no">07 / READABILITY FLOOR</div>
+    <h2>底线：危险物在任何氛围下都必须清晰</h2>
+    <p>这是跑酷游戏唯一不能妥协的事。当前代码里至少有三处会破坏这条底线，新方案要逐条堵住。</p>
+
+    <h3>现有风险点</h3>
+    <table>
+      <thead><tr><th>位置</th><th>问题</th><th>后果</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="mono">GameScene.ts:1805</td>
+          <td><code>particles.render()</code> 在障碍与角色<b>之后</b>绘制</td>
+          <td>连击爆发 40 颗、加速流光、死亡碎片全部盖在尖刺/激光之上——最需要看清的一帧恰好被粒子糊住</td>
+        </tr>
+        <tr>
+          <td class="mono">GameScene.ts:1866</td>
+          <td>连击 ≥5 时全屏叠 <code>rgba(255,77,109,0.06)</code> 红脉冲</td>
+          <td>叠的正好是极性红——红障碍的边界被同色氛围吃掉</td>
+        </tr>
+        <tr>
+          <td class="mono">GameScene.ts:1823</td>
+          <td>白闪 / 死亡红闪是全屏不透明覆盖</td>
+          <td>白闪 100% 白时，蓝极障碍（L 0.183）与背景同时被抹平</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>新方案的五条硬规则</h3>
+    <table>
+      <thead><tr><th>#</th><th>规则</th><th>可测判据</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">R1</td><td><b>分层固定</b>：板面 → 力线/颗粒 → 结构 → 障碍 → 角色 → <b>危险提示</b> → 氛围 → HUD。粒子属于"氛围"，永远在障碍之后画，且受 R2 限制</td><td>z 序写进一处常量，不散落在各 render 里</td></tr>
+        <tr><td class="mono">R2</td><td><b>氛围不得覆盖危险物</b>：任何全屏叠加（连击脉冲、风暴、白闪）透明度上限 0.18，且必须在屏幕边缘做 vignette 渐隐，中心 60% 区域不叠</td><td>叠加层中心 alpha ≤ 0.18；危险区像素 alpha ≤ 0.06</td></tr>
+        <tr><td class="mono">R3</td><td><b>轮廓优先于填充</b>：所有带电体必须有 2px 铁屑亮边；亮边不参与任何透明度动画（充能时闪的是琥珀外框，不是亮边）</td><td>去色 + 缩到 160×90 后，危险物剪影仍完整可数</td></tr>
+        <tr><td class="mono">R4</td><td><b>对比度下限</b>：危险物填充对其<b>紧邻</b>背景 ≥ 3:1；不足时补亮边（蓝对结构块 2.88 → 亮边 3.45）</td><td>可写成 selfcheck 断言，见 §9</td></tr>
+        <tr><td class="mono">R5</td><td><b>预警必须预示同一种危险</b>：琥珀虚线 = 将出现致命判定，琥珀脉冲 = 充能；两者都不允许用于装饰或奖励</td><td>全项目搜索"琥珀 + 非危险语义"应为 0 处</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <div class="t">为什么深色背景反而更安全</div>
+      <p>不是"深色好看"，而是数学：亮背景把可用对比度上限压死了。糖果天空的亮度是 L 0.739–0.917，
+      任何饱和色的 L 都在 0.18–0.35，两者相除得到的对比度必然只有 1.2–3.0——<b>除非把彩色也调亮到发白</b>，那就失去了极性。
+      把背景压到 L 0.02 之后，同样的红/蓝立刻拿到 3.5–5.6。<b>这是用背景换前景的对比度预算。</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 08 -->
+<section id="s8">
+  <div class="wrap">
+    <div class="sec-no">08 / CHECKLIST</div>
+    <h2>避免「AI 味」的操作清单</h2>
+    <p>每条都能直接执行、能验收，不是"要有设计感"这种废话。</p>
+
+    <ol class="check">
+      <li><b>调色板锁死在 11 个值</b><em>删除 UI.color 里的 mint/grape/lemon/sky/success；删除 COLORS 里重复的 REVERSE_ZONE / SPECIAL_ITEM / GRAVITY；删除 36 关的 bg 字段。任何新颜色必须先进 theme.ts 并说明角色。</em></li>
+      <li><b>一条不可违反的色彩规则：饱和色只属于带电体</b><em>环境（天空/山/草/云/地板/面板）饱和度上限 8%。这条一条就能干掉 70% 的"AI 感"。</em></li>
+      <li><b>描边只允许 1/2/3/4 四个值</b><em>把 76 处 lineWidth:3 按"角色=3 / 带电体=2 / 结构=2暗边 / 刻线=1"重新分配；对不上的说明该元素没有定位。</em></li>
+      <li><b>圆角只允许 0/4/8/12</b><em>删除 6/7/9/10/14/16。所有"软硬"必须能对应到"可通行/会伤人"。</em></li>
+      <li><b>删除所有椭圆高光块</b><em>Player、摆锤球、石柱、平台的白色椭圆高光全部删掉。高光只保留"1px 亮边"和"顶面受光唇"两种。</em></li>
+      <li><b>删除 90% 的光晕</b><em>只保留蓄能危险物外的一圈琥珀虚线。传送门外环、激光外扩、晶片光晕、星核光晕、石柱呼吸灯全部删除。</em></li>
+      <li><b>删除全部"生成式默认装饰"</b><em>太阳、云、彩虹、星星、四角闪、光斑——一个不留。装饰只允许力线与铁屑颗粒。</em></li>
+      <li><b>引入确定性不规则</b><em>草簇/铁屑间距用 <code>seed</code> 驱动的 <code>52 + rand(0,64)</code>；线段端点 ±2px；颗粒 ±0.5px 亚像素偏移。必须用关卡 seed，保证回放和每日挑战一致。</em></li>
+      <li><b>限制细节密度（景深分层）</b><em>角色 ≤6 个细节件、危险物 ≤3 个、结构 ≤2 个、远景 ≤1 个（只剩颗粒）。超了就删，不要加。</em></li>
+      <li><b>给每个物体一个"加工方式"</b><em>落地的说"铸造/车削/切割"，画的时候就会自然出现倒角、磨痕、厚度差，而不是 r=16 的圆角矩形。</em></li>
+      <li><b>禁止再给物体加眼睛</b><em>只有主角有"面部"（且是护目条不是眼睛）。摆锤球的 N/S 保留，眼睛删除。</em></li>
+      <li><b>网格对齐</b><em>所有刻线端点、颗粒、力线锚点对齐 6px 网格。手绘感来自粗细和断点，不来自错位到奇怪坐标。</em></li>
+      <li><b>一次只引入一个新形状</b><em>新增障碍先从现有 4 种形状语言（刃、板、轴、环）里挑，不发明第 5 种。</em></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================================================ 09 -->
+<section id="s9">
+  <div class="wrap">
+    <div class="sec-no">09 / COST</div>
+    <h2>落地成本：三档，都能独立收敛</h2>
+
+    <div class="tier">
+      <div class="label">T0<small>PARAMS</small></div>
+      <div class="detail">
+        <div class="h">只改配色与线条参数 —— 能拿到大部分观感改善</div>
+        <p>改 <span class="ref">theme.ts</span>（TOON_SKY 三段 → 铁灰、UI.ink → 板底、新增极性 token）、
+        <span class="ref">config.ts</span>（COLORS 收敛到 11 个值）、
+        <span class="ref">widgets.ts</span>（删太阳光芒循环 / 云数组 / 双正弦山 / drawCloud，草地改结构灰）、
+        <span class="ref">GameScene.renderBackground</span>（草簇改随机间距）、以及各 render 里的 <code>lineWidth</code> 与光晕参数。
+        <b>不动布局、不动玩法、不动碰撞、不动关卡数据。</b></p>
+        <p>收益：对比度全部达标（红 5.61 / 蓝 3.51 / 晶片 12.13），"糖果 AI 感"基本消失，
+        但形状仍然偏软（尖刺还是圆角、角色还是圆角方块）。<b>预计覆盖整体观感差距的 55–65%。</b></p>
+        <div class="cost">≈ 4–5 个文件 · 80–120 行改动 · 不新增任何资源</div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="label">T1<small>SHAPES</small></div>
+      <div class="detail">
+        <div class="h">重画 6 个核心元素，把"硬软语义"做实</div>
+        <p>角色（<code>drawRunner</code>）、尖刺（<code>renderSpikes</code>）、石柱（<code>renderPillar</code>）、
+        平台（<code>renderPlatform</code>）、激光（<code>renderPulseLaser</code>）、终点（<code>renderFinish</code>）。
+        这一档才会真正改变"手感"：硬角、刃口、磨痕、极性刻印、铁屑拖尾。</p>
+        <p>收益：危险物可以脱离颜色被识别；画面有真正的材质差。<b>累计覆盖 85%。</b></p>
+        <div class="cost">≈ 6 个函数 · 500–700 行 · 需要一轮关卡实机走查（36 关 + 无尽）</div>
+      </div>
+    </div>
+
+    <div class="tier">
+      <div class="label">T2<small>FULL</small></div>
+      <div class="detail">
+        <div class="h">补齐菜单 / 编辑器 / 联机 HUD / 粒子 / 教程</div>
+        <p>把同一套令牌推到 MenuScene、LevelSelectScene、EditorScene、OnlineLobbyScene、ResultScene、
+        SharePanel、SettingsLayout，以及 ParticleSystem（圆形光点 → 铁屑短线）和旁边那套贴纸文字。
+        编辑器还要给新参数（亮边宽度、颗粒密度、刻印开关）留出可调项。</p>
+        <p>收益：全链路一致，截图可以直接上架。<b>累计 100%。</b></p>
+        <div class="cost">≈ 12 个文件 · 1500–2000 行 · 建议分 3 个 PR 提交，每轮跑 build + selfcheck</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:30px">
+      <div class="t">最小改动的真实差别</div>
+      <p><b>只做 T0，玩家第一眼就能看出"这是另一个游戏"</b>——因为天空从糖果渐变变成铁灰板面，
+      红蓝障碍突然跳出来，所有元素的白色光晕消失。<b>但形状语言没变，尖刺依然圆润，角色依然是一块粉色糖果。</b>
+      所以 T0 解决的是"违和感"，T1 才解决"辨识度和个性"。如果只允许做一件事，做 T0 的"删天空 + 收敛调色板 + 描边分级"这三步。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 10 -->
+<section id="s10">
+  <div class="wrap">
+    <div class="sec-no">10 / ACCEPTANCE</div>
+    <h2>怎么验收，而不是"我觉得好看了"</h2>
+    <table>
+      <thead><tr><th>#</th><th>检查</th><th>做法</th><th>通过线</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">A1</td><td>调色板规模</td><td>扫 <code>src/</code> 下十六进制字面量并去重</td><td class="pass">≤ 12 个（当前 71）</td></tr>
+        <tr><td class="mono">A2</td><td>危险物对比度</td><td>20 行 node 脚本算 WCAG 对比度</td><td class="pass">红/蓝/琥珀 对其紧邻背景 ≥ 3:1</td></tr>
+        <tr><td class="mono">A3</td><td>极性可辨（色盲）</td><td>把画面转灰度，缩到 160×90</td><td class="pass">3 秒内能数出红/蓝障碍数量</td></tr>
+        <tr><td class="mono">A4</td><td>描边层级</td><td>统计 lineWidth 的去重值数量</td><td class="pass">≤ 4 个</td></tr>
+        <tr><td class="mono">A5</td><td>圆角层级</td><td>统计 radius 的去重值数量</td><td class="pass">≤ 4 个</td></tr>
+        <tr><td class="mono">A6</td><td>装饰自查</td><td>搜代码里的 <code>arc</code> 画太阳/云，<code>ellipse</code> 画高光</td><td class="pass">0 处</td></tr>
+        <tr><td class="mono">A7</td><td>不规则性</td><td>固定 seed 连跑两次同一关的截图</td><td class="pass">像素完全一致（可复现）且间距非等距</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--b500)">A2 与 A7 可以直接挂进现有的 <code>npm run selfcheck</code>：前者是纯函数断言，后者复用项目已有的每日/无尽 seed 确定性机制，不需要新框架。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div>《磁极狂奔》美术方向方案 · 铁屑沙盘 / Filing Board</div>
+      <div>2026-11-09 · 仅文档，未修改任何游戏代码</div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div>依据：src/ui/widgets.ts · src/ui/theme.ts · src/entities/Player.ts · src/entities/Obstacle.ts · src/scenes/GameScene.ts · src/data/config.ts · src/data/levels.ts</div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  var btns = document.querySelectorAll('.toggle button');
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      btns.forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      var m = b.getAttribute('data-mode');
+      document.body.classList.remove('mode-gray', 'mode-deut');
+      if (m === 'gray') document.body.classList.add('mode-gray');
+      if (m === 'deut') document.body.classList.add('mode-deut');
+    });
+  });
+</script>
+</body>
+</html>

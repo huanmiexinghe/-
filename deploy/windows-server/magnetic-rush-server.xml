@@ -1,0 +1,40 @@
+<!--
+  WinSW 服务配置：Magnetic Rush 联机中转服务
+  使用前提：
+    1) 本目录下放 magnetic-rush-server.exe（新版 WinSW-x64.exe 改名即可）
+    2) 已执行 npm ci --omit=dev
+    3) Node 已按"为所有用户"安装（node 在系统 PATH）；否则把下面的 <executable> 改成绝对路径
+  说明：
+    - %BASE% = 本 xml/exe 所在目录
+    - 服务名 id 与 exe/xml 文件名一致，install-service.cmd 不带参数即可识别
+    - 端口/监听地址/数据目录要和 relay.env 保持一致
+-->
+<service>
+  <id>magnetic-rush-server</id>
+  <name>Magnetic Rush Relay Server</name>
+  <description>Magnetic Rush 联机中转 + 自制关卡上传接口（端口 8080，供 cpolar 本机回源）</description>
+
+  <executable>node</executable>
+  <arguments>relay-server.mjs</arguments>
+  <workingdirectory>%BASE%</workingdirectory>
+
+  <!-- 与 relay.env 保持一致；改端口后记得同步 cpolar 隧道的本地地址 -->
+  <env name="PORT" value="8080"/>
+  <env name="HOST" value="127.0.0.1"/>
+  <env name="LEVELS_DIR" value="%BASE%\data"/>
+
+  <!-- 日志：标准输出/错误都写入 logs，按大小滚动 -->
+  <logpath>%BASE%\logs</logpath>
+  <log mode="roll-by-size">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>8</keepFiles>
+  </log>
+
+  <!-- 崩溃自动重启；开机自启（延迟启动，等网络就绪） -->
+  <onfailure action="restart" delay="10 sec"/>
+  <onfailure action="restart" delay="20 sec"/>
+  <onfailure action="restart" delay="30 sec"/>
+  <startmode>Automatic</startmode>
+  <delayedAutoStart>true</delayedAutoStart>
+  <stoptimeout>15 sec</stoptimeout>
+</service>

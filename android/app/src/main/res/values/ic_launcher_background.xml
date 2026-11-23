@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 自适应图标背景基色（与插画顶部天空色一致） -->
+    <color name="ic_launcher_background">#6FC4F2</color>
+    <!-- Android 12+ 系统启动页底色，与启动图渐变顶部一致 -->
+    <color name="splash_background">#6FC4F2</color>
+</resources>

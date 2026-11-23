@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="light dark">
+<title>磁极冲刺 · 隐私政策</title>
+<style>
+  /* 自包含单页：不引用任何外部字体、脚本、样式或图片，离线/弱网也能完整阅读 */
+  :root {
+    --bg: #f6f4ee;
+    --card: #fffdf6;
+    --ink: #2b2350;
+    --sub: #5a5570;
+    --line: #ded8c8;
+    --accent: #5b3fa8;
+    --accent-soft: #efeafd;
+    --warn: #b3402f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16141f;
+      --card: #1f1c2b;
+      --ink: #ece9f7;
+      --sub: #b9b3cc;
+      --line: #37324a;
+      --accent: #b9a2ff;
+      --accent-soft: #2a2540;
+      --warn: #ff9a86;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    padding: 20px 16px calc(40px + env(safe-area-inset-bottom));
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  header {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 18px 14px;
+    margin-bottom: 18px;
+  }
+  h1 { font-size: 22px; line-height: 1.4; margin: 0 0 8px; }
+  h2 {
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 26px 0 8px;
+    padding-left: 10px;
+    border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 16px; margin: 16px 0 6px; }
+  p, li { margin: 6px 0; }
+  ul, ol { padding-left: 22px; margin: 6px 0; }
+  .meta { font-size: 14px; color: var(--sub); margin: 2px 0; }
+  .intro { color: var(--sub); margin-top: 10px; }
+  section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 4px 18px 16px;
+    margin: 0 0 14px;
+  }
+  code {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 5px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 4px;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 8px 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  th { color: var(--accent); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .contact {
+    background: var(--accent-soft);
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 12px;
+  }
+  .note { color: var(--sub); font-size: 14px; }
+  .warn { color: var(--warn); }
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 13px;
+    padding: 8px 0 0;
+  }
+  @media (min-width: 600px) {
+    body { padding: 28px 24px 48px; font-size: 16.5px; }
+    h1 { font-size: 25px; }
+    h2 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>《磁极冲刺》隐私政策</h1>
+    <p class="meta">生效日期与更新日期：2026 年 11 月 9 日</p>
+    <p class="meta">适用版本：Android 客户端（应用包名 com.experiment.magneticrush）及配套联机服务</p>
+    <p class="intro">感谢你游玩《磁极冲刺》。本政策说明我们在你使用游戏本体、联机竞速、自制关卡分享功能以及配套网页服务时，如何处理相关信息。请在使用前仔细阅读。</p>
+  </header>
+
+  <section>
+    <h2>一、适用范围</h2>
+    <p>本政策适用于《磁极冲刺》移动客户端，以及由我们运营的联机中转服务与页面服务（以下统称「本服务」）。</p>
+    <p>如你通过第三方应用商店（包括但不限于好游快爆）下载或更新本游戏，该平台自身收集的信息由其平台隐私政策约束，不适用本政策。若你在游戏内手动填写了自有服务器地址（例如同一局域网内的自建服务），相关数据的处理由该服务器运营者负责，请另行确认其政策。</p>
+  </section>
+
+  <section>
+    <h2>二、我们收集哪些信息及用途</h2>
+    <h3>1. 保存在你设备本地的信息</h3>
+    <p>以下数据仅保存在你所使用设备的应用本地存储（WebView localStorage）中，不会随游戏启动自动上传：</p>
+    <table>
+      <tr><th>内容</th><th>用途</th></tr>
+      <tr><td>存档进度：已通关关卡、星级、最佳用时与最高连击、每日挑战与连续天数、成就解锁状态、磁芯数量等（键名 <code>magnetic_rush_save_v1</code>、<code>magnetic_rush_achievements_v1</code>）</td><td>保存你的游玩进度与设置，以便下次继续</td></tr>
+      <tr><td>设置：静音状态、主音量</td><td>恢复你的声音偏好</td></tr>
+      <tr><td>自制关卡草稿：关卡名称、物件类型与坐标尺寸、创建时间、上传后获得的 8 位分享码（键名 <code>magnetic_rush_custom_levels_v1</code>）</td><td>在「我的地图」中查看、编辑、再次取码</td></tr>
+      <tr><td>玩家昵称（键名 <code>mr_player_name</code>）</td><td>联机大厅中显示与识别，避免每次重新输入</td></tr>
+      <tr><td>自定义服务器地址（键名 <code>mr_server_url</code>）</td><td>记住你为联机或局域网测试填写的服务器地址</td></tr>
+    </table>
+    <p class="note">说明：本游戏不生成、也不持久保存设备唯一标识（例如 deviceId / clientId / IMEI / MAC）。我们不使用 Cookie、IndexedDB 或 sessionStorage 进行追踪。</p>
+
+    <h3>2. 你主动发送到联机服务器的信息</h3>
+    <p>当你进入联机大厅并创建或加入房间时，以下信息会通过加密的 WebSocket（wss）连接发送到服务器：</p>
+    <ul>
+      <li>你填写的昵称、房间号、准备状态、关卡选择；</li>
+      <li>对局中的实时状态：坐标、速度、极性、连击数、存活/滑行/倒挂等表现状态、已用时间与是否到达终点；</li>
+      <li>完赛成绩与用时；</li>
+      <li>快捷短语的序号（服务器只接受预设短语白名单，不支持自由文本聊天）。</li>
+    </ul>
+    <p>上述信息仅在房间内广播给同一房间的其他玩家，用于实时竞速与排名展示。连接建立时，服务器会下发一个随机会话令牌（token）与房间内公开别名：令牌仅用于网络中断后 30 秒内恢复原席位，保存在运行内存中，不写入你的本地存储，也不会展示给其他玩家。</p>
+
+    <h3>3. 自制关卡上传</h3>
+    <p>当你主动点击「上传」或「分享码」时，游戏会通过 HTTPS 将关卡名称、物件类型与坐标尺寸发送到服务器，服务器校验后生成一个 8 位分享码并返回。获得分享码后，该关卡内容会保存在服务器上，供任何持有分享码的玩家下载。请勿在关卡名称中填写你的真实姓名、联系方式等个人信息。</p>
+
+    <h3>4. 服务器运行日志与网络信息</h3>
+    <p>服务器在运行时会输出少量运行日志，例如连接数量、房间创建与加入、上传成功的分享码与关卡名称、异常错误等。我们不会把玩家 IP 地址写入日志文件，也不会长期保存 IP。</p>
+    <p>为防范恶意刷量，服务器会在运行内存中按来源 IP 统计短时间内的上传/读取次数（超过阈值会暂时拒绝请求），该计数仅在内存中短期存在、到期自动清除，不用于识别个人身份，也不与你的昵称或存档关联。提供隧道接入的网络服务商可能按其自身政策记录访问日志，该部分不在我们的控制范围内。</p>
+
+    <h3>5. 剪贴板</h3>
+    <p>仅当你主动点击「复制分享码」或「取码」面板中的复制按钮时，游戏会把该分享码写入系统剪贴板。本游戏<strong>不会读取</strong>剪贴板中的任何内容。</p>
+
+    <h3>6. 设备权限</h3>
+    <p>本游戏仅申请网络访问权限（INTERNET），用于联机与自制关卡上传下载。我们不申请定位、通讯录、相册、麦克风、摄像头等权限。</p>
+
+    <h3>7. 第三方统计与广告</h3>
+    <p>本游戏<strong>未接入</strong>任何第三方统计分析、崩溃上报、广告或用户画像 SDK。除实现游戏功能所必需的网络通信外，我们不会向第三方出售或共享你的个人信息。</p>
+  </section>
+
+  <section>
+    <h2>三、存储位置与保存期限</h2>
+    <ul>
+      <li><strong>你的设备本地</strong>：上述存档、设置、自制关卡草稿、昵称与服务器地址保存在本机，直至你在游戏内「重置存档」、手动清除应用数据或卸载游戏。</li>
+      <li><strong>联机服务器</strong>：房间、玩家状态与会话令牌仅保存在运行内存中，房间结束、玩家全部离开或服务器重启后即被清除。</li>
+      <li><strong>自制关卡</strong>：上传成功的关卡保存在服务器数据文件中，以便分享码持续可用。服务器最多保留 2000 张关卡，超出时会按创建时间淘汰最旧的关卡；我们也会在必要时人工清理违规或失效内容。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>四、共享、转让与第三方</h2>
+    <p>我们不会出售你的个人信息。仅在以下情形下，信息会因实现功能而被处理：</p>
+    <ul>
+      <li>你在联机房间内填写的昵称、对局状态与成绩，会展示给同一房间的其他玩家；</li>
+      <li>你上传的自制关卡内容与名称，会展示给使用对应分享码下载该关卡的玩家；</li>
+      <li>网络隧道与云主机服务商为提供公网接入，可能按其政策处理必要的网络传输数据；</li>
+      <li>依据法律法规、监管要求或司法/行政机关的合法要求，我们可能提供必要信息。</li>
+    </ul>
+    <p>若后续通过好游快爆等平台分发，并接入该平台的账号登录、实名认证或防沉迷能力，该部分信息将由平台按照其自身隐私政策收集与处理，我们不会另行获取平台的账号资料。届时我们会在本页面与游戏内同步更新说明。</p>
+  </section>
+
+  <section>
+    <h2>五、未成年人保护</h2>
+    <p>本游戏玩法简单，不含付费、抽卡、广告或自由文本聊天，但仍建议未成年人在监护人同意与指导下使用。请勿在昵称或自制关卡名称中填写真实姓名、学校、住址、电话等个人信息。</p>
+    <p>若你是未成年人的监护人，发现相关个人信息被不当填写或上传，可通过本政策末尾的联系方式与我们联系，并提供对应的分享码（如有），我们会在核实后尽快删除相关内容。</p>
+  </section>
+
+  <section>
+    <h2>六、你的权利</h2>
+    <ul>
+      <li><strong>查询与更正</strong>：你的本地数据可在游戏内查看；修改昵称可在联机大厅重新填写，修改设置可在「设置」弹层完成。</li>
+      <li><strong>删除本地数据</strong>：在「设置」中使用「重置存档 · 清空全部进度」，或在系统设置中清除本应用数据/卸载应用，即可删除全部本地数据。</li>
+      <li><strong>删除服务器上的自制关卡</strong>：本服务不设账号体系，无法通过登录自助注销。你可通过下方联系方式提出删除请求，并附上对应分享码；核实后我们会删除该关卡数据。</li>
+      <li><strong>撤回同意</strong>：你可停止使用联机与自制关卡功能；这不影响单机游玩。</li>
+    </ul>
+    <p class="note">由于本游戏不建立账号、不保存可识别个人的账号资料，「注销账号」在本服务中不适用；如需清除服务器端由你上传的内容，请使用上述删除请求途径。</p>
+  </section>
+
+  <section>
+    <h2>七、数据安全措施</h2>
+    <ul>
+      <li>联机与自制关卡接口通过加密的 wss / https 隧道传输，避免明文传输；</li>
+      <li>服务器对上传内容进行字段、数量、尺寸与坐标范围校验，非法载荷整包拒绝；</li>
+      <li>服务器对上传与读取接口设置频率限制，降低恶意刷量与滥用风险；</li>
+      <li>服务器不持久保存 IP 与玩家会话，减少不必要的数据留存；</li>
+      <li>我们仅保留实现功能所必需的最小数据，并限制内部访问范围。</li>
+    </ul>
+    <p>请理解：互联网环境不存在绝对安全，若发生安全事件，我们会按法律要求及时处置并在必要时告知受影响用户。</p>
+  </section>
+
+  <section>
+    <h2>八、政策变更通知</h2>
+    <p>当功能或数据处理方式发生变化时，我们会更新本页面并修改顶部的「生效日期与更新日期」。涉及重大变更时，我们会在游戏内以适当方式提示，或在本页面显著位置说明。若你继续使用本服务，即表示你接受更新后的政策。</p>
+  </section>
+
+  <section>
+    <h2>九、联系我们</h2>
+    <p>如对本政策有任何疑问、意见，或需要查询、更正、删除相关信息（包括服务器上的自制关卡），请通过以下方式联系我们。我们会在收到请求并核实后尽快处理。</p>
+    <!-- 联系邮箱：一行常量，替换即可（把下面这段 &lt;待填写&gt; 换成真实邮箱后保存本文件） -->
+    <p class="contact">联系邮箱：<span id="contact-email">&lt;待填写&gt;</span></p>
+    <p class="note">为便于定位问题，建议在邮件中说明游戏版本、问题类型；涉及自制关卡的删除请求请附上对应的 8 位分享码。</p>
+  </section>
+
+  <footer>《磁极冲刺》 · 本页面为自包含静态页面，可离线阅读</footer>
+</main>
+</body>
+</html>

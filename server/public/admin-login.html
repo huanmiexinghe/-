@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>运维后台登录 · Magnetic Rush</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0b0e14;
+    --panel: #121722;
+    --line: #263145;
+    --text: #e9effb;
+    --muted: #94a3b8;
+    --cyan: #22d3ee;
+    --red: #fb7185;
+    --green: #34d399;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh; display: grid; place-items: center; padding: 28px 20px;
+    background:
+      radial-gradient(900px 520px at 80% -5%, rgba(34, 211, 238, .12), transparent 60%),
+      radial-gradient(760px 480px at 10% 10%, rgba(251, 113, 133, .09), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    font: 15px/1.6 "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  }
+  .card {
+    width: 100%; max-width: 400px;
+    background: linear-gradient(180deg, rgba(255,255,255,.03), transparent 40%), var(--panel);
+    border: 1px solid var(--line); border-radius: 18px;
+    padding: 30px 28px 26px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  }
+  .brand { display: flex; align-items: center; gap: 13px; margin-bottom: 22px; }
+  .logo {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: linear-gradient(145deg, #1b2a3d, #0f1621);
+    border: 1px solid var(--line);
+    color: var(--cyan); font-weight: 800; letter-spacing: .5px;
+    box-shadow: inset 0 0 18px rgba(34, 211, 238, .18);
+  }
+  h1 { margin: 0; font-size: 19px; letter-spacing: .3px; }
+  .sub { margin: 2px 0 0; color: var(--muted); font-size: 12.5px; }
+  label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: 12.5px; }
+  input {
+    width: 100%; padding: 11px 13px;
+    border-radius: 10px; border: 1px solid var(--line);
+    background: #0d131d; color: var(--text); font-size: 14px;
+    outline: none;
+  }
+  input:focus { border-color: rgba(34, 211, 238, .65); box-shadow: 0 0 0 3px rgba(34, 211, 238, .12); }
+  button {
+    width: 100%; margin-top: 22px; padding: 11px 14px;
+    border: 0; border-radius: 10px; cursor: pointer;
+    background: linear-gradient(135deg, #22d3ee, #0ea5b7);
+    color: #06232a; font-weight: 700; font-size: 14.5px; letter-spacing: .5px;
+  }
+  button:hover { filter: brightness(1.08); }
+  button:active { transform: translateY(1px); }
+  .err {
+    margin: 0 0 12px; padding: 9px 12px; border-radius: 9px; font-size: 13px;
+    background: rgba(251, 113, 133, .10);
+    border: 1px solid rgba(251, 113, 133, .38);
+    color: #fecdd3;
+  }
+  .err:empty, .notice:empty { display: none; }
+  .notice {
+    margin: 0 0 12px; padding: 9px 12px; border-radius: 9px; font-size: 12.5px;
+    background: rgba(251, 191, 36, .09);
+    border: 1px solid rgba(251, 191, 36, .32);
+    color: #fde68a;
+  }
+  .hint { margin: 18px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+  .hint code { color: #cbd5e1; background: #1a2231; padding: 1px 5px; border-radius: 4px; }
+  .ok { color: var(--green); }
+</style>
+<body>
+  <main class="card">
+    <div class="brand">
+      <div class="logo">MR</div>
+      <div>
+        <h1>运维后台</h1>
+        <p class="sub">Magnetic Rush · 账号权限后台</p>
+      </div>
+    </div>
+
+    <p class="err" id="err">{{ERROR}}</p>
+    <p class="notice" id="notice">{{NOTICE}}</p>
+
+    <form method="post" action="/admin/login" autocomplete="on">
+      <label for="user">管理员账号</label>
+      <input id="user" name="user" type="text" autocomplete="username" maxlength="64" required autofocus>
+      <label for="password">密码</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+      <button type="submit">登录</button>
+    </form>
+
+    <p class="hint">
+      首次启动时若还没有账号文件，会用 <code>relay.env</code> 的
+      <code>ADMIN_USER</code> / <code>ADMIN_PASSWORD</code> 创建引导管理员（仅一次）；
+      之后账号与角色以数据目录下的 <code>accounts.json</code> 为准，由管理员在此后台维护。<br>
+      没有任何启用中的管理员时后台一律拒绝访问；同一账号连续输错 5 次会锁定 15 分钟。
+    </p>
+  </main>
+</body>
+</html>
